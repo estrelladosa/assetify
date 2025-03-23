@@ -1,5 +1,41 @@
 # Assetify
 
+
+## Proyecto Frontend - React.js
+
+En el frontend del proyecto se ha empleado la siguiente estructura de carpetas para organizar la información:
+
+
+/frontend
+│── /public              # Archivos estáticos (favicon, index.html, imágenes públicas)
+│── /src                 # Código fuente de la aplicación
+│   │── /assets          # Archivos estáticos internos (imágenes, fuentes, estilos)
+│   │── /components      # Componentes reutilizables (Header, Footer, Botones, etc.)
+│   │── /pages           # Páginas completas de la app (Registro, Login, Home, etc.)
+│   │── /context         # Context API para gestionar estados globales
+│   │── /hooks           # Custom hooks (uso de autenticación, llamadas a API, etc.)
+│   │── /services        # Funciones para hacer requests al backend (API calls)
+│   │── /routes          # Configuración de las rutas (React Router)
+│   │── /styles          # Archivos CSS, Sass o Tailwind (si se usa CSS modular)
+│   │── App.js           # Componente principal de la aplicación
+│   │── index.js         # Punto de entrada de la app (Renderiza en el DOM)
+│── .gitignore           # Archivos ignorados por Git
+│── package.json         # Dependencias y scripts del proyecto
+
+### Puesta en marcha del frontend
+
+Estos son los pasos para poner en marcha el frontend (el backend debe estar iniciado con npm start dentro de la carpeta backend):
+
+   - Dentro de la carpeta frontend
+   - **npm install** react-router-dom axios *(para navegar entre paginas y para peticiones http al backend)*
+   - **npm start** para iniciar el proyecto
+
+
+
+
+
+
+
 ## Proyecto Backend - Node.js con MongoDB Atlas
 
 Este es el backend del proyecto desarrollado con **Node.js** y **MongoDB Atlas**. A continuación, se detallan los avances realizados hasta ahora, las dependencias necesarias y cómo poner en marcha el proyecto en los equipos de los demás compañeros.

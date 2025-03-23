@@ -1,0 +1,85 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@700&display=swap');
+
+/* Definir variables globales */
+:root {
+  --primary-blue: #004080;
+  --hover-blue: #c8dfff; /* Azul sutil para hover */
+  --input-border-color: #004080; /* Azul primario para el borde del input */
+  --focus-border-color: #416693; /* Azul oscuro para el borde al hacer focus */
+  --focus-background-color: #b5c9e5; /* Azul sutil para el fondo cuando el input está enfocado */
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Poppins', sans-serif;
+  background-color: #f0f4f8;
+  background-image: url('../assets/background-light.png'); /* Ruta de la imagen de fondo */
+  background-size: cover; /* Hace que la imagen cubra toda la página */
+  background-position: center; /* Centra la imagen de fondo */
+  height: 100vh; /* Asegura que el fondo cubra toda la altura de la página */
+}
+
+.registro-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 94vh; /* Ajuste teniendo en cuenta el header */
+  background: rgba(255, 255, 255, 0.6); /* IMPORTANTE: ESTO HACE QUE LA IMAGEN DEL FONDO SE VEA MENOS OPACA Fondo semi-transparente para resaltar el formulario */
+  border-radius: 8px;
+  padding: 20px;
+}
+
+h2 {
+  color: #000;
+  font-size: 28px;
+  margin-bottom: 20px;
+}
+
+.registro-form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  width: 320px;
+  background: #fff;
+  padding: 25px;
+  border-radius: 8px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+input {
+  padding: 12px;
+  border: 2px solid var(--input-border-color);
+  border-radius: 5px;
+  font-size: 16px;
+  outline: none;
+  transition: all 0.3s ease;
+  background-color: white; /* Fondo blanco por defecto */
+}
+
+input:focus {
+  border-color: var(--focus-border-color); /* Cambia el borde a un azul oscuro al hacer focus */
+  background-color: var(--focus-background-color); /* Cambia el fondo a un azul sutil al hacer focus */
+}
+
+input:hover {
+  border-color: var(--primary-blue); /* Azul primario para el borde al hacer hover */
+  background-color: var(--hover-blue); /* Fondo azul sutil al hacer hover */
+}
+
+button {
+  padding: 12px;
+  border: none;
+  background-color: var(--primary-blue);
+  color: white;
+  font-size: 18px;
+  font-weight: bold;
+  cursor: pointer;
+  border-radius: 5px;
+  transition: background 0.3s ease;
+}
+
+button:hover {
+  background-color: #002b5e; 
+}
