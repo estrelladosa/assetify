@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const bcrypt = require('bcrypt');
 
 // Definir el esquema de Usuario
 const usuarioSchema = new mongoose.Schema({
@@ -9,6 +10,7 @@ const usuarioSchema = new mongoose.Schema({
   correo: {
     type: String,
     required: true,
+    unique: true,
   },
   contraseña: {
     type: String,

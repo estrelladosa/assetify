@@ -1,5 +1,7 @@
 const express = require('express');
 const Usuario = require('../models/Usuario');
+const jwt = require('jsonwebtoken');
+const bcrypt = require('bcrypt');
 
 const router = express.Router();
 
@@ -53,5 +55,34 @@ router.post('/', async (req, res) => {
     }
   });
   
+  router.post('/login', async (req, res) => {
+    const { correo, contraseña } = req.body;
+  
+    try {
+      // Buscar al usuario por correo
+      const usuario = await Usuario.findOne({ correo });
+  
+      if (!usuario) {
+        return res.status(400).json({ error: 'Correo incorrecto' });
+      }
+  
+    // Comparar la contraseña ingresada con la almacenada en la base de datos (sin hashear)
+    if (contraseña !== usuario.contraseña) {
+      return res.status(400).json({ error: 'Contraseña incorrecta' });
+    }
+  
+      // Generar un token JWT
+      const token = jwt.sign(
+        { id: usuario._id, correo: usuario.correo }, // Payload
+        process.env.JWT_SECRET || 'secreto', // Clave secreta
+        { expiresIn: '1h' } // Tiempo de expiración
+      );
+  
+      // Responder con el token y un mensaje de éxito
+      res.json({ message: 'Inicio de sesión correcto', token });
+    } catch (err) {
+      res.status(500).json({ error: 'Error del servidor' });
+    }
+  });
 
 module.exports = router;
