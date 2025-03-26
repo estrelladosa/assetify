@@ -1,7 +1,9 @@
-import React, { useState } from "react";
+import React, { useState , useRef, useEffect} from "react";
+import { useNavigate } from "react-router-dom";
 import "../pages/Registro.css";
 
 const Registro = () => {
+  const navigate = useNavigate();
   const [form, setForm] = useState({
     nombre_usuario: "",
     correo: "",
@@ -10,6 +12,11 @@ const Registro = () => {
   });
 
   const [mensaje, setMensaje] = useState("");
+  const nombreImputRef = useRef(null);
+
+  useEffect(() => {
+    nombreImputRef.current?.focus();
+  }, []);
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -49,16 +56,21 @@ const Registro = () => {
 
   return (
     <>
-      <div className="registro-container">
-        <h2>Registro</h2>
-        {mensaje && <p className="mensaje">{mensaje}</p>}
-        <form onSubmit={handleSubmit} className="registro-form">
-          <input type="text" name="nombre_usuario" placeholder="Nombre de usuario" value={form.nombre_usuario} onChange={handleChange} required />
-          <input type="email" name="correo" placeholder="Correo electrónico" value={form.correo} onChange={handleChange} required />
-          <input type="password" name="contraseña" placeholder="Contraseña" value={form.contraseña} onChange={handleChange} required />
-          <input type="password" name="repetirContraseña" placeholder="Repetir contraseña" value={form.repetirContraseña} onChange={handleChange} required />
-          <button type="submit">Registrarse</button>
-        </form>
+      <div className="registro-wrapper">
+        <div className="registro-container">
+          <h2>REGÍSTRATE</h2>
+          {mensaje && <p className="mensaje">{mensaje}</p>}
+          <form onSubmit={handleSubmit} className="registro-form">
+            <input ref={nombreImputRef} type="text" name="nombre_usuario" placeholder="Nombre de usuario" value={form.nombre_usuario} onChange={handleChange} required />
+            <input type="email" name="correo" placeholder="Correo electrónico" value={form.correo} onChange={handleChange} required />
+            <input type="password" name="contraseña" placeholder="Contraseña" value={form.contraseña} onChange={handleChange} required />
+            <input type="password" name="repetirContraseña" placeholder="Repetir contraseña" value={form.repetirContraseña} onChange={handleChange} required />
+            <p className="register-link" onClick={() => navigate("/login")}>
+              ¿Ya tienes cuenta? <span>Inicia sesión aquí</span>
+            </p>
+            <button type="submit">Registrarme</button>
+          </form>
+        </div>
       </div>
     </>
   );

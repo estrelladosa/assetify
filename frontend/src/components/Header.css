@@ -7,7 +7,7 @@
   }
   
   .header-logo {
-    height: 30px; /* Reducir el tamaño del logo */
+    height: 65px; /* Reducir el tamaño del logo */
     margin-right: 15px; /* Reducir margen entre logo y otros elementos */
   }
   
@@ -19,8 +19,9 @@
     margin: 0 10px; /* Menos margen entre botones */
     cursor: pointer;
     transition: background-color 0.3s ease;
-    font-size: 14px; /* Fuente más pequeña */
-    flex: 1; /* Hacer que los botones ocupen más espacio en el contenedor */
+    font-size: 18px; /* Fuente más pequeña */
+    /* flex: 1; Hacer que los botones ocupen más espacio en el contenedor */
+    width: 150px;
   }
   
   .header-button:hover {
@@ -30,6 +31,7 @@
   .header-search {
     flex-grow: 1;
     max-width: 500px; /* Reducir el tamaño máximo del campo de búsqueda */
+    height: 25px;
     padding: 6px;
     border-radius: 5px;
     border: 1px solid #444;
@@ -47,11 +49,12 @@
   .header-icon {
     background: none;
     border: none;
-    font-size: 20px; /* Un tamaño de icono más pequeño */
+    font-size: 25px; /* Un tamaño de icono más pequeño */
     color: white;
     margin: 0 10px; /* Menos separación entre iconos */
     cursor: pointer;
     transition: color 0.3s ease;
+    width: 100px;
   }
   
   .header-icon:hover {

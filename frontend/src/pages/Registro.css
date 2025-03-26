@@ -2,84 +2,102 @@
 
 /* Definir variables globales */
 :root {
-  --primary-blue: #004080;
-  --hover-blue: #c8dfff; /* Azul sutil para hover */
-  --input-border-color: #004080; /* Azul primario para el borde del input */
-  --focus-border-color: #416693; /* Azul oscuro para el borde al hacer focus */
-  --focus-background-color: #b5c9e5; /* Azul sutil para el fondo cuando el input está enfocado */
+  --primary-blue: #0a58ca;
+  --hover-blue: #0056b3; /* Azul sutil para hover */
+  --input-border-color: #ffffff; /* Azul primario para el borde del input */
+  --focus-border-color: #80bdff; /* Azul oscuro para el borde al hacer focus */
+  --focus-background-color: #e9f3ff; /* Azul sutil para el fondo cuando el input está enfocado */
 }
 
 body {
   margin: 0;
   padding: 0;
   font-family: 'Poppins', sans-serif;
-  background-color: #f0f4f8;
   background-image: url('../assets/background-dark.png'); /* Ruta de la imagen de fondo */
   background-size: cover; /* Hace que la imagen cubra toda la página */
   background-position: center; /* Centra la imagen de fondo */
   height: 100vh; /* Asegura que el fondo cubra toda la altura de la página */
 }
 
+.registro-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: calc(100vh - 80px);
+  width: 100%;
+}
+
 .registro-container {
   display: flex;
-  flex-direction: column;
-  align-items: center;
   justify-content: center;
-  height: 94vh; /* Ajuste teniendo en cuenta el header */
-  /*background: rgba(255, 255, 255, 0.6); /* IMPORTANTE: ESTO HACE QUE LA IMAGEN DEL FONDO SE VEA MENOS OPACA Fondo semi-transparente para resaltar el formulario */
-  border-radius: 8px;
-  padding: 20px;
+  align-items: center;
+  flex-direction: column;
+  padding: 20px 40px;
+  border-radius: 16px;
+  text-align: center;
+  max-width: 700px;
+  width: 90%;
 }
 
 h2 {
-  color: #000;
-  font-size: 28px;
-  margin-bottom: 20px;
+  font-size: 50px;
+  margin-bottom: 40px;
+  color: var(--input-border-color);
 }
 
 .registro-form {
   display: flex;
   flex-direction: column;
-  gap: 15px;
-  width: 320px;
-  background: #fff;
-  padding: 25px;
-  border-radius: 8px;
-  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  gap: 30px;
+  width: 100%;
 }
 
 input {
-  padding: 12px;
-  border: 2px solid var(--input-border-color);
-  border-radius: 5px;
-  font-size: 16px;
+  padding: 15px;
+  border: none;
+  border-bottom: 2px solid var(--input-border-color);
+  border-radius: 1;
+  font-size: 18px;
+  background: rgb(255, 255, 255);
   outline: none;
-  transition: all 0.3s ease;
-  background-color: white; /* Fondo blanco por defecto */
-}
-
-input:focus {
-  border-color: var(--focus-border-color); /* Cambia el borde a un azul oscuro al hacer focus */
-  background-color: var(--focus-background-color); /* Cambia el fondo a un azul sutil al hacer focus */
+  transition: border-color 0.3s ease;
 }
 
 input:hover {
-  border-color: var(--primary-blue); /* Azul primario para el borde al hacer hover */
-  background-color: var(--hover-blue); /* Fondo azul sutil al hacer hover */
+  background-color: var(--focus-border-color);
+}
+
+input:focus {
+  border-color: var(--focus-border-color);
+  background-color: var(--focus-background-color);
 }
 
 button {
-  padding: 12px;
+  padding: 15px;
   border: none;
   background-color: var(--primary-blue);
-  color: white;
-  font-size: 18px;
+  color: var(--input-border-color);
+  font-size: 20px;
   font-weight: bold;
   cursor: pointer;
-  border-radius: 5px;
+  border-radius: 8px;
   transition: background 0.3s ease;
+  width: 50%;
+  margin: 0 auto;
 }
 
 button:hover {
-  background-color: #002b5e; 
+  background-color: var(--focus-border-color);
+  color: black;
+}
+
+/* Estilos para el enlace de registro */
+.register-link {
+  font-size: 14px;
+  color: var(--input-border-color);
+}
+
+.register-link span {
+  text-decoration: underline;
+  font-weight: bold;
 }

@@ -1,13 +1,20 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import "../pages/login.css";
+import {useNavigate } from "react-router-dom";
 
 const Login = () => {
+  const navigate = useNavigate();
   const [form, setForm] = useState({
     correo: "",
     contraseña: "",
   });
 
   const [mensaje, setMensaje] = useState("");
+  const correoInputRef = useRef(null);
+
+  useEffect(() => {
+    correoInputRef.current?.focus();
+  })
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -42,28 +49,33 @@ const Login = () => {
 
   return (
     <>
-      <div className="login-container">
-        <h2>Iniciar Sesión</h2>
-        {mensaje && <p className="mensaje">{mensaje}</p>}
-        <form onSubmit={handleSubmit} className="login-form">
-          <input
-            type="email"
-            name="correo"
-            placeholder="Correo electrónico"
-            value={form.correo}
-            onChange={handleChange}
-            required
-          />
-          <input
-            type="password"
-            name="contraseña"
-            placeholder="Contraseña"
-            value={form.contraseña}
-            onChange={handleChange}
-            required
-          />
-          <button type="submit">Iniciar Sesión</button>
-        </form>
+      <div className="login-wrapper">
+        <div className="login-container">
+          <h2>INICIA SESIÓN</h2>
+          {mensaje && <p className="mensaje">{mensaje}</p>}
+          <form onSubmit={handleSubmit} className="login-form">
+            <input
+              type="email"
+              name="correo"
+              placeholder="Correo electrónico"
+              value={form.correo}
+              onChange={handleChange}
+              required
+              ref={correoInputRef}
+            />
+            <input
+              type="password"
+              name="contraseña"
+              placeholder="Contraseña"
+              value={form.contraseña}
+              onChange={handleChange}
+              required
+            />
+            <p className="register-link" onClick={() => navigate("/registro")}>
+              ¿No tienes cuenta? <span>Regístrate aquí</span></p>
+            <button type="submit">Iniciar Sesión</button>
+          </form>
+        </div>
       </div>
     </>
   );
