@@ -67,7 +67,8 @@ router.post('/', async (req, res) => {
       }
   
     // Comparar la contraseña ingresada con la almacenada en la base de datos (sin hashear)
-    if (contraseña !== usuario.contraseña) {
+    const contraseñaValida = await bcrypt.compare(contraseña, usuario.contraseña);
+    if (!contraseñaValida) {
       return res.status(400).json({ error: 'Contraseña incorrecta' });
     }
   
