@@ -2,11 +2,11 @@
 
 /* Definir variables globales */
 :root {
-  --primary-blue: #004080;
-  --hover-blue: #c8dfff;
-  --input-border-color: #004080;
-  --focus-border-color: #416693;
-  --focus-background-color: #b5c9e5;
+  --primary-blue: #0a58ca;
+  --hover-blue: #0056b3;
+  --input-border-color: #ffffff;
+  --focus-border-color: #80bdff;
+  --focus-background-color: #e9f3ff;
 }
 
 body {
@@ -14,7 +14,7 @@ body {
   padding: 0;
   font-family: 'Poppins', sans-serif;
   background-color: #f0f4f8;
-  background-image: url('../assets/background-light.png');
+  background-image: url('../assets/background-dark.png');
   background-size: cover;
   background-position: center;
   height: 100vh;
@@ -25,68 +25,67 @@ body {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  height: 94vh;
-  background: rgba(255, 255, 255, 0.6);
-  border-radius: 8px;
-  padding: 20px;
+  height: auto;
+  padding: 20px 40px;
+  border-radius: 16px;
+  background: rgba(0, 0, 0, 0.5);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.8);
+  text-align: center;
+  max-width: 450px;
 }
 
 h2 {
-  color: #000;
-  font-size: 28px;
-  margin-bottom: 20px;
+  font-size: 40px;
+  margin-bottom: 40px;
+  color: white;
 }
 
 .login-form {
   display: flex;
   flex-direction: column;
-  gap: 15px;
-  width: 320px;
-  background: #fff;
-  padding: 25px;
-  border-radius: 8px;
-  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  gap: 20px;
+  width: 100%;
 }
 
 input {
-  padding: 12px;
-  border: 2px solid var(--input-border-color);
-  border-radius: 5px;
-  font-size: 16px;
+  padding: 15px;
+  border: none;
+  border-bottom: 2px solid var(--input-border-color);
+  border-radius: 0;
+  font-size: 18px;
+  background: transparent;
+  color: white;
   outline: none;
-  transition: all 0.3s ease;
-  background-color: white;
+  transition: border-color 0.3s ease;
 }
 
 input:focus {
   border-color: var(--focus-border-color);
-  background-color: var(--focus-background-color);
-}
-
-input:hover {
-  border-color: var(--primary-blue);
-  background-color: var(--hover-blue);
 }
 
 button {
-  padding: 12px;
+  padding: 15px;
   border: none;
   background-color: var(--primary-blue);
   color: white;
-  font-size: 18px;
+  font-size: 20px;
   font-weight: bold;
   cursor: pointer;
-  border-radius: 5px;
+  border-radius: 8px;
   transition: background 0.3s ease;
 }
 
 button:hover {
-  background-color: #002b5e;
+  background-color: var(--hover-blue);
 }
 
-.mensaje {
-  color: red;
+.link {
+  margin-top: 20px;
   font-size: 14px;
-  margin-bottom: 10px;
-  text-align: center;
+}
+
+.link a {
+  color: white;
+  text-decoration: underline;
+  cursor: pointer;
 }
