@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import Header from "../components/Header";
 import "../pages/login.css";
 
 const Login = () => {
@@ -43,7 +42,6 @@ const Login = () => {
 
   return (
     <>
-      <Header />
       <div className="login-container">
         <h2>Iniciar Sesión</h2>
         {mensaje && <p className="mensaje">{mensaje}</p>}

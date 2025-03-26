@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import Header from "../components/Header";
 import "../pages/Registro.css";
 
 const Registro = () => {
@@ -50,7 +49,6 @@ const Registro = () => {
 
   return (
     <>
-      <Header />
       <div className="registro-container">
         <h2>Registro</h2>
         {mensaje && <p className="mensaje">{mensaje}</p>}
