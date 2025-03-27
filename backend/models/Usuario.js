@@ -41,6 +41,7 @@ const usuarioSchema = new mongoose.Schema({
   },
 });
 
+//Password hasheada
 usuarioSchema.pre('save', async function(next) {
   if (this.isModified('contraseña')) {
     const salt = await bcrypt.genSalt(10);
