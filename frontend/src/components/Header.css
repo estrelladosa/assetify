@@ -2,13 +2,13 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 2px 16px; /* Reducimos el padding para un header más bajo */
     background-color: #212121; /* Fondo oscuro */
   }
   
   .header-logo {
     height: 65px; /* Reducir el tamaño del logo */
     margin-right: 15px; /* Reducir margen entre logo y otros elementos */
+    margin-left: 0;
   }
   
   .header-button {
@@ -21,7 +21,7 @@
     transition: background-color 0.3s ease;
     font-size: 18px; /* Fuente más pequeña */
     /* flex: 1; Hacer que los botones ocupen más espacio en el contenedor */
-    width: 150px;
+    /* width: auto; */
   }
   
   .header-button:hover {
@@ -30,7 +30,7 @@
   
   .header-search {
     flex-grow: 1;
-    max-width: 500px; /* Reducir el tamaño máximo del campo de búsqueda */
+    min-width: 500px; /* Reducir el tamaño máximo del campo de búsqueda */
     height: 25px;
     padding: 6px;
     border-radius: 5px;
@@ -54,7 +54,7 @@
     margin: 0 10px; /* Menos separación entre iconos */
     cursor: pointer;
     transition: color 0.3s ease;
-    width: 100px;
+    /* width: 100px; */
   }
   
   .header-icon:hover {
