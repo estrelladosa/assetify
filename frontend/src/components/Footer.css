@@ -1,7 +1,7 @@
 .footer {
     background-color: #18181C; /* Color de fondo */
     color: #FFFFFF; /* Color de texto por defecto */
-    padding: 20px;
+    padding: 5px;
     display: flex;
     flex-direction: column;
     align-items: center;
