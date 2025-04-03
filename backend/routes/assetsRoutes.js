@@ -5,7 +5,7 @@ const Asset = require('../models/Assets');
 // Ruta para obtener todos los assets
 router.get('/', async (req, res) => {
     try {
-        const assets = await Asset.find();  
+        const assets = await Assets.find();  
         res.status(200).json(assets); 
     } catch (error) {
         res.status(500).json({ message: error.message }); 
@@ -16,7 +16,7 @@ router.get('/', async (req, res) => {
 router.get('/:id', async (req, res) => {
     const { id } = req.params;  
     try {
-        const asset = await Asset.findById(id); 
+        const asset = await Assets.findById(id); 
         if (!asset) {
             return res.status(404).json({ message: 'Asset no encontrado' }); 
         }
