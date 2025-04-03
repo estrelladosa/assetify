@@ -1,6 +1,6 @@
 import React from "react";
 import "../components/Header.css";
-import logo from "../assets/logo.png"; // Asegúrate de que la ruta sea correcta
+import logo from "../assets/logo.png";
 import descubrir from "../assets/descubrir.png";
 import lista from "../assets/lista.png";
 import { Navigate, useNavigate } from "react-router-dom";
