@@ -108,37 +108,42 @@ router.post('/', async (req, res) => {
     }
   });
 
+  // Si el asset ya estaba guardado, lo elimina, sino, lo guarda
   router.put('/:userId/guardados/:assetId', async (req, res) => {
-    const { userId, assetId } = req.params; // Obtener el userId y assetId desde los parámetros de la URL
-    console.log(`userId: ${userId}, assetId: ${assetId}`);
+    const { userId, assetId } = req.params;
+  
     try {
-        // Verifica si el usuario existe
-        const usuario = await Usuario.findById(userId);
-
-        if (!usuario) {
-            return res.status(404).json({ message: 'Usuario no encontrado' });
-        }
-
-        // Verifica si el asset existe
-        const asset = await Asset.findById(assetId);
-        if (!asset) {
-            return res.status(404).json({ message: 'Asset no encontrado' });
-        }
-
-        
-        // Usamos $addToSet para evitar duplicados en el array 'guardados'
-        const updatedUser = await Usuario.findByIdAndUpdate(
-            userId,
-            { $addToSet: { guardados: assetId } }, // Añadir el asset al array 'guardados'
-            { new: true } // Esto devolverá el documento actualizado
+      const usuario = await Usuario.findById(userId);
+      if (!usuario) return res.status(404).json({ message: 'Usuario no encontrado' });
+  
+      const asset = await Asset.findById(assetId);
+      if (!asset) return res.status(404).json({ message: 'Asset no encontrado' });
+  
+      const yaGuardado = usuario.guardados.includes(assetId);
+      let updatedUser;
+  
+      if (yaGuardado) {
+        // Si ya está guardado, lo quitamos
+        updatedUser = await Usuario.findByIdAndUpdate(
+          userId,
+          { $pull: { guardados: assetId } },
+          { new: true }
         );
-
-        // Responder con el usuario actualizado
-        res.status(200).json(updatedUser);
+      } else {
+        // Si no está, lo añadimos
+        updatedUser = await Usuario.findByIdAndUpdate(
+          userId,
+          { $addToSet: { guardados: assetId } },
+          { new: true }
+        );
+      }
+  
+      res.status(200).json(updatedUser);
     } catch (error) {
-        res.status(500).json({ message: error.message });
+      res.status(500).json({ message: error.message });
     }
   });
+  
 
 
 module.exports = router;

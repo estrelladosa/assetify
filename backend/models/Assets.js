@@ -22,12 +22,14 @@ const assetSchema = new mongoose.Schema({
   formato: {
     type: String,
   },
-  etiquetas: {
-    type: [String],
-  },
-  categorias: {
-    type: [String],
-  },
+  etiquetas: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Etiqueta'
+  }],
+  categorias: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Categoria'
+  }],  
   likes: {
     type: [mongoose.Schema.Types.ObjectId],
     ref: 'Usuario',
