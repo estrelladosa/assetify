@@ -108,7 +108,7 @@ router.post('/', async (req, res) => {
     }
   });
 
-  // Si el asset ya estaba guardado, lo elimina, sino, lo guarda
+  // Si el asset ya estaba guardado en la lista del usuario, lo elimina, sino, lo guarda
   router.put('/:userId/guardados/:assetId', async (req, res) => {
     const { userId, assetId } = req.params;
   
