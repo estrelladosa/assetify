@@ -1,0 +1,92 @@
+.home {
+    padding: 20px;
+  }
+  
+  /* ✅ Caja decorativa para "Destacados del Día" con gradiente en movimiento */
+  @keyframes gradientAnimation {
+    0% {
+      background: radial-gradient(circle, #007bff, #7a52ff);
+    }
+    50% {
+      background: radial-gradient(circle, #0056b3, #8a5eff);
+    }
+    100% {
+      background: radial-gradient(circle, #007bff, #7a52ff);
+    }
+  }
+  
+  .destacados-box {
+    border-radius: 10px;
+    padding: 15px;
+    animation: gradientAnimation 5s infinite alternate;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  }
+  
+  /* ✅ Configuración de los contenedores de assets */
+  .destacados, .recientes, .tendencias {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    padding-bottom: 10px;
+  }
+  
+  /* ✅ Se asegura que SOLO 4 assets entren por fila */
+  .recientes > *:nth-child(4n+1),
+  .tendencias > *:nth-child(4n+1) {
+    clear: both;
+  }
+  
+  /* ✅ Escalado de las tarjetas en "Recientes" y "Tendencias" */
+  .recientes .asset-card,
+  .tendencias .asset-card {
+    transform: scale(0.85); /* Reduce el tamaño de las tarjetas */
+    transition: transform 0.2s ease-in-out;
+  }
+  
+  .recientes .asset-card:hover,
+  .tendencias .asset-card:hover {
+    transform: scale(0.9); /* Efecto de hover para dar realce */
+  }
+  
+  /* ✅ Alineación de botones */
+  .botones {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    margin-top: 5px;
+  }
+  
+  /* ✅ Botón de "Mostrar más" y "Mostrar menos" */
+  .mostrar-mas, .mostrar-menos {
+    font-size: 14px;
+    cursor: pointer;
+    text-decoration: underline;
+  }
+  
+  /* ✅ Color blanco para "Mostrar menos" */
+  .mostrar-menos {
+    color: white;
+  }
+  
+  .mostrar-mas {
+    color: #007bff;
+  }
+  
+  .mostrar-menos:hover {
+    color: #d6d6d6;
+  }
+  
+  .mostrar-mas:hover {
+    color: #0056b3;
+  }
+  
+  /* ✅ Mover "Mostrar menos" a la izquierda */
+  .botones p {
+    order: -1;
+  }
+  
+  /* ✅ Tamaño de los títulos */
+  h2 {
+    font-size: 44px;
+  }
+  
