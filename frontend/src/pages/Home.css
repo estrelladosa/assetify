@@ -3,22 +3,20 @@
   }
   
   /* ✅ Caja decorativa para "Destacados del Día" con gradiente en movimiento */
-  @keyframes gradientAnimation {
-    0% {
-      background: radial-gradient(circle, #007bff, #7a52ff);
-    }
-    50% {
-      background: radial-gradient(circle, #0056b3, #8a5eff);
-    }
-    100% {
-      background: radial-gradient(circle, #007bff, #7a52ff);
-    }
+  @keyframes linearGradientMove {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
   }
-  
+
   .destacados-box {
     border-radius: 10px;
     padding: 15px;
-    animation: gradientAnimation 5s infinite alternate;
+
+    background: linear-gradient(270deg, #2a80dc, #5927ff, #50a5ff);
+    background-size: 600% 600%;
+    animation: linearGradientMove 6s ease infinite;
+
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   }
   

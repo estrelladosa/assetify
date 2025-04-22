@@ -55,6 +55,14 @@ footer {
   background-color: #18181C;
 }
 
+body {
+  background-image: url('assets/background-dark.png');
+  background-attachment: fixed;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
 .main-content {
   flex: 1; 
   padding: 80px 10px 60px; 
