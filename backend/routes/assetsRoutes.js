@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const Asset = require('../models/Assets'); 
+const Assets = require('../models/Assets'); 
 const Etiqueta = require('../models/Etiqueta');
 const Categoria = require('../models/Categoria');
 
@@ -12,6 +12,29 @@ router.get('/', async (req, res) => {
     } catch (error) {
         res.status(500).json({ message: error.message }); 
     }
+});
+
+router.get('/search', async (req, res) => {
+  const {nombre} = req.query;
+  try {
+      console.log("Término de búsqueda:", nombre);
+      
+      // Validar que el término no esté vacío
+      if (!nombre || nombre.trim() === '') {
+          return res.status(400).json({ message: "El término de búsqueda no puede estar vacío" });
+      }
+      
+      // Escapar caracteres especiales de regex si es necesario
+      const terminoBusqueda = nombre.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+      
+      const assets = await Assets.find({ nombre: { $regex: terminoBusqueda, $options: 'i' } });
+      console.log("Resultados encontrados:", assets.length);
+      
+      res.status(200).json(assets); 
+  } catch (error) {
+      console.error("Error en búsqueda:", error);
+      res.status(500).json({ message: error.message });
+  }
 });
 
 // Ruta para obtener un asset por id
@@ -33,7 +56,7 @@ router.get('/:assetId/tags', async (req, res) => {
     const { assetId } = req.params;
   
     try {
-      const asset = await Asset.findById(assetId).populate('etiquetas');
+      const asset = await Assets.findById(assetId).populate('etiquetas');
   
       if (!asset) {
         return res.status(404).json({ message: 'Asset no encontrado' });
@@ -51,7 +74,7 @@ router.get('/:assetId/categorias', async (req, res) => {
     const { assetId } = req.params;
   
     try {
-      const asset = await Asset.findById(assetId).populate('categorias');
+      const asset = await Assets.findById(assetId).populate('categorias');
   
       if (!asset) {
         return res.status(404).json({ message: 'Asset no encontrado' });
@@ -73,7 +96,7 @@ router.get('/usuario/:userId', async (req, res) => {
   
     try {
       // Buscar assets por el ObjectId del usuario
-      const assets = await Asset.find({ usuario: userId });
+      const assets = await Assets.find({ usuario: userId });
   
       if (assets.length === 0) {
         return res.status(404).json({ message: 'No se encontraron assets para este usuario' });
@@ -87,6 +110,16 @@ router.get('/usuario/:userId', async (req, res) => {
       });
     }
   });
-  
-  
+
+
+// Ruta para obtener todos los assets
+router.get('/', async (req, res) => {
+  try {
+    const assets = await Assets.find().populate('usuario', 'nombre');
+    res.status(200).json(assets);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
 module.exports = router;
