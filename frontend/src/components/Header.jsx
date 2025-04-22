@@ -37,7 +37,7 @@ const Header = () => {
       <button className="header-icon">
         <img src={descubrir} alt="descubrir" style={{ width: "20px", height: "20px" }} />
       </button>
-      <button className="header-icon">
+      <button className="header-icon" onClick={() => navigate("/config")}>
         <img src={lista} alt="lista" style={{ width: "20px", height: "20px" }} />
       </button>
       <button className="header-button" onClick={() => navigate("/login")}>
