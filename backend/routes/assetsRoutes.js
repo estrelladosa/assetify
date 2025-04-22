@@ -3,6 +3,7 @@ const router = express.Router();
 const Assets = require('../models/Assets'); 
 const Etiqueta = require('../models/Etiqueta');
 const Categoria = require('../models/Categoria');
+const Comentario = require('../models/Comentario');
 
 // Ruta para obtener todos los assets
 router.get('/', async (req, res) => {
@@ -117,6 +118,77 @@ router.get('/', async (req, res) => {
   try {
     const assets = await Assets.find().populate('usuario', 'nombre');
     res.status(200).json(assets);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
+// subir un asset 
+router.post('/', async (req, res) => {
+  try {
+    const {
+      nombre,
+      descripcion,
+      usuario,
+      imagenes,
+      archivos,
+      formato,
+      etiquetas,
+      categorias
+    } = req.body;
+
+    const nuevoAsset = new Assets({
+      nombre,
+      descripcion,
+      usuario,
+      imagenes,
+      archivos,
+      formato,
+      etiquetas,
+      categorias,
+      likes: [],
+      fecha: new Date(),
+      descargas: 0
+    });
+
+    const assetGuardado = await nuevoAsset.save();
+    res.status(201).json(assetGuardado);
+
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
+// Eliminar un asset por su ID, si pertenece al usuario (No lo he probado
+// porque se necesita un middleware para comrpobar que realmente es del usuario)
+router.delete('/:id', async (req, res) => {
+  try {
+    const asset = await Assets.findById(req.params.id);
+
+    if (!asset) {
+      return res.status(404).json({ message: 'Asset no encontrado' });
+    }
+
+    // Asegurarse de que el asset pertenece al usuario autenticado
+    if (asset.usuario.toString() !== req.usuario.id) {
+      return res.status(403).json({ message: 'No tienes permiso para eliminar este asset' });
+    }
+
+    await Asset.findByIdAndDelete(req.params.id);
+
+    res.status(200).json({ message: 'Asset eliminado correctamente' });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
+// Obtener comentarios de un asset por su ID 
+router.get('/comentarios/:assetId', async (req, res) => {
+  try {
+    const comentarios = await Comentario.find({ asset: req.params.assetId })
+      .populate('usuario', 'nombre_usuario'); // Opcional: para traer el nombre del usuario que comentó
+
+    res.status(200).json(comentarios);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
