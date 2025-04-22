@@ -1,6 +1,8 @@
 const express = require('express');
 const Usuario = require('../models/Usuario');
+const Asset = require('../models/Assets');
 const jwt = require('jsonwebtoken');
+const mongoose = require('mongoose'); 
 const bcrypt = require('bcrypt');
 
 const router = express.Router();
@@ -85,5 +87,63 @@ router.post('/', async (req, res) => {
       res.status(500).json({ error: 'Error del servidor' });
     }
   });
+
+  // Ruta para obtener los assets guardados por un usuario
+  router.get('/:userId/guardados', async (req, res) => {
+    const { userId } = req.params; // Obtiene el ID del usuario desde los parámetros de la ruta
+
+    try {
+        // Buscar al usuario en la base de datos usando el userId
+        const usuario = await Usuario.findById(userId).populate('guardados'); 
+
+        if (!usuario) {
+            return res.status(404).json({ message: 'Usuario no encontrado' }); // Si no se encuentra el usuario, devolver 404
+        }
+
+        // Los assets guardados están en el array `guardados` del usuario
+        // Si guardados contiene IDs de assets, `populate` los convierte en documentos completos
+        res.status(200).json(usuario.guardados); // Devuelve los assets guardados en formato JSON
+    } catch (error) {
+        res.status(500).json({ message: error.message }); // En caso de error en la consulta
+    }
+  });
+
+  // Si el asset ya estaba guardado en la lista del usuario, lo elimina, sino, lo guarda
+  router.put('/:userId/guardados/:assetId', async (req, res) => {
+    const { userId, assetId } = req.params;
+  
+    try {
+      const usuario = await Usuario.findById(userId);
+      if (!usuario) return res.status(404).json({ message: 'Usuario no encontrado' });
+  
+      const asset = await Asset.findById(assetId);
+      if (!asset) return res.status(404).json({ message: 'Asset no encontrado' });
+  
+      const yaGuardado = usuario.guardados.includes(assetId);
+      let updatedUser;
+  
+      if (yaGuardado) {
+        // Si ya está guardado, lo quitamos
+        updatedUser = await Usuario.findByIdAndUpdate(
+          userId,
+          { $pull: { guardados: assetId } },
+          { new: true }
+        );
+      } else {
+        // Si no está, lo añadimos
+        updatedUser = await Usuario.findByIdAndUpdate(
+          userId,
+          { $addToSet: { guardados: assetId } },
+          { new: true }
+        );
+      }
+  
+      res.status(200).json(updatedUser);
+    } catch (error) {
+      res.status(500).json({ message: error.message });
+    }
+  });
+  
+
 
 module.exports = router;
