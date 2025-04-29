@@ -143,7 +143,75 @@ router.post('/', async (req, res) => {
       res.status(500).json({ message: error.message });
     }
   });
+  //actualizar lista de seguidos de un usuario
+  router.put('/:userId/seguidos/:seguidoId', async (req, res) => {
+    const { userId, seguidoId } = req.params;
   
+    try {
+      const usuario = await Usuario.findById(userId);
+      if (!usuario) return res.status(404).json({ message: 'Usuario no encontrado' });
+  
+      const seguidoExiste = await Usuario.findById(seguidoId);
+      if (!seguidoExiste) return res.status(404).json({ message: 'Usuario a seguir no encontrado' });
+  
+      const yaSigue = usuario.seguidos.includes(seguidoId);
+      let usuarioActualizado;
+  
+      if (yaSigue) {
+        usuarioActualizado = await Usuario.findByIdAndUpdate(
+          userId,
+          { $pull: { seguidos: seguidoId } },
+          { new: true }
+        );
+      } else {
+        usuarioActualizado = await Usuario.findByIdAndUpdate(
+          userId,
+          { $addToSet: { seguidos: seguidoId } },
+          { new: true }
+        );
+      }
+  
+      res.status(200).json(usuarioActualizado);
+    } catch (error) {
+      res.status(500).json({ message: error.message });
+    }
+  });
+  
+  // Actualizar lista de seguidores de un usuario
+router.put('/:userId/seguidores/:seguidorId', async (req, res) => {
+  const { userId, seguidorId } = req.params;
+
+  try {
+    const usuario = await Usuario.findById(userId);
+    if (!usuario) return res.status(404).json({ message: 'Usuario no encontrado' });
+
+    const seguidorExiste = await Usuario.findById(seguidorId);
+    if (!seguidorExiste) return res.status(404).json({ message: 'Usuario seguidor no encontrado' });
+
+    const yaEsSeguidor = usuario.seguidores.includes(seguidorId);
+    let usuarioActualizado;
+
+    if (yaEsSeguidor) {
+      // Si ya es seguidor, lo quitamos
+      usuarioActualizado = await Usuario.findByIdAndUpdate(
+        userId,
+        { $pull: { seguidores: seguidorId } },
+        { new: true }
+      );
+    } else {
+      // Si no es seguidor, lo añadimos
+      usuarioActualizado = await Usuario.findByIdAndUpdate(
+        userId,
+        { $addToSet: { seguidores: seguidorId } },
+        { new: true }
+      );
+    }
+
+    res.status(200).json(usuarioActualizado);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
 
 
 module.exports = router;

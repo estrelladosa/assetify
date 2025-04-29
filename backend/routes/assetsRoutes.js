@@ -4,6 +4,8 @@ const Assets = require('../models/Assets');
 const Etiqueta = require('../models/Etiqueta');
 const Categoria = require('../models/Categoria');
 const Comentario = require('../models/Comentario');
+const Usuario = require('../models/Usuario');
+
 
 // Ruta para obtener todos los assets
 router.get('/', async (req, res) => {
@@ -193,5 +195,56 @@ router.get('/comentarios/:assetId', async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 });
+// publicar un comentario
+router.post('/comentarios', async (req, res) => {
+  try {
+    const { usuario, asset, comentario } = req.body;
+
+    const nuevoComentario = new Comentario({
+      usuario,
+      asset,
+      comentario
+    });
+
+    const comentarioGuardado = await nuevoComentario.save();
+    res.status(201).json(comentarioGuardado);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+// actualizar lista de likes de un asset
+router.put('/:assetId/likes/:userId', async (req, res) => {
+  const { assetId, userId } = req.params;
+
+  try {
+    const asset = await Assets.findById(assetId);
+    if (!asset) return res.status(404).json({ message: 'Asset no encontrado' });
+
+    const usuarioExiste = await Usuario.findById(userId);
+    if (!usuarioExiste) return res.status(404).json({ message: 'Usuario no encontrado' });
+
+    const yaDioLike = asset.likes.includes(userId);
+    let assetActualizado;
+
+    if (yaDioLike) {
+      assetActualizado = await Assets.findByIdAndUpdate(
+        assetId,
+        { $pull: { likes: userId } },
+        { new: true }
+      );
+    } else {
+      assetActualizado = await Assets.findByIdAndUpdate(
+        assetId,
+        { $addToSet: { likes: userId } },
+        { new: true }
+      );
+    }
+
+    res.status(200).json(assetActualizado);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
 
 module.exports = router;

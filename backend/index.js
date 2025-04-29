@@ -4,6 +4,7 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 const usuarioRoutes = require('./routes/usuarioRoutes'); // Importar las rutas
 const assetsRoutes = require('./routes/assetsRoutes');
+const catEtiRoutes = require('./routes/catEtiRoutes');
 
 const app = express();
 app.use(express.json());
@@ -20,6 +21,10 @@ app.use('/api/usuarios', usuarioRoutes);
 
 // Rutas de los assets
 app.use('/api/assets', assetsRoutes);
+
+
+app.use('/api', catEtiRoutes);
+
 
 // Ruta raíz
 app.get("/", (req, res) => {
