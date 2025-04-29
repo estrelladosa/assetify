@@ -4,6 +4,7 @@ import Login from "../pages/Login";
 import Home from "../pages/Home"; // Importamos la página de inicio
 import Search from "../pages/Search"; // Importamos la página de búsqueda
 import Config from "../pages/Config";
+import Publicar from "../pages/Publicar";
 
 
 const AppRoutes = () => {
@@ -14,6 +15,7 @@ const AppRoutes = () => {
       <Route path="/login" element={<Login />} />
       <Route path="/buscar" element={<Search />} />
       <Route path="/config" element={<Config />} />
+      <Route path="/publicar" element={<Publicar />} />
     </Routes>
   );
 };

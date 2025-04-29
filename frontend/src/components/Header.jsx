@@ -25,7 +25,9 @@ const Header = () => {
         style={{ cursor: "pointer" }}
       />
       <button className="header-button">Descubrir</button>
-      <button className="header-button">Publicar</button>
+      <button className="header-button" onClick={() => navigate("/publicar")}>
+        Publicar
+      </button>
       <input
         type="text"
         placeholder="Buscar..."
