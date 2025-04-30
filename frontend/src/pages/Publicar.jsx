@@ -1,7 +1,11 @@
 import React, { useState, useEffect } from "react";
+import subirArchivoIcon from "../assets/subirarchivo.png";
+import subirImagenIcon from "../assets/subirimagen.png";
+import { useNavigate } from "react-router-dom";
 import "./Publicar.css";
 
 const Publicar = () => {
+  const navigate = useNavigate();
   const [archivos, setArchivos] = useState([]);
   const [imagenes, setImagenes] = useState([]);
   const [etiquetas, setEtiquetas] = useState([]);
@@ -55,11 +59,40 @@ const Publicar = () => {
     setImagenes(imagenes.filter((_, i) => i !== index));
   };
 
-  const handleAgregarEtiqueta = () => {
-    if (nuevaEtiqueta.trim() && !etiquetas.includes(nuevaEtiqueta)) {
-      setEtiquetas([...etiquetas, nuevaEtiqueta]);
-      setNuevaEtiqueta("");
+  const handleAgregarEtiqueta = async () => {
+    if (!nuevaEtiqueta.trim()) return;
+
+    const etiquetaExistente = etiquetasDisponibles.find(
+      (etiqueta) => etiqueta.nombre.toLowerCase() === nuevaEtiqueta.toLowerCase()
+    );
+
+    if (etiquetaExistente) {
+      if (!etiquetas.some((etiqueta) => etiqueta._id === etiquetaExistente._id)) {
+        setEtiquetas([...etiquetas, etiquetaExistente]);
+      }
+    } else {
+      const nuevaEtiquetaObj = { nombre: nuevaEtiqueta };
+
+      try {
+        const response = await fetch("http://localhost:4000/api/etiquetas", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(nuevaEtiquetaObj),
+        });
+
+        const data = await response.json();
+        if (response.ok) {
+          setEtiquetas([...etiquetas, data]);
+          setEtiquetasDisponibles([...etiquetasDisponibles, data]);
+        } else {
+          console.error("Error al agregar etiqueta:", data.message);
+        }
+      } catch (error) {
+        console.error("Error al conectar con el servidor:", error);
+      }
     }
+
+    setNuevaEtiqueta("");
   };
 
   const handleEliminarEtiqueta = (index) => {
@@ -87,18 +120,18 @@ const Publicar = () => {
     }
 
     try {
-      const usuarioId = "67dd5dbc5b23483b4fcb67ad"; // Reemplaza con el ID del usuario logueado
+      const usuarioId = "680f55d62a63adb9232b058c";
       const fechaActual = new Date().toISOString();
 
       const formData = {
         nombre: form.nombre,
         descripcion: form.descripcion,
         usuario: usuarioId,
-        imagenes: imagenes.map((imagen) => imagen.name), // Solo los nombres de las imágenes
-        archivos: archivos.map((archivo) => archivo.name), // Solo los nombres de los archivos
+        imagenes: imagenes.map((imagen) => imagen.name),
+        archivos: archivos.map((archivo) => archivo.name),
         formato: form.formato,
-        etiquetas, // Array de ObjectId
-        categorias: categoriasSeleccionadas, // Array de ObjectId
+        etiquetas: etiquetas.map((etiqueta) => etiqueta._id),
+        categorias: categoriasSeleccionadas,
         likes: [],
         fecha: fechaActual,
         descargas: 0,
@@ -127,14 +160,20 @@ const Publicar = () => {
     }
   };
 
+  const handleCancelar = () => {
+    if (window.confirm("¿Estás seguro de que deseas cancelar?")) {
+      navigate("/");
+    }
+  };
+
   return (
     <div className="publicar-container">
       {mensaje && <p className="mensaje">{mensaje}</p>}
       <form onSubmit={handleSubmit} className="publicar-columnas">
-        {/* Primera columna */}
-        <div className="publicar-columna">
-          <h3>Información del Asset</h3>
+        <div>
+          <h3>Nombre</h3>
           <input
+            id="nombre"
             type="text"
             name="nombre"
             placeholder="Nombre"
@@ -142,21 +181,20 @@ const Publicar = () => {
             onChange={handleChange}
             required
           />
+          <h3>Descripción</h3>
           <textarea
+            id="descripcion"
             name="descripcion"
             placeholder="Descripción"
             value={form.descripcion}
             onChange={handleChange}
             required
           ></textarea>
-          <input
-            type="text"
-            name="formato"
-            placeholder="Formato (ej. SVG)"
-            value={form.formato}
-            onChange={handleChange}
-          />
-          <input type="file" multiple onChange={handleArchivoSubido} />
+          <h3>Sube los archivos aquí</h3>
+          <label className="upload-button">
+            <img src={subirArchivoIcon} alt="Subir archivo" />
+            <input type="file" multiple onChange={handleArchivoSubido} />
+          </label>
           <ul>
             {archivos.map((archivo, index) => (
               <li key={index}>
@@ -169,35 +207,40 @@ const Publicar = () => {
           </ul>
         </div>
 
-        {/* Segunda columna */}
-        <div className="publicar-columna">
-          <h3>Etiquetas e Imágenes</h3>
-          <select
-            onChange={(e) => {
-              const etiquetaId = e.target.value;
-              if (!etiquetas.includes(etiquetaId)) {
-                setEtiquetas([...etiquetas, etiquetaId]);
-              }
-            }}
-          >
-            <option value="">Seleccionar etiqueta</option>
-            {etiquetasDisponibles.map((etiqueta) => (
-              <option key={etiqueta._id} value={etiqueta._id}>
-                {etiqueta.nombre}
-              </option>
-            ))}
-          </select>
-          <ul>
-            {etiquetas.map((etiqueta, index) => (
-              <li key={index}>
-                {etiqueta}{" "}
-                <button type="button" onClick={() => handleEliminarEtiqueta(index)}>
-                  Eliminar
-                </button>
-              </li>
-            ))}
-          </ul>
-          <input type="file" multiple onChange={handleImagenSubida} />
+        <div>
+          <h3>Elige tus tags</h3>
+          <div className="translucent-background">
+            <input
+              list="etiquetas-disponibles"
+              type="text"
+              placeholder="Añadir nueva etiqueta"
+              value={nuevaEtiqueta}
+              onChange={(e) => setNuevaEtiqueta(e.target.value)}
+            />
+            <datalist id="etiquetas-disponibles">
+              {etiquetasDisponibles.map((etiqueta) => (
+                <option key={etiqueta._id} value={etiqueta.nombre} />
+              ))}
+            </datalist>
+            <button type="button" onClick={handleAgregarEtiqueta}>
+              Añadir
+            </button>
+            <ul>
+              {etiquetas.map((etiqueta, index) => (
+                <li key={index}>
+                  {etiqueta.nombre}{" "}
+                  <button type="button" onClick={() => handleEliminarEtiqueta(index)}>
+                    Eliminar
+                  </button>
+                </li>
+              ))}
+            </ul>
+          </div>
+          <h3>Subir fotos de vista previa</h3>
+          <label className="upload-button">
+            <img src={subirImagenIcon} alt="Subir imagen" />
+            <input type="file" multiple onChange={handleImagenSubida} />
+          </label>
           <ul>
             {imagenes.map((imagen, index) => (
               <li key={index}>
@@ -210,27 +253,28 @@ const Publicar = () => {
           </ul>
         </div>
 
-        {/* Tercera columna */}
-        <div className="publicar-columna">
-          <h3>Categorías</h3>
-          <ul>
-            {categoriasDisponibles.map((categoria) => (
-              <li key={categoria._id}>
-                <label>
-                  <input
-                    type="checkbox"
-                    name="categoria"
-                    value={categoria._id}
-                    checked={categoriasSeleccionadas.includes(categoria._id)}
-                    onChange={() => handleCategoriaSeleccionada(categoria._id)}
-                  />
-                  {categoria.nombre}
-                </label>
-              </li>
-            ))}
-          </ul>
+        <div>
+          <h3>Selecciona categoría</h3>
+          <div className="translucent-background">
+            <ul>
+              {categoriasDisponibles.map((categoria) => (
+                <li key={categoria._id}>
+                  <label>
+                    <input
+                      type="checkbox"
+                      name="categoria"
+                      value={categoria._id}
+                      checked={categoriasSeleccionadas.includes(categoria._id)}
+                      onChange={() => handleCategoriaSeleccionada(categoria._id)}
+                    />
+                    {categoria.nombre}
+                  </label>
+                </li>
+              ))}
+            </ul>
+          </div>
           <div className="botones">
-            <button type="button" onClick={() => alert("Operación cancelada")}>
+            <button type="reset" onClick={handleCancelar}>
               Cancelar
             </button>
             <button type="submit">Publicar</button>
