@@ -12,30 +12,32 @@
   margin: 20px;
 }
   
-  .asset-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
-  }
+.asset-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+}
   
-  .asset-card-image {
-    width: 100%;
-    height: 70%;
-    object-fit: cover;
-  }
+.asset-card-image {
+  width: 100%;
+  height: 70%;
+  object-fit: cover;
+}
   
-  .asset-card-content {
-    padding: 10px;
-    text-align: left;
-  }
+.asset-card-content {
+  padding: 10px;
+  text-align: left;
+}
   
-  .asset-card-title {
-    font-size: 25px;
-    color: #ffffff;
-    margin: 5px 0;
-  }
+.asset-card-title {
+  /* Usar variables CSS en lugar de tamaños fijos */
+  font-size: var(--font-size-xl);
+  color: #ffffff;
+  margin: 5px 0;
+}
   
-  .asset-card-author {
-    font-size: 18px;
-    color: #e0e0e0;
-    margin: 0;
-  }
+.asset-card-author {
+  /* Usar variables CSS en lugar de tamaños fijos */
+  font-size: var(--font-size-base);
+  color: #e0e0e0;
+  margin: 0;
+}

@@ -1,63 +1,68 @@
+:root {
+  --header-footer-bg: #212121;
+  --header-footer-text: #ffffff;
+  --header-footer-hover: #5d5d5d;
+}
+
 .header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    background-color: #212121; /* Fondo oscuro */
-  }
-  
-  .header-logo {
-    height: 65px; /* Reducir el tamaño del logo */
-    margin-right: 15px; /* Reducir margen entre logo y otros elementos */
-    margin-left: 0;
-  }
-  
-  .header-button {
-    background-color: #212121; /* Gris muy oscuro, casi negro */
-    color: white;
-    border: none;
-    padding: 12px 20px; /* Reducir padding para hacer botones más pequeños */
-    margin: 0 10px; /* Menos margen entre botones */
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-    font-size: 18px; /* Fuente más pequeña */
-    /* flex: 1; Hacer que los botones ocupen más espacio en el contenedor */
-    /* width: auto; */
-  }
-  
-  .header-button:hover {
-    background-color: #5d5d5d; /* Gris más claro al hacer hover */
-  }
-  
-  .header-search {
-    flex-grow: 1;
-    min-width: 500px; /* Reducir el tamaño máximo del campo de búsqueda */
-    height: 25px;
-    padding: 6px;
-    border-radius: 5px;
-    border: 1px solid #444;
-    margin: 0 12px; /* Reducir margen entre la búsqueda y los botones */
-    font-size: 14px; /* Fuente más pequeña */
-    transition: border-color 0.3s ease, background-color 0.3s ease; /* Transición suave */
-  }
-  
-  .header-search:hover {
-    border-color: #1800b7; /* Borde azul sutil al hacer hover */
-    background-color: #b5b5b5; /* Fondo azul claro al hacer hover */
-  }
-  
-  
-  .header-icon {
-    background: none;
-    border: none;
-    font-size: 25px; /* Un tamaño de icono más pequeño */
-    color: white;
-    margin: 0 10px; /* Menos separación entre iconos */
-    cursor: pointer;
-    transition: color 0.3s ease;
-    /* width: 100px; */
-  }
-  
-  .header-icon:hover {
-    color: #5d5d5d;
-  }
-  
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: var(--header-footer-bg);
+  color: var(--header-footer-text);
+}
+
+.header-logo {
+  height: 65px;
+  margin-right: 15px;
+  margin-left: 0;
+}
+
+.header-button {
+  background-color: var(--header-footer-bg);
+  color: var(--header-footer-text);
+  border: none;
+  padding: 12px 20px;
+  margin: 0 10px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  /* Cambiar tamaño fijo por variable CSS */
+  font-size: var(--font-size-base);
+}
+
+.header-button:hover {
+  background-color: var(--header-footer-hover);
+}
+
+.header-search {
+  flex-grow: 1;
+  min-width: 500px;
+  height: 25px;
+  padding: 6px;
+  border-radius: 5px;
+  border: 1px solid #444;
+  margin: 0 12px;
+  /* Cambiar tamaño fijo por variable CSS */
+  font-size: var(--font-size-sm);
+  transition: border-color 0.3s ease, background-color 0.3s ease;
+}
+
+.header-search:hover {
+  border-color: #1800b7;
+  background-color: #b5b5b5;
+}
+
+.header-icon {
+  background: none;
+  border: none;
+  /* Cambiar tamaño fijo por variable CSS */
+  font-size: var(--font-size-xl);
+  color: var(--header-footer-text);
+  margin: 0 10px;
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+.header-icon:hover {
+  color: var(--header-footer-hover);
+}

@@ -1,76 +1,115 @@
+:root {
+  --header-footer-bg: #212121;
+  --header-footer-text: #ffffff;
+  --header-footer-hover: #5d5d5d;
+  --header-footer-text-rgb: 255, 255, 255; /* Variable añadida para la transparencia */
+}
+
 .footer {
-    background-color: #18181C; /* Color de fondo */
-    color: #FFFFFF; /* Color de texto por defecto */
-    padding: 5px;
-    display: flex;
+  background-color: var(--header-footer-bg);
+  color: var(--header-footer-text);
+  padding: 5px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  /* Eliminada altura fija para permitir que se expanda con el contenido */
+  width: 100%;
+  /* Asegurando que el footer tenga al menos un alto mínimo pero pueda crecer */
+  min-height: 400px;
+  /* Asegura que el footer no tenga una altura máxima y pueda crecer según sea necesario */
+  height: auto;
+  /* Añade un padding adicional en la parte inferior para evitar que el contenido quede pegado al borde */
+  padding-bottom: 30px;
+}
+
+.footer-title {
+  text-align: left;
+  font-size: var(--font-size-4xl);
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  max-width: 1200px;
+  color: var(--header-footer-text);
+}
+
+.footer-logo {
+  width: 50px;
+  height: auto;
+  margin-right: 10px;
+  cursor: pointer;
+}
+
+.footer-columns {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  max-width: 1200px;
+  /* Asegura que los elementos hijo no desborden el contenedor */
+  flex-wrap: wrap;
+}
+
+.footer-column {
+  flex: 1;
+  margin: 0 10px;
+  /* Asegura un margen inferior adecuado para evitar desbordamiento en tamaños de fuente grandes */
+  margin-bottom: 20px;
+  /* Establecer un ancho mínimo para evitar que las columnas se estrechen demasiado */
+  min-width: 150px;
+}
+
+.footer-column h3 {
+  color: var(--header-footer-text);
+  margin-bottom: 10px;
+  font-size: var(--font-size-lg);
+}
+
+.footer-column ul {
+  list-style: none;
+  padding: 0;
+  /* Asegurar que las listas tengan margen inferior suficiente */
+  margin-bottom: 15px;
+}
+
+.footer-column ul li {
+  margin-bottom: 8px;
+  /* Asegurar que los elementos de lista tengan suficiente espacio para tamaños de fuente grandes */
+  line-height: 1.5;
+}
+
+.footer-column ul li a {
+  color: rgba(var(--header-footer-text-rgb), 0.7); /* Uso correcto de la variable RGB */
+  text-decoration: none;
+  font-size: var(--font-size-sm);
+}
+
+.footer-column ul li a:hover {
+  color: var(--header-footer-text);
+  text-decoration: underline;
+}
+
+/* Mejora de responsividad para adaptarse a diferentes tamaños de fuente */
+@media (max-width: 768px) {
+  .footer-columns {
     flex-direction: column;
     align-items: center;
   }
-  
-  .footer-title {
-    text-align: left;
-    font-size: 40px;
-    margin-bottom: 20px;
-    display: flex;
-    align-items: center;
-    width: 100%;
-    max-width: 1200px;
-  }
-  
-  .footer-logo {
-    width: 50px;
-    height: auto;
-    margin-right: 10px;
-    cursor: pointer;
-  }
-  
-  .footer-columns {
-    display: flex;
-    justify-content: space-between;
-    width: 100%;
-    max-width: 1200px;
-  }
-  
+
   .footer-column {
-    flex: 1;
-    margin: 0 10px;
+    margin-bottom: 20px;
+    text-align: center;
+    width: 100%; /* Ocupar todo el ancho disponible en móviles */
   }
-  
-  .footer-column h3 {
-    color: #FFFFFF; 
-    margin-bottom: 10px;
-    font-size: 18px;
-  }
-  
-  .footer-column ul {
-    list-style: none;
-    padding: 0;
-  }
-  
-  .footer-column ul li {
-    margin-bottom: 8px;
-  }
-  
-  .footer-column ul li a {
-    color: #B0B0B0;
-    text-decoration: none;
-    font-size: 14px;
-  }
-  
-  .footer-column ul li a:hover {
-    color: #FFFFFF; 
-    text-decoration: underline;
-  }
-  
-  /* Responsividad */
-  @media (max-width: 768px) {
-    .footer-columns {
-      flex-direction: column;
-      align-items: center;
-    }
-  
-    .footer-column {
-      margin-bottom: 20px;
-      text-align: center;
-    }
-  }
+}
+
+/* Estilos adicionales para tamaños de fuente muy grandes */
+html[data-font-size="grande"] .footer,
+html[data-font-size="muy-grande"] .footer {
+  /* Aumentar el padding inferior para tamaños de fuente grandes */
+  padding-bottom: 40px;
+}
+
+html[data-font-size="muy-grande"] .footer-column ul li {
+  /* Mayor espacio entre elementos de lista para fuentes muy grandes */
+  margin-bottom: 12px;
+}
