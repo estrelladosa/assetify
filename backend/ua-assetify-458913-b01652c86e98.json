@@ -1,0 +1,13 @@
+{
+  "type": "service_account",
+  "project_id": "ua-assetify-458913",
+  "private_key_id": "b01652c86e9840cd022706bb676e514d7718c16d",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQCh0QugQ+J+sbP6\nieg3P5b5f9bJWi0WJ6FVtMWM4NdJ1hkrSLMkwqQIbsjW7VlpAk6QkQDRepYCrpFw\nbol/oJbcgdFsn52MmGsaV6hIjjHMiYkvRP07e93WZ2o203oANiAoY+PsRfHbIway\n4Au+iE4ApXz/Ok8bjZp5UMqihQIHNoSjpQxdk/35j5xSOVoYEoyv5rmgeGgyW346\neeCArpAvIY6zPl3euapOWRzpsdRamf5dDhyR3ea1KRQYtPZ7MP4oVV7pFVr/kHFE\nQQzVWNmuPJLprezer7sxgdLx3Ed1l2Cipp5xAS2vQkYRGW39MA48s2R87dbUzawv\nsaa2t4y1AgMBAAECggEAGA3JGqO8sXSc+msxl7TeLmxwczHybc6qTuE2VIC/v/wR\ndbuy1Y4RcCd3t2tE1TVAlIDZjEoarn9go0PrMIugoVqy1ODNPK8TjLDnFRH+GReA\nywQIWKVLDqoEwe2hvxJMqXRf1yl2kEqenkxrsoD0h2gSMqZqSAA+rDX0SUBYUtXt\nRgMnzV/75CJmHvi9DKBQnQBPvH5fqq7qTiU9fjkWRS0mCjXapYHzs5VPf7TSzGnn\nzb9xGkzdwOq3CxMgeE5J/vA+iQM1gknWKxx0cL8DB37PsgeEDqjB3OJkvZ8tcSOh\n6+6nji56tQK0r5SfZSM7/LxEAT0lBngQTWI/Iiz6qQKBgQDUBwSasydRZr+DTnEc\npxdtbcAq1XOoWPMGx6qk0TYkg4y990DPxBv6UNKVk1WL07U6zLiWjlJf8snE9KEz\nMNyd6tic/iKIfP7RPmUM1qwDU3PV+UGaG1qdqNXb5fdvLlf8RGqQtLRe4z7zqxzr\nXXDmZjGh4gI9A5GA4drDF6u3swKBgQDDYDqK+9bbPXRUDTg8dZ9hIQQdQESZxV50\nejtZqAt1izjc8bSVvclUZcUYJ6E5M10cf2DabOumWeD3OGlw5cUnL0p5rEGJk1n0\n0sI08I1PRcQU8sGei0lUQQgAFe8rn6vJf0byOhDD+9q0QAGwCeSmp/z8Al9tXXpt\nfIwWpFn19wKBgQC6z+Anqbf3yc7tk1yoATTsDqolU2KPLqgaDix1AXxx2ZJVAhgR\nt1lrSHDypxjVlVf1kdEFnipILbPHHD83ylJntTbbxDKLDY66r/36vN5cI9hI7E/3\nxyglB1A+arWDOVL+iw1VqFHP1OtvaBGX8wF5jwsl9etA9PbrlpPYFvAObwKBgHT3\n85Sp2aRAUpjPoU9xDA5WeeQZSfjV1Qre8xFmLhYdV9nPS1Iq4ZIJq8oeT8OzIJej\nGxUqCJr7TFg2CcpxhWtEQM4/dq0q7rxIQcT4D2HaXt47x/dnZGtw051ZhGsVmP91\nl8AFS2xKKFGp0FjYU3ADOs6VjRQo1tcdrbEQjFtZAoGAdWuxvCisvsnO31EXlJED\nH9RU3McmNJisLpUccpnj1NcDrJsX0niWnK9ROKmbw34JLtTb6tbChjvtLqqChsYP\ncDOyRUGia+QXoGr2ag7R01K5+irFxShyutz7bjvZYZ/MLORicEJjd6tI6520n300\n9Oo3nRNGjsf2o5OUOKstm2A=\n-----END PRIVATE KEY-----\n",
+  "client_email": "assetify-drive@ua-assetify-458913.iam.gserviceaccount.com",
+  "client_id": "115030398334026864941",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/assetify-drive%40ua-assetify-458913.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
+}

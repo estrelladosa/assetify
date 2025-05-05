@@ -21,7 +21,6 @@ const Publicar = () => {
   const [categoriasDisponibles, setCategoriasDisponibles] = useState([]);
   const [etiquetasDisponibles, setEtiquetasDisponibles] = useState([]);
 
-  // Cargar categorías y etiquetas desde el backend
   useEffect(() => {
     const fetchDatos = async () => {
       try {
@@ -111,6 +110,24 @@ const Publicar = () => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
+  const subirImagenADrive = async (imagen) => {
+    const formData = new FormData();
+    formData.append("archivo", imagen);
+  
+    const response = await fetch("http://localhost:4000/api/drive/subir", {
+      method: "POST",
+      body: formData,
+    });
+  
+    const data = await response.json();
+  
+    if (!response.ok) {
+      throw new Error(data.message || "Error desconocido al subir imagen a Drive");
+    }
+  
+    return data;
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -120,6 +137,11 @@ const Publicar = () => {
     }
 
     try {
+      // 1. Subir imágenes a Drive
+      const imagenesSubidas = await Promise.all(imagenes.map((img) => subirImagenADrive(img)));
+      const urlsImagenes = imagenesSubidas.map((res) => res.link);
+
+      // 2. Preparar y enviar el asset
       const usuarioId = "680f55d62a63adb9232b058c";
       const fechaActual = new Date().toISOString();
 
@@ -127,8 +149,8 @@ const Publicar = () => {
         nombre: form.nombre,
         descripcion: form.descripcion,
         usuario: usuarioId,
-        imagenes: imagenes.map((imagen) => imagen.name),
-        archivos: archivos.map((archivo) => archivo.name),
+        imagenes: urlsImagenes,
+        archivos: archivos.map((archivo) => archivo.name), // aún no se suben a Drive
         formato: form.formato,
         etiquetas: etiquetas.map((etiqueta) => etiqueta._id),
         categorias: categoriasSeleccionadas,
@@ -156,7 +178,7 @@ const Publicar = () => {
         setMensaje(`❌ Error: ${data.message || "No se pudo publicar el asset."}`);
       }
     } catch (error) {
-      setMensaje("❌ Error de conexión con el servidor.");
+      setMensaje("❌ Error al subir las imágenes: " + error.message);
     }
   };
 

@@ -5,6 +5,8 @@ const cors = require("cors");
 const usuarioRoutes = require('./routes/usuarioRoutes'); // Importar las rutas
 const assetsRoutes = require('./routes/assetsRoutes');
 const catEtiRoutes = require('./routes/catEtiRoutes');
+const driveUploadRoutes = require('./routes/driveUpload'); // Importar las rutas de subida a Google Drive
+
 
 const app = express();
 app.use(express.json());
@@ -25,6 +27,7 @@ app.use('/api/assets', assetsRoutes);
 
 app.use('/api', catEtiRoutes);
 
+app.use('/api/drive', driveUploadRoutes); // Usar las rutas de subida a Google Drive
 
 // Ruta raíz
 app.get("/", (req, res) => {

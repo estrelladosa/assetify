@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import AssetCard from "../components/AssetCard";
-import "../pages/Home.css"; // Asegúrate de que el archivo existe para los estilos
-import { obtenerAssets } from "../services/api"; // Función para cargar datos reales
+import "../pages/Home.css";
+import { obtenerAssets } from "../services/api";
 
 const Home = () => {
   const [allAssets, setAllAssets] = useState([]);
@@ -28,19 +28,37 @@ const Home = () => {
     cargarAssets();
   }, []);
 
-  // Filtrar destacados (por ejemplo, los 3 primeros)
+  // Función para asegurar que las URLs de Drive sean correctas
+  const getProperImageUrl = (url) => {
+    if (!url) return "./assets/placeholder.png";
+    
+    // Si ya es una URL correcta de visualización de Drive
+    if (url.includes('drive.google.com/uc?id=')) {
+      return url;
+    }
+    
+    // Para URLs como "https://drive.google.com/file/d/ID/view?usp=drivesdk"
+    const fileIdMatch = url.match(/\/file\/d\/([^/]+)/);
+    if (fileIdMatch && fileIdMatch[1]) {
+      return `https://drive.google.com/uc?id=${fileIdMatch[1]}`;
+    }
+    
+    return url; // Devolver la URL original si no hay coincidencia
+  };
+
+  // Filtrar destacados
   const destacados = allAssets.length > 0 
     ? allAssets.filter((asset, index) => index < 3) 
     : [];
 
   // Ordenar por fecha de creación para recientes
   const recientes = allAssets.length > 0 
-    ? [...allAssets].sort((a, b) => new Date(b.fechaCreacion) - new Date(a.fechaCreacion))
+    ? [...allAssets].sort((a, b) => new Date(b.fecha || b.fechaCreacion) - new Date(a.fecha || a.fechaCreacion))
     : [];
 
-  // Ordenar por popularidad para tendencias (suponiendo que tienes un campo likes o vistas)
+  // Ordenar por popularidad para tendencias
   const tendencias = allAssets.length > 0 
-    ? [...allAssets].sort((a, b) => (b.likes || 0) - (a.likes || 0))
+    ? [...allAssets].sort((a, b) => (b.likes?.length || 0) - (a.likes?.length || 0))
     : [];
 
   const mostrarMas = (setVisible, total) => {
@@ -70,7 +88,8 @@ const Home = () => {
                 key={asset._id} 
                 title={asset.nombre || asset.title} 
                 author={asset.usuario?.nombre || asset.author || "Usuario desconocido"} 
-                imageURL={asset.imagenes?.[0] || asset.imageURL || "./assets/placeholder.png"} 
+                // Aquí aplicamos la función para corregir la URL
+                imageURL={asset.imagenes?.[0] ? getProperImageUrl(asset.imagenes[0]) : "./assets/placeholder.png"} 
               />
             ))}
           </div>
@@ -88,7 +107,8 @@ const Home = () => {
                 key={asset._id} 
                 title={asset.nombre || asset.title} 
                 author={asset.usuario?.nombre || asset.author || "Usuario desconocido"} 
-                imageURL={asset.imagenes?.[0] || asset.imageURL || "./assets/placeholder.png"} 
+                // Aquí aplicamos la función para corregir la URL
+                imageURL={asset.imagenes?.[0] ? getProperImageUrl(asset.imagenes[0]) : "./assets/placeholder.png"} 
                 className={`asset-${index % 4}`} 
               />
             ))}
@@ -115,7 +135,8 @@ const Home = () => {
                 key={asset._id} 
                 title={asset.nombre || asset.title} 
                 author={asset.usuario?.nombre || asset.author || "Usuario desconocido"} 
-                imageURL={asset.imagenes?.[0] || asset.imageURL || "./assets/placeholder.png"}
+                // Aquí aplicamos la función para corregir la URL
+                imageURL={asset.imagenes?.[0] ? getProperImageUrl(asset.imagenes[0]) : "./assets/placeholder.png"}
                 className={`asset-${index % 4}`} 
               />
             ))}
