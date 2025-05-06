@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import AssetCard from "../components/AssetCard";
 import "../pages/Home.css";
 import { obtenerAssets } from "../services/api";
+//import { link } from "../../../backend/routes/usuarioRoutes";
 
 const Home = () => {
   const [allAssets, setAllAssets] = useState([]);
@@ -84,6 +86,10 @@ const Home = () => {
         <div className="destacados-box">
           <div className="destacados">
             {destacados.map((asset) => (
+             <Link 
+             key={asset._id} 
+             to={`/asset/${asset._id}`}  // <-- Pasa el ID en la URL
+              >           
               <AssetCard 
                 key={asset._id} 
                 title={asset.nombre || asset.title} 
@@ -91,6 +97,7 @@ const Home = () => {
                 // Aquí aplicamos la función para corregir la URL
                 imageURL={asset.imagenes?.[0] ? getProperImageUrl(asset.imagenes[0]) : "./assets/placeholder.png"} 
               />
+              </Link>
             ))}
           </div>
         </div>
@@ -103,6 +110,10 @@ const Home = () => {
         <>
           <div className="recientes">
             {recientes.slice(0, visibleRecientes).map((asset, index) => (
+              <Link 
+              key={asset._id} 
+              to={`/asset/${asset._id}`}  // <-- Pasa el ID en la URL
+            >            
               <AssetCard 
                 key={asset._id} 
                 title={asset.nombre || asset.title} 
@@ -111,6 +122,7 @@ const Home = () => {
                 imageURL={asset.imagenes?.[0] ? getProperImageUrl(asset.imagenes[0]) : "./assets/placeholder.png"} 
                 className={`asset-${index % 4}`} 
               />
+              </Link>
             ))}
           </div>
           <div className="botones">
@@ -131,6 +143,10 @@ const Home = () => {
         <>
           <div className="tendencias">
             {tendencias.slice(0, visibleTendencias).map((asset, index) => (
+               <Link 
+               key={asset._id} 
+               to={`/asset/${asset._id}`}  // <-- Pasa el ID en la URL
+               >             
               <AssetCard 
                 key={asset._id} 
                 title={asset.nombre || asset.title} 
@@ -139,6 +155,7 @@ const Home = () => {
                 imageURL={asset.imagenes?.[0] ? getProperImageUrl(asset.imagenes[0]) : "./assets/placeholder.png"}
                 className={`asset-${index % 4}`} 
               />
+              </Link>
             ))}
           </div>
           <div className="botones">

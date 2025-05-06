@@ -82,7 +82,7 @@ router.post('/', async (req, res) => {
       );
   
       // Responder con el token y un mensaje de éxito
-      res.json({ message: 'Inicio de sesión correcto', token });
+      res.json({ message: 'Inicio de sesión correcto', token,  userId: usuario._id, });
     } catch (err) {
       res.status(500).json({ error: 'Error del servidor' });
     }

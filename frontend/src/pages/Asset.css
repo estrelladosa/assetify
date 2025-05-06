@@ -1,0 +1,182 @@
+/* Estilo general para el contenedor de la página */
+.asset-container {
+    display: flex;
+    gap: 2rem;
+    height: 100vh;
+    padding: 1rem;
+    box-sizing: border-box;
+    color: black;
+  }
+  
+  /* Carrusel de imágenes */
+  .asset-carousel-section {
+    width: 40%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .asset-carousel {
+    width: 100%;
+    height: 24rem;
+    background-color: #e5e7eb; /* gray-200 */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    border-radius: 1rem;
+  }
+  
+  .asset-thumbnails {
+    display: flex;
+    gap: 0.5rem;
+    justify-content: center;
+    margin-top: 1rem;
+  }
+  
+  .asset-thumbnail {
+    width: 4rem;
+    height: 4rem;
+    object-fit: cover;
+    border-radius: 0.375rem;
+    cursor: pointer;
+    transition: outline 0.2s;
+  }
+  
+  .asset-thumbnail.selected {
+    outline: 2px solid #3b82f6; /* blue-500 */
+  }
+  
+  /* Estilo para la sección de información del asset */
+  .asset-info {
+    width: 60%;
+    background-color: #fff;
+    border-radius: 1rem;
+    padding: 1rem;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+    overflow-y: auto; /* Habilita el scroll solo en el área de la derecha */
+    max-height: 100%;
+  }
+  
+  /* Estilo de los botones tipo checkbox */
+  .asset-button {
+    padding: 0.25rem 0.75rem;
+    border-radius: 9999px;
+    color: white;
+    cursor: pointer;
+    user-select: none;
+    display: inline-block;
+    font-size: 0.875rem;
+    transition: background-color 0.2s;
+  }
+  
+  .asset-follow {
+    background-color: #3b82f6; /* blue-500 */
+  }
+  
+  input[type="checkbox"].follow:checked + .asset-follow {
+    background-color: #1d4ed8; /* blue-700 */
+  }
+  
+  .asset-like {
+    background-color: #ec4899; /* pink-500 */
+  }
+  
+  input[type="checkbox"].like:checked + .asset-like {
+    background-color: #be185d; /* pink-700 */
+  }
+  
+  .asset-save {
+    background-color: #eab308; /* yellow-500 */
+  }
+  
+  input[type="checkbox"].save:checked + .asset-save {
+    background-color: #ca8a04; /* yellow-700 */
+  }
+  
+  /* Estilo para las etiquetas del asset */
+  .asset-tag {
+    background-color: #e5e7eb;
+    padding: 0.25rem 0.5rem;
+    border-radius: 9999px;
+    font-size: 0.875rem;
+    margin-right: 0.25rem;
+    margin-bottom: 0.25rem;
+  }
+  
+  /* Estilo para los comentarios */
+  .comment-box {
+    border: 1px solid #d1d5db;
+    background-color: #f9fafb;
+    padding: 0.5rem;
+    border-radius: 0.5rem;
+    margin-bottom: 0.5rem;
+  }
+  
+  .comment-user {
+    font-weight: 600;
+    font-size: 0.875rem;
+  }
+  
+  .comment-content {
+    font-size: 0.875rem;
+  }
+  
+  /* Formulario de comentarios */
+  .comment-form {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 1rem;
+  }
+  
+  .comment-form input {
+    flex-grow: 1;
+    padding: 0.5rem;
+    border: 1px solid #d1d5db;
+    border-radius: 0.375rem;
+  }
+  
+  .comment-form button {
+    background-color: #2563eb; /* blue-600 */
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 0.375rem;
+    border: none;
+    cursor: pointer;
+  }
+  
+  /* Estilos adicionales para el carrusel de imágenes (navegación) */
+  .asset-thumbnails button {
+    background: none;
+    border: none;
+    font-size: 2rem;
+    color: #3b82f6; /* blue-500 */
+    cursor: pointer;
+  }
+  
+  .asset-thumbnails button:hover {
+    color: #1d4ed8; /* blue-700 */
+  }
+  
+
+  .login-prompt-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.6);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+  }
+  
+  .login-prompt-content {
+    background: white;
+    padding: 2rem;
+    border-radius: 10px;
+    text-align: center;
+  }
+  

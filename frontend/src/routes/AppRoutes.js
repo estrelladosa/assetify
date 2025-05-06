@@ -5,6 +5,7 @@ import Home from "../pages/Home"; // Importamos la página de inicio
 import Search from "../pages/Search"; // Importamos la página de búsqueda
 import Config from "../pages/Config";
 import Publicar from "../pages/Publicar";
+import Asset from "../pages/Asset"; // Asegúrate de importar la página de asset
 
 
 const AppRoutes = () => {
@@ -16,6 +17,7 @@ const AppRoutes = () => {
       <Route path="/buscar" element={<Search />} />
       <Route path="/config" element={<Config />} />
       <Route path="/publicar" element={<Publicar />} />
+      <Route path="/asset/:assetId" element={<Asset />} /> {/* Ruta para la página del asset */}
     </Routes>
   );
 };
