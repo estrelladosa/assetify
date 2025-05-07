@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import "./Asset.css";
 import { useCurrentUser } from "../hooks/useCurrentUser";
+import { FaUserPlus, FaCheck, FaHeart, FaRegHeart, FaBookmark, FaRegBookmark, FaPaperPlane } from "react-icons/fa";
+
 
 import {
   obtenerAssetPorId,
@@ -17,7 +19,7 @@ import {
 
 export default function Asset() {
   const { assetId } = useParams();
-  const { currentUser, loading } = useCurrentUser();
+  const { currentUser, loading, refetchUser } = useCurrentUser();
   const [asset, setAsset] = useState(null);
   const [usuario, setUsuario] = useState(null);
   const [comments, setComments] = useState([]);
@@ -46,15 +48,16 @@ export default function Asset() {
       
       if (currentUser) {
         setLiked(assetData.likes.includes(currentUser._id));
-        setSaved(usuarioData.guardados?.includes(currentUser._id));
-        setFollowing(usuarioData.seguidos?.includes(currentUser._id));
+        setSaved(currentUser.guardados?.includes(assetId));
+        setFollowing(currentUser.seguidos?.includes(usuarioData._id));
       }
     }
 
     if (!loading) {
       fetchData();
     }
-  }, [assetId, currentUser?._id, loading]);
+  }, [assetId, currentUser, loading]);
+
 
   const handleImageChange = (direction) => {
     const total = asset.imagenes.length;
@@ -104,6 +107,7 @@ export default function Asset() {
       await toggleSeguido(currentUser._id, usuario._id);
       setUsuario(updatedUser);
       setFollowing(updatedUser.seguidores.includes(currentUser._id));
+      await refetchUser(); // <- Esto actualiza currentUser
     } catch (error) {
       console.error("Error al seguir/dejar de seguir:", error);
     }
@@ -153,37 +157,38 @@ export default function Asset() {
 
       {/* Información del asset */}
       <div className="asset-info">
-        <div className="asset-user">
-          <img src={usuario.profileImage} alt="Usuario" className="asset-user-avatar" />
-          <div>
-            <p className="asset-username">{usuario.nombre_usuario}</p>
-            <label>
-              <input type="checkbox" checked={following} onChange={handleToggleFollow} />
-              <span className="asset-button asset-follow">
-                {following ? "Siguiendo" : "Seguir"}
-              </span>
-            </label>
-          </div>
+      <div className="asset-user">
+        <img src={usuario.profileImage || "/imagenes/no-profile.png"}  alt="Usuario" className="asset-user-avatar" />
+        <div className="asset-user-info">
+          <p className="asset-username">{usuario.nombre_usuario}</p>
+          <label>
+            <input type="checkbox" checked={following} onChange={handleToggleFollow} className="follow" />
+            <span className="asset-button asset-follow">
+              {following ?  <><FaCheck /> Siguiendo</> : <><FaUserPlus /> Seguir</>}
+            </span>
+          </label>
         </div>
+      </div>
 
-        <div className="asset-actions">
-          <label>
-            <input type="checkbox" checked={liked} onChange={handleToggleLike} />
-            <span className="asset-button asset-like">
-              {liked ? "❤️ Te gusta" : "❤️ Like"}
-            </span>
-          </label>
-          <label>
-            <input type="checkbox" checked={saved} onChange={handleToggleSave} />
-            <span className="asset-button asset-save">
-              {saved ? "💾 Guardado" : "💾 Guardar"}
-            </span>
-          </label>
-        </div>
+      <div className="asset-actions">
+        <label>
+          <input type="checkbox" checked={liked} onChange={handleToggleLike} className="like" />
+          <span className="asset-button asset-like">
+            {liked ? <><FaHeart /> Liked</> : <><FaRegHeart /> Like</>}
+          </span>
+        </label>
+        <label>
+          <input type="checkbox" checked={saved} onChange={handleToggleSave} className="save" />
+          <span className="asset-button asset-save">
+            {saved ? <><FaBookmark /> Guardado</> : <><FaRegBookmark /> Guardar</>}
+          </span>
+        </label>
+      </div>
+
 
         <h2>{asset.nombre}</h2>
-        <p>{asset.descripcion}</p>
-
+        <p className="desc">{asset.descripcion}</p>
+        <p className="eti">Etiquetas:</p>
         {/* Mostrar las etiquetas */}
         <div className="asset-tags">
           {etiquetas.map((etiqueta, i) => (
@@ -213,7 +218,7 @@ export default function Asset() {
               onChange={(e) => setNewComment(e.target.value)}
               placeholder="Escribe un comentario..."
             />
-            <button type="submit">Enviar</button>
+            <button type="submit"> <FaPaperPlane /></button>
           </form>
         </div>
       </div>

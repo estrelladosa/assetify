@@ -1,3 +1,20 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@700&display=swap');
+
+/* Definir variables globales */
+:root {
+  --dark-blue: #081856;
+  --h-dark-blue: #0056b3;
+  --blue: #0a58ca;
+  --text: #FFF6F1;
+  --yellow: #FFD646;
+  --yellow-t: rgba(234, 179, 8, 0.5); /* amarillo semi-transparente */
+  --back: #05051f;
+  --input-border-color: #ffffff;
+  --focus-border-color: #80bdff;
+  --focus-background-color: #e9f3ff;
+}
+
+
 /* Estilo general para el contenedor de la página */
 .asset-container {
     display: flex;
@@ -5,12 +22,12 @@
     height: 100vh;
     padding: 1rem;
     box-sizing: border-box;
-    color: black;
+    color: var(--text);
   }
   
-  /* Carrusel de imágenes */
+  /* Carrusel de imágenes más grande */
   .asset-carousel-section {
-    width: 40%;
+    width: 90%;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -19,14 +36,16 @@
   
   .asset-carousel {
     width: 100%;
-    height: 24rem;
-    background-color: #e5e7eb; /* gray-200 */
+    height: 70%;
+    background-color: var(--back);
     display: flex;
     align-items: center;
     justify-content: center;
     overflow: hidden;
     border-radius: 1rem;
+    border: 1px solid var(--blue);
   }
+  
   
   .asset-thumbnails {
     display: flex;
@@ -35,6 +54,14 @@
     margin-top: 1rem;
   }
   
+  .asset-user-avatar {
+    width: 90px;       /* o 50px, ajusta según lo que necesites */
+    height: 90px;
+    border-radius: 50%;  /* esto la hace redonda */
+    object-fit: cover;   /* mantiene proporción y recorta si es necesario */
+  }
+  
+
   .asset-thumbnail {
     width: 4rem;
     height: 4rem;
@@ -50,65 +77,135 @@
   
   /* Estilo para la sección de información del asset */
   .asset-info {
-    width: 60%;
-    background-color: #fff;
+    width: 50%;
+    background-color: var(--dark-blue);
     border-radius: 1rem;
     padding: 1rem;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
-    overflow-y: auto; /* Habilita el scroll solo en el área de la derecha */
+    overflow-y: auto;
     max-height: 100%;
+    margin-top: 2rem; /* Para evitar que se pegue al header */
+  }
+
+  .asset-user {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+    margin: 1em;
+  }
+
+  .asset-user-info {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .asset-actions {
+    display: flex;
+    gap: 2rem;
+    margin-top: 1.5rem;
+    justify-content: center; /* Centra los elementos horizontalmente */
+    align-items: center; /* Centra los elementos verticalmente */
+  }
+  
+  .asset-button svg {
+    margin-right: 0.5rem;
+    vertical-align: middle;
+  }
+  
+  
+  .asset-username {
+    font-size: 2rem;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
   }
   
   /* Estilo de los botones tipo checkbox */
   .asset-button {
-    padding: 0.25rem 0.75rem;
-    border-radius: 9999px;
-    color: white;
+    padding: 0.6rem 2rem;          /* Aumentamos el tamaño de los botones */
+    border-radius: 0.375rem;     /* Reducimos la redondez de las esquinas */
+    color: var(--text);
     cursor: pointer;
     user-select: none;
     display: inline-block;
-    font-size: 0.875rem;
+    font-size: 1.25rem;         /* Aumentamos el tamaño de la fuente */
     transition: background-color 0.2s;
+    margin-right: 0.5rem;
   }
   
   .asset-follow {
-    background-color: #3b82f6; /* blue-500 */
+    color:  var(--dark-blue);
+    background-color: var(--yellow); /* blue-500 */
+    
   }
+
+  input[type="checkbox"] {
+    display: none;
+  }  
   
   input[type="checkbox"].follow:checked + .asset-follow {
-    background-color: #1d4ed8; /* blue-700 */
+    background-color: var(--blue); 
+    color: var(--yellow);
   }
   
   .asset-like {
-    background-color: #ec4899; /* pink-500 */
+    color: var(--text);
+    background-color: var(--blue); 
+    border: 2px solid var(--text); 
+    border-radius: 0.375rem; 
   }
   
   input[type="checkbox"].like:checked + .asset-like {
-    background-color: #be185d; /* pink-700 */
+    color:  var(--blue);
+    background-color:var(--text); 
+    border-color:  var(--blue);
   }
   
   .asset-save {
-    background-color: #eab308; /* yellow-500 */
+    color: var(--text);
+    background-color: var(--blue); 
+    border: 2px solid var(--text); 
+    border-radius: 0.375rem;
   }
   
   input[type="checkbox"].save:checked + .asset-save {
-    background-color: #ca8a04; /* yellow-700 */
+    color:  var(--blue);
+    background-color:var(--text); 
+    border-color:  var(--blue);
   }
   
   /* Estilo para las etiquetas del asset */
   .asset-tag {
-    background-color: #e5e7eb;
+    color: var(--yellow);
+    background-color: var(--yellow-t);
     padding: 0.25rem 0.5rem;
     border-radius: 9999px;
-    font-size: 0.875rem;
+    font-size: 1rem;
     margin-right: 0.25rem;
     margin-bottom: 0.25rem;
   }
+
+  .asset-download{
+    width: 100%;
+    margin-top: 2rem;
+  }
+
+  .desc{
+    font-size: 1.2rem;
+  }
+
+  .eti{
+    font-size: 1.2rem;
+    font-weight: bold;
+  }
   
+  .asset-comments h3{
+    color:var(--yellow);
+  }
   /* Estilo para los comentarios */
   .comment-box {
-    border: 1px solid #d1d5db;
-    background-color: #f9fafb;
+    border: 1px solid var(--yellow-t);
+    background-color: var(--yellow);
     padding: 0.5rem;
     border-radius: 0.5rem;
     margin-bottom: 0.5rem;
@@ -116,11 +213,13 @@
   
   .comment-user {
     font-weight: 600;
-    font-size: 0.875rem;
+    font-size: 1.1rem;
+    color: var(--dark-blue);
   }
   
   .comment-content {
-    font-size: 0.875rem;
+    font-size: 1rem;
+    color: var(--dark-blue);
   }
   
   /* Formulario de comentarios */
@@ -135,15 +234,17 @@
     padding: 0.5rem;
     border: 1px solid #d1d5db;
     border-radius: 0.375rem;
+    width: 200%;
   }
   
   .comment-form button {
     background-color: #2563eb; /* blue-600 */
     color: white;
-    padding: 0.5rem 1rem;
     border-radius: 0.375rem;
     border: none;
     cursor: pointer;
+    padding: 0;
+    height: 2.6rem;
   }
   
   /* Estilos adicionales para el carrusel de imágenes (navegación) */
@@ -159,7 +260,6 @@
     color: #1d4ed8; /* blue-700 */
   }
   
-
   .login-prompt-modal {
     position: fixed;
     top: 0;
@@ -180,3 +280,32 @@
     text-align: center;
   }
   
+  .login-prompt-content a {
+    display: inline-block;
+    margin-top: 1rem;
+    padding: 0.5rem 1rem;
+    background-color: #3b82f6;
+    color: white;
+    text-decoration: none;
+    border-radius: 0.375rem;
+    transition: background-color 0.2s;
+  }
+  
+  .login-prompt-content a:hover {
+    background-color: #1d4ed8;
+  }
+  
+  .login-prompt-content button {
+    display: block;
+    margin: 1rem auto 0;
+    padding: 0.5rem 1rem;
+    background-color: #6b7280; /* gray-500 */
+    color: white;
+    border: none;
+    border-radius: 0.375rem;
+    cursor: pointer;
+  }
+  
+  .login-prompt-content button:hover {
+    background-color: #4b5563; /* gray-700 */
+  }

@@ -1,14 +1,15 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { obtenerUsuarioPorId } from "../services/api";
 
 export function useCurrentUser() {
   const [currentUser, setCurrentUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
+  const fetchUser = useCallback(() => {
     const userId = localStorage.getItem("userId");
 
     if (userId) {
+      setLoading(true);
       obtenerUsuarioPorId(userId)
         .then(setCurrentUser)
         .catch((err) => {
@@ -22,5 +23,9 @@ export function useCurrentUser() {
     }
   }, []);
 
-  return { currentUser, loading };
+  useEffect(() => {
+    fetchUser();
+  }, [fetchUser]);
+
+  return { currentUser, loading, refetchUser: fetchUser };
 }
