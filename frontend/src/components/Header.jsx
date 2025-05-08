@@ -1,17 +1,31 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "../components/Header.css";
 import logo from "../assets/logo.png";
-import descubrir from "../assets/descubrir.png";
-import lista from "../assets/lista.png";
 import { useNavigate } from "react-router-dom";
+import { FaCog, FaSearch, FaGlobeEurope } from "react-icons/fa";
 
 const Header = () => {
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState("");
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  useEffect(() => {
+    // Verifica si el token está en localStorage
+    const token = localStorage.getItem("token");
+    setIsLoggedIn(!!token); // Cambia el estado según la existencia del token
+  }, []);
+
+  const handleLogout = () => {
+    // Elimina el token y redirige al usuario
+    localStorage.removeItem("token");
+    localStorage.removeItem("userId");
+    setIsLoggedIn(false);
+    navigate("/login");
+  };
 
   const handleSearch = (e) => {
     if (e.key === "Enter" && searchQuery.trim() !== "") {
-      navigate(`/buscar?nombre=${encodeURIComponent(searchQuery)}`); // Redirige a la página de búsqueda con el término
+      navigate(`/buscar?nombre=${encodeURIComponent(searchQuery)}`);
     }
   };
 
@@ -34,17 +48,23 @@ const Header = () => {
         className="header-search"
         value={searchQuery}
         onChange={(e) => setSearchQuery(e.target.value)}
-        onKeyDown={handleSearch} // Detecta la tecla Enter
+        onKeyDown={handleSearch}
       />
       <button className="header-icon">
-        <img src={descubrir} alt="descubrir" style={{ width: "20px", height: "20px" }} />
+        <FaGlobeEurope size={30} />
       </button>
       <button className="header-icon" onClick={() => navigate("/config")}>
-        <img src={lista} alt="lista" style={{ width: "20px", height: "20px" }} />
+        <FaCog size={30} />
       </button>
-      <button className="header-button" onClick={() => navigate("/login")}>
-        Iniciar sesión
-      </button>
+      {isLoggedIn ? (
+        <button className="header-button" onClick={handleLogout}>
+          Cerrar sesión
+        </button>
+      ) : (
+        <button className="header-button" onClick={() => navigate("/login")}>
+          Iniciar sesión
+        </button>
+      )}
     </header>
   );
 };

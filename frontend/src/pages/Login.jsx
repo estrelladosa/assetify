@@ -40,6 +40,9 @@ const Login = () => {
         // Aquí puedes redirigir al usuario o guardar el token en el localStorage
         localStorage.setItem("token", data.token);
         localStorage.setItem("userId", data.userId);
+        navigate("/");
+        window.location.reload();
+
       } else {
         setMensaje(`❌ Error: ${data.error || "Credenciales incorrectas"}`);
       }
