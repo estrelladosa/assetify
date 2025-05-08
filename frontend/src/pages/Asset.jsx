@@ -168,7 +168,7 @@ export default function Asset() {
         <div className="asset-user-info">
           <p className="asset-username">{usuario.nombre_usuario}</p>
           <label>
-            <input type="checkbox" checked={following} onChange={handleToggleFollow} className="follow" />
+            <input type="checkbox" checked={following} onChange={handleToggleFollow} className="follow NoCheckBox" />
             <span className="asset-button asset-follow">
               {following ?  <><FaCheck /> Siguiendo</> : <><FaUserPlus /> Seguir</>}
             </span>
@@ -178,13 +178,13 @@ export default function Asset() {
 
       <div className="asset-actions">
         <label>
-          <input type="checkbox" checked={liked} onChange={handleToggleLike} className="like" />
+          <input type="checkbox" checked={liked} onChange={handleToggleLike} className="like NoCheckBox" />
           <span className="asset-button asset-like">
             {liked ? <><FaHeart /> Liked</> : <><FaRegHeart /> Like</>}
           </span>
         </label>
         <label>
-          <input type="checkbox" checked={saved} onChange={handleToggleSave} className="save" />
+          <input type="checkbox" checked={saved} onChange={handleToggleSave} className="save NoCheckBox" />
           <span className="asset-button asset-save">
             {saved ? <><FaBookmark /> Guardado</> : <><FaRegBookmark /> Guardar</>}
           </span>

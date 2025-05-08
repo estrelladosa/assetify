@@ -139,9 +139,9 @@
     
   }
 
-  input[type="checkbox"] {
+  .NoCheckBox {
     display: none;
-  }  
+  }
   
   input[type="checkbox"].follow:checked + .asset-follow {
     background-color: var(--blue); 

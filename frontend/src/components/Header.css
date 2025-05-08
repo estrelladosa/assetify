@@ -41,9 +41,9 @@
   padding: 6px;
   border-radius: 5px;
   border: 1px solid #444;
-  margin: 0 12px;
+  margin: 12px;
   /* Cambiar tamaño fijo por variable CSS */
-  font-size: var(--font-size-sm);
+  font-size: var(--font-size-xl);
   transition: border-color 0.3s ease, background-color 0.3s ease;
 }
 
