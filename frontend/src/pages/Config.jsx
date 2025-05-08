@@ -41,14 +41,43 @@ const Config = () => {
     );
   }, []);
 
-  // Función para aplicar los estilos globalmente
+  // Función para aplicar los estilos globalmente - ENFOQUE COMPLETAMENTE NUEVO
   const applyStyles = (theme, headerColor, fontSizeOption, fontFamily, bgImage, highContrast) => {
     const root = document.documentElement;
+    const body = document.body;
     
-    // CORRECCIÓN AQUÍ: Usar setAttribute en el elemento HTML, no en root
-    document.documentElement.setAttribute('data-font-size', fontSizeOption);
-  
-    // Tema
+    // Limpiar todas las clases de tema anteriores
+    body.classList.remove('theme-light', 'theme-dark', 'theme-super-dark', 'high-contrast', 'has-custom-bg');
+    
+    // Configurar tamaño de fuente
+    root.setAttribute('data-font-size', fontSizeOption);
+    
+    // Si está activado el contraste alto, aplicar configuración específica y salir
+    if (highContrast) {
+      body.classList.add('high-contrast');
+      
+      // Configuración específica para alto contraste
+      root.style.setProperty("--bg-color", "#000000");
+      root.style.setProperty("--text-color", "#ffffff");
+      root.style.setProperty("--card-bg", "#000000");
+      root.style.setProperty("--header-footer-bg", "#000000");
+      root.style.setProperty("--header-footer-text", "#ffffff");
+      root.style.setProperty("--header-footer-hover", "#333333");
+      root.style.setProperty("--font-family", "'Roboto', sans-serif");
+      root.setAttribute('data-font-size', "mediano");
+      return;
+    }
+    
+    // Aplicar tema a través de clases
+    if (theme === "light") {
+      body.classList.add('theme-light');
+    } else if (theme === "dark") {
+      body.classList.add('theme-dark');
+    } else if (theme === "superDark") {
+      body.classList.add('theme-super-dark');
+    }
+    
+    // Establecer color de fondo, texto y tarjetas según el tema
     if (theme === "light") {
       root.style.setProperty("--bg-color", "#f5f5f5");
       root.style.setProperty("--text-color", "#333333");
@@ -61,6 +90,16 @@ const Config = () => {
       root.style.setProperty("--bg-color", "#000000");
       root.style.setProperty("--text-color", "#ffffff");
       root.style.setProperty("--card-bg", "#0a0a0a");
+    }
+    
+    // Manejar el fondo personalizado
+    if (bgImage) {
+      body.classList.add('has-custom-bg');
+      // Establecer la imagen como fondo en línea para mayor prioridad
+      body.style.backgroundImage = `url(${bgImage})`;
+    } else {
+      // Eliminar cualquier fondo personalizado en línea
+      body.style.backgroundImage = '';
     }
   
     // Header y Footer color
@@ -77,27 +116,6 @@ const Config = () => {
   
     // Familia de fuente
     root.style.setProperty("--font-family", fontFamily);
-  
-    // Alto contraste
-    if (highContrast) {
-      root.style.setProperty("--text-color", "#ffffff");
-      root.style.setProperty("--card-bg", "#000000");
-      root.style.setProperty("--header-footer-text", "#ffffff");
-    }
-  
-    // Imagen de fondo
-    if (bgImage) {
-      document.body.style.backgroundImage = `url(${bgImage})`;
-      document.body.style.backgroundAttachment = "fixed";
-      document.body.style.backgroundSize = "cover";
-      document.body.style.backgroundPosition = "center";
-    } else {
-      // Restaurar el fondo predeterminado si no hay imagen
-      document.body.style.backgroundImage = "url('assets/background-dark.png')";
-      document.body.style.backgroundAttachment = "fixed";
-      document.body.style.backgroundSize = "cover";
-      document.body.style.backgroundPosition = "center";
-    }
   };
   
   // Función para calcular la luminancia de un color (para determinar si usar texto claro u oscuro)
@@ -161,6 +179,9 @@ const Config = () => {
     setTags([]);
     setHighContrast(defaultHighContrast);
 
+    // Eliminar la imagen de fondo personalizada del body
+    document.body.style.backgroundImage = '';
+
     // Guardar en localStorage
     localStorage.setItem("theme", defaultTheme);
     localStorage.setItem("headerFooterColor", defaultHeaderFooterColor);
@@ -189,6 +210,40 @@ const Config = () => {
     }
   };
 
+  // Vista previa del tema actual (para mostrar al usuario) DESACTIVADO
+  const getThemePreview = () => {
+    if (customBackground) {
+      return (
+        <div className="theme-preview">
+          <small>Usando fondo personalizado</small>
+        </div>
+      );
+    } else {
+      let themeName = "";
+      switch(theme) {
+        case "light": themeName = "Claro con fondo light"; break;
+        case "dark": themeName = "Oscuro con fondo dark"; break;
+        case "superDark": themeName = "Super Oscuro con fondo dark"; break;
+        default: themeName = "Oscuro con fondo dark";
+      }
+      // return (
+      //   // <div className="theme-preview">
+      //   //   <small>Tema: {themeName}</small>
+      //   // </div>
+      // );
+    }
+  };
+  
+  // Precargar las imágenes de fondo para asegurar que estén disponibles cuando se apliquen
+  useEffect(() => {
+    // Precargar imágenes de fondo
+    const lightBg = new Image();
+    lightBg.src = '/assets/background-light.png';
+    
+    const darkBg = new Image();
+    darkBg.src = '/assets/background-dark.png';
+  }, []);
+
   // Agregar tag
   const addTag = () => {
     if (currentTag && !tags.includes(currentTag)) {
@@ -213,6 +268,15 @@ const Config = () => {
     }
   };
 
+  // Limpiar imagen personalizada
+  const clearCustomBackground = () => {
+    setCustomBackground("");
+    // Eliminar la imagen de fondo personalizada del body
+    document.body.style.backgroundImage = '';
+    // Aplicar inmediatamente el cambio para mejorar UX
+    applyStyles(theme, headerFooterColor, fontSize, fontFamily, "", highContrast);
+  };
+
   return (
     <div className="config-container">
       <h1 className="config-title">Configuración</h1>
@@ -231,23 +295,39 @@ const Config = () => {
           <div className="theme-options">
             <button 
               className={`theme-button ${theme === "light" ? "active" : ""}`}
-              onClick={() => setTheme("light")}
+              onClick={() => {
+                setTheme("light");
+                // Aplicar inmediatamente para mostrar el cambio
+                applyStyles("light", headerFooterColor, fontSize, fontFamily, customBackground, highContrast);
+              }}
+              disabled={highContrast}
             >
               Claro
             </button>
             <button 
               className={`theme-button ${theme === "dark" ? "active" : ""}`}
-              onClick={() => setTheme("dark")}
+              onClick={() => {
+                setTheme("dark");
+                // Aplicar inmediatamente para mostrar el cambio
+                applyStyles("dark", headerFooterColor, fontSize, fontFamily, customBackground, highContrast);
+              }}
+              disabled={highContrast}
             >
               Oscuro
             </button>
             <button 
               className={`theme-button ${theme === "superDark" ? "active" : ""}`}
-              onClick={() => setTheme("superDark")}
+              onClick={() => {
+                setTheme("superDark");
+                // Aplicar inmediatamente para mostrar el cambio
+                applyStyles("superDark", headerFooterColor, fontSize, fontFamily, customBackground, highContrast);
+              }}
+              disabled={highContrast}
             >
               Super Oscuro
             </button>
           </div>
+          {!highContrast && getThemePreview()}
         </div>
         
         <div className="config-option">
@@ -257,11 +337,12 @@ const Config = () => {
             accept="image/*"
             onChange={handleBackgroundChange}
             className="file-input"
+            disabled={highContrast}
           />
-          {customBackground && (
+          {customBackground && !highContrast && (
             <div className="background-preview">
               <img src={customBackground} alt="Fondo personalizado" />
-              <button onClick={() => setCustomBackground("")}>Eliminar</button>
+              <button onClick={clearCustomBackground}>Eliminar</button>
             </div>
           )}
         </div>
@@ -271,40 +352,65 @@ const Config = () => {
           <input
             type="color"
             value={headerFooterColor}
-            onChange={(e) => setHeaderFooterColor(e.target.value)}
+            onChange={(e) => {
+              setHeaderFooterColor(e.target.value);
+              // Opcional: aplicar inmediatamente para mejor UX
+              applyStyles(theme, e.target.value, fontSize, fontFamily, customBackground, highContrast);
+            }}
             className="color-picker"
+            disabled={highContrast}
           />
-          <div className="color-preview" style={{ backgroundColor: headerFooterColor }}>
-            <span style={{ color: getLuminance(headerFooterColor) < 0.5 ? "#fff" : "#000" }}>
+          <div className="color-preview" style={{ backgroundColor: highContrast ? "#000000" : headerFooterColor }}>
+            <span style={{ color: highContrast ? "#ffffff" : (getLuminance(headerFooterColor) < 0.5 ? "#fff" : "#000") }}>
               Vista previa
             </span>
           </div>
         </div>
         
         <div className="config-option">
-          <label>Tamaño de fuente: {getFontSizeLabel(fontSize)}</label>
+          <label>Tamaño de fuente: {getFontSizeLabel(highContrast ? "mediano" : fontSize)}</label>
           <div className="font-size-options">
             <button 
-              className={`font-size-button ${fontSize === "pequeño" ? "active" : ""}`}
-              onClick={() => setFontSize("pequeño")}
+              className={`font-size-button ${fontSize === "pequeño" && !highContrast ? "active" : ""}`}
+              onClick={() => {
+                setFontSize("pequeño");
+                // Aplicar inmediatamente para mejor UX
+                applyStyles(theme, headerFooterColor, "pequeño", fontFamily, customBackground, highContrast);
+              }}
+              disabled={highContrast}
             >
               Pequeño
             </button>
             <button 
-              className={`font-size-button ${fontSize === "mediano" ? "active" : ""}`}
-              onClick={() => setFontSize("mediano")}
+              className={`font-size-button ${(fontSize === "mediano" || highContrast) ? "active" : ""}`}
+              onClick={() => {
+                setFontSize("mediano");
+                // Aplicar inmediatamente para mejor UX
+                applyStyles(theme, headerFooterColor, "mediano", fontFamily, customBackground, highContrast);
+              }}
+              disabled={highContrast}
             >
               Mediano
             </button>
             <button 
-              className={`font-size-button ${fontSize === "grande" ? "active" : ""}`}
-              onClick={() => setFontSize("grande")}
+              className={`font-size-button ${fontSize === "grande" && !highContrast ? "active" : ""}`}
+              onClick={() => {
+                setFontSize("grande");
+                // Aplicar inmediatamente para mejor UX
+                applyStyles(theme, headerFooterColor, "grande", fontFamily, customBackground, highContrast);
+              }}
+              disabled={highContrast}
             >
               Grande
             </button>
             <button 
-              className={`font-size-button ${fontSize === "muy-grande" ? "active" : ""}`}
-              onClick={() => setFontSize("muy-grande")}
+              className={`font-size-button ${fontSize === "muy-grande" && !highContrast ? "active" : ""}`}
+              onClick={() => {
+                setFontSize("muy-grande");
+                // Aplicar inmediatamente para mejor UX
+                applyStyles(theme, headerFooterColor, "muy-grande", fontFamily, customBackground, highContrast);
+              }}
+              disabled={highContrast}
             >
               Muy grande
             </button>
@@ -314,9 +420,14 @@ const Config = () => {
         <div className="config-option">
           <label>Fuente</label>
           <select 
-            value={fontFamily} 
-            onChange={(e) => setFontFamily(e.target.value)}
+            value={highContrast ? "'Roboto', sans-serif" : fontFamily}
+            onChange={(e) => {
+              setFontFamily(e.target.value);
+              // Aplicar inmediatamente para mejor UX
+              applyStyles(theme, headerFooterColor, fontSize, e.target.value, customBackground, highContrast);
+            }}
             className="select"
+            disabled={highContrast}
           >
             <option value="'Roboto', sans-serif">Roboto</option>
             <option value="'Open Sans', sans-serif">Open Sans</option>
@@ -355,14 +466,18 @@ const Config = () => {
       <div className="config-section">
         <h2>Accesibilidad</h2>
         <div className="config-option">
-          <label>Contraste alto</label>
+          <label>Contraste alto "desactiva otras funciones estéticas"</label>
           <div className="toggle-switch">
             <input 
               type="checkbox" 
               id="contrast-toggle" 
               className="toggle-input" 
               checked={highContrast}
-              onChange={(e) => setHighContrast(e.target.checked)}
+              onChange={(e) => {
+                setHighContrast(e.target.checked);
+                // Aplicar inmediatamente para mejorar la experiencia del usuario
+                applyStyles(theme, headerFooterColor, fontSize, fontFamily, customBackground, e.target.checked);
+              }}
             />
             <label htmlFor="contrast-toggle" className="toggle-label"></label>
           </div>

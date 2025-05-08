@@ -49,22 +49,61 @@ html[data-font-size="muy-grande"] {
   --font-size-scale: 1.7;
 }
 
+/* Temas usando clases en el body */
+body.theme-light {
+  background-image: url('assets/background-light.png');
+  background-color: var(--bg-color);
+  background-attachment: fixed;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+body.theme-dark {
+  background-image: url('assets/background-dark.png');
+  background-color: var(--bg-color);
+  background-attachment: fixed;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+body.theme-super-dark {
+  background-image: none;
+  background-color: var(--bg-color);
+  background-attachment: fixed;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+/* Alto contraste */
+body.high-contrast {
+  background-image: none;
+  background-color: #000000;
+}
+
+/* Cuando hay un fondo personalizado */
+body.has-custom-bg {
+  /* La imagen se establece directamente en el elemento body mediante JavaScript */
+  background-color: var(--bg-color);
+  background-attachment: fixed;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
 /* Estilos globales que usan las variables */
 * {
   font-family: var(--font-family);
 }
 
 body {
-  background-color: var(--bg-color);
+  background-image: url('assets/background-dark.png');
   color: var(--text-color);
   font-size: var(--font-size-base);
   margin: 0;
   padding: 0;
-  background-image: url('assets/background-dark.png');
-  background-attachment: fixed;
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
 }
 
 .App {
@@ -194,6 +233,15 @@ p {
 
 small {
   font-size: var(--font-size-sm);
+}
+
+/* Nuevos estilos para la página de configuración */
+.theme-preview {
+  margin-top: 10px;
+  padding: 5px;
+  background-color: var(--card-bg);
+  border-radius: var(--border-radius);
+  font-style: italic;
 }
 
 @keyframes App-logo-spin {
