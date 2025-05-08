@@ -65,13 +65,19 @@ export default function Asset() {
   };
 
   const handleCommentSubmit = async (e) => {
+    if (!currentUser) {
+      setShowLoginPrompt(true);
+      return;
+    } else {
+
     e.preventDefault();
     if (!newComment.trim()) return;
 
-    await publicarComentario({ assetId, comentario: newComment });
+    await publicarComentario({ usuario:currentUser._id, asset, comentario: newComment });
     const commentsData = await obtenerComentariosPorAsset(assetId);
     setComments(commentsData);
     setNewComment("");
+  }
   };
 
   const handleToggleLike = async () => {

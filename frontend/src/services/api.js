@@ -76,11 +76,11 @@ export const obtenerComentariosPorAsset = async (assetId) => {
   return await response.json();
 };
 
-export const publicarComentario = async ({ assetId, content }) => {
+export const publicarComentario = async ({ usuario, asset, comentario }) => {
   const response = await fetch(`${API_URL}/assets/comentarios`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ assetId, content }),
+    body: JSON.stringify({ usuario, asset, comentario }),
   });
 
   if (!response.ok) {
