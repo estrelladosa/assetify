@@ -1,58 +1,57 @@
 const API_URL = "http://localhost:4000/api";
- 
- export const registrarUsuario = async (datos) => {
-   const response = await fetch(`${API_URL}/usuarios`, {
-     method: "POST",
-     headers: { "Content-Type": "application/json" },
-     body: JSON.stringify(datos),
-   });
- 
-   return await response.json();
- };
- 
- export const loginUsuario = async (datos) => {
-   const response = await fetch(`${API_URL}/usuarios/login`, {
-     method: "POST",
-     headers: { "Content-Type": "application/json" },
-     body: JSON.stringify(datos),
-   });
- 
-   return await response.json();
- }
- 
- 
- export const searchAssets = async (nombre) => {
-   console.log(`Buscando assets con el nombre: ${nombre}`); // Log para depuración
- 
-   const response = await fetch(`${API_URL}/assets/search?nombre=${nombre}`, {
-     method: "GET",
-     headers: { "Content-Type": "application/json" },
-   });
- 
-   if (!response.ok) {
-     const errorMessage = await response.text();
-     console.error("Error en la respuesta del servidor:", errorMessage); // Log para depuración
-     throw new Error("Error al buscar assets");
-   }
- 
-   return await response.json();
- };
- 
- // En tu archivo api.js
- export const obtenerAssets = async () => {
-   const response = await fetch(`${API_URL}/assets`, {
-     method: "GET",
-     headers: { "Content-Type": "application/json" },
-   });
- 
-   if (!response.ok) {
-     throw new Error("Error al obtener assets");
-   }
- 
-   return await response.json();
- };
 
- export const obtenerAssetPorId = async (assetId) => {
+export const registrarUsuario = async (datos) => {
+  const response = await fetch(`${API_URL}/usuarios`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(datos),
+  });
+
+  return await response.json();
+};
+
+export const loginUsuario = async (datos) => {
+  const response = await fetch(`${API_URL}/usuarios/login`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(datos),
+  });
+
+  return await response.json();
+};
+
+export const searchAssets = async (nombre) => {
+  console.log(`Buscando assets con el nombre: ${nombre}`); // Log para depuración
+
+  const response = await fetch(`${API_URL}/assets/search?nombre=${nombre}`, {
+    method: "GET",
+    headers: { "Content-Type": "application/json" },
+  });
+
+  if (!response.ok) {
+    const errorMessage = await response.text();
+    console.error("Error en la respuesta del servidor:", errorMessage); // Log para depuración
+    throw new Error("Error al buscar assets");
+  }
+
+  return await response.json();
+};
+
+// En tu archivo api.js
+export const obtenerAssets = async () => {
+  const response = await fetch(`${API_URL}/assets`, {
+    method: "GET",
+    headers: { "Content-Type": "application/json" },
+  });
+
+  if (!response.ok) {
+    throw new Error("Error al obtener assets");
+  }
+
+  return await response.json();
+};
+
+export const obtenerAssetPorId = async (assetId) => {
   const response = await fetch(`${API_URL}/assets/${assetId}`);
   if (!response.ok) {
     throw new Error("Error al obtener asset");
@@ -128,4 +127,66 @@ export const obtenerEtiquetasPorAsset = async (assetId) => {
     throw new Error("Error al obtener etiquetas");
   }
   return await response.json();  // Esto te dará solo los nombres de las etiquetas
+};
+
+// Nuevas funciones para la configuración de usuario
+
+// Verificar el token de autenticación
+export const verificarToken = async (token) => {
+  const response = await fetch(`${API_URL}/auth/verify`, {
+    headers: { 
+      "Content-Type": "application/json",
+      "Authorization": `Bearer ${token}`
+    },
+  });
+  
+  if (!response.ok) {
+    throw new Error("Token inválido o expirado");
+  }
+  
+  return await response.json();
+};
+
+// Obtener configuración del usuario
+export const obtenerConfigUsuario = async (userId) => {
+  const response = await fetch(`${API_URL}/config/${userId}`);
+  
+  if (!response.ok) {
+    throw new Error("Error al obtener configuración");
+  }
+  
+  return await response.json();
+};
+
+// Guardar configuración del usuario
+export const guardarConfigUsuario = async (configData) => {
+  const response = await fetch(`${API_URL}/config/save`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(configData),
+  });
+  
+  if (!response.ok) {
+    throw new Error("Error al guardar configuración");
+  }
+  
+  return await response.json();
+};
+
+// Cargar fondo personalizado
+export const cargarFondoPersonalizado = async (userId, fileData) => {
+  const formData = new FormData();
+  formData.append('fondo', fileData);
+  formData.append('usuarioId', userId);
+  
+  const response = await fetch(`${API_URL}/config/fondo`, {
+    method: "POST",
+    body: formData,
+  });
+  
+  if (!response.ok) {
+    throw new Error("Error al cargar imagen de fondo");
+  }
+  
+  return await response.json();
 };

@@ -100,6 +100,10 @@ body.has-custom-bg {
 
 body {
   background-image: url('assets/background-dark.png');
+  background-attachment: fixed;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
   color: var(--text-color);
   font-size: var(--font-size-base);
   margin: 0;

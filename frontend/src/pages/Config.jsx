@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import axios from "axios"; // Necesitarás instalar axios si aún no lo tienes
 import "./Config.css";
 
 const Config = () => {
@@ -11,9 +12,60 @@ const Config = () => {
   const [tags, setTags] = useState([]);
   const [currentTag, setCurrentTag] = useState("");
   const [highContrast, setHighContrast] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [userId, setUserId] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
 
-  // Cargar configuraciones del localStorage al iniciar
+  // Verificar el estado de inicio de sesión al cargar el componente
   useEffect(() => {
+    checkLoginStatus();
+  }, []);
+
+  // Función para verificar el estado de inicio de sesión
+  const checkLoginStatus = async () => {
+    try {
+      // Verificar si hay un token en localStorage o en una cookie
+      const token = localStorage.getItem('token') || getCookie('authToken');
+      
+      if (token) {
+        // Verificar validez del token con el backend
+        const response = await axios.get('/api/auth/verify', {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+        
+        if (response.data.isValid) {
+          setIsLoggedIn(true);
+          setUserId(response.data.userId);
+          
+          // Cargar configuración desde la base de datos
+          loadConfigFromDB(response.data.userId);
+        } else {
+          // Token inválido, cargar desde localStorage
+          loadConfigFromLocalStorage();
+        }
+      } else {
+        // No hay token, cargar desde localStorage
+        loadConfigFromLocalStorage();
+      }
+    } catch (error) {
+      console.error("Error al verificar inicio de sesión:", error);
+      // En caso de error, cargar desde localStorage
+      loadConfigFromLocalStorage();
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // Función auxiliar para obtener cookies
+  const getCookie = (name) => {
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) return parts.pop().split(';').shift();
+    return null;
+  };
+
+  // Cargar configuraciones del localStorage
+  const loadConfigFromLocalStorage = () => {
     const savedTheme = localStorage.getItem("theme");
     const savedHeaderFooterColor = localStorage.getItem("headerFooterColor");
     const savedFontSize = localStorage.getItem("fontSize");
@@ -39,9 +91,90 @@ const Config = () => {
       savedBackground || customBackground,
       savedHighContrast === "true" || false
     );
-  }, []);
+  };
 
-  // Función para aplicar los estilos globalmente - ENFOQUE COMPLETAMENTE NUEVO
+  // Cargar configuraciones de la base de datos
+  const loadConfigFromDB = async (userId) => {
+    try {
+      const response = await axios.get(`/api/config/${userId}`);
+      const dbConfig = response.data;
+
+      // Mapear valores numéricos/textuales de DB a los valores que usa la interfaz
+      // Mapeo de tema (1 = light, 2 = dark, 3 = superDark)
+      const temaMap = { 1: "light", 2: "dark", 3: "superDark" };
+      const tema = temaMap[dbConfig.tema] || "dark";
+      
+      // Mapeo de fuente (1 = Roboto, 2 = Open Sans, etc.)
+      const fuenteMap = { 
+        1: "'Roboto', sans-serif",
+        2: "'Open Sans', sans-serif",
+        3: "'Montserrat', sans-serif",
+        4: "'Lato', sans-serif",
+        5: "'Poppins', sans-serif"
+      };
+      const fuente = fuenteMap[dbConfig.fuente] || "'Roboto', sans-serif";
+      
+      // Mapeo de tamaño de fuente
+      let tamFuenteValor;
+      if (dbConfig.tamFuente <= 16) tamFuenteValor = "pequeño";
+      else if (dbConfig.tamFuente <= 18) tamFuenteValor = "mediano";
+      else if (dbConfig.tamFuente <= 22) tamFuenteValor = "grande";
+      else tamFuenteValor = "muy-grande";
+      
+      // Mapeo de color de header/footer (asumiendo que colorhf puede ser un índice o un valor hexadecimal)
+      let colorHF;
+      if (typeof dbConfig.colorhf === 'number') {
+        const colorMap = {
+          1: "#1a1a1a", // Negro
+          2: "#2c3e50", // Azul oscuro
+          3: "#8e44ad", // Púrpura
+          4: "#c0392b", // Rojo
+          5: "#27ae60"  // Verde
+        };
+        colorHF = colorMap[dbConfig.colorhf] || "#1a1a1a";
+      } else {
+        colorHF = dbConfig.colorhf || "#1a1a1a";
+      }
+
+      // Actualizar estados con los valores de la base de datos
+      setTheme(tema);
+      setHeaderFooterColor(colorHF);
+      setFontSize(tamFuenteValor);
+      setFontFamily(fuente);
+      setHighContrast(dbConfig.altoContraste || false);
+      setTags(dbConfig.recomendacion || []);
+      
+      // Para el fondo personalizado, podría ser una URL o un base64
+      if (dbConfig.fondo && dbConfig.fondo !== "fondo1.jpg") {
+        // Si es una URL de imagen almacenada en el servidor
+        if (dbConfig.fondo.startsWith('http') || dbConfig.fondo.startsWith('/')) {
+          setCustomBackground(dbConfig.fondo);
+        } else {
+          // Asumir que es el nombre de un archivo predeterminado
+          setCustomBackground(`/assets/${dbConfig.fondo}`);
+        }
+      }
+
+      // Guardar en localStorage como respaldo
+      saveToLocalStorage(tema, colorHF, tamFuenteValor, fuente, dbConfig.fondo, dbConfig.altoContraste, dbConfig.recomendacion);
+
+      // Aplicar los estilos
+      applyStyles(
+        tema,
+        colorHF,
+        tamFuenteValor,
+        fuente,
+        customBackground,
+        dbConfig.altoContraste
+      );
+    } catch (error) {
+      console.error("Error al cargar configuración de la base de datos:", error);
+      // Si falla la carga desde DB, usar localStorage como respaldo
+      loadConfigFromLocalStorage();
+    }
+  };
+
+  // Función para aplicar los estilos globalmente
   const applyStyles = (theme, headerColor, fontSizeOption, fontFamily, bgImage, highContrast) => {
     const root = document.documentElement;
     const body = document.body;
@@ -145,25 +278,104 @@ const Config = () => {
     return `#${r.toString(16).padStart(2, '0')}${g.toString(16).padStart(2, '0')}${b.toString(16).padStart(2, '0')}`;
   };
 
-  // Guardar cambios
-  const saveChanges = () => {
+  // Guardar en localStorage
+  const saveToLocalStorage = (theme, headerFooterColor, fontSize, fontFamily, background, highContrast, tags) => {
     localStorage.setItem("theme", theme);
     localStorage.setItem("headerFooterColor", headerFooterColor);
     localStorage.setItem("fontSize", fontSize);
     localStorage.setItem("fontFamily", fontFamily);
-    localStorage.setItem("preferredTags", JSON.stringify(tags));
-    localStorage.setItem("customBackground", customBackground);
+    localStorage.setItem("preferredTags", JSON.stringify(tags || []));
+    localStorage.setItem("customBackground", background || "");
     localStorage.setItem("highContrast", highContrast.toString());
+  };
 
-    // Aplicar los cambios
+  // Guardar en la base de datos
+  const saveToDatabase = async () => {
+    try {
+      if (!isLoggedIn || !userId) return false;
+
+      // Convertir los valores de la interfaz a formato de base de datos
+      // Mapeo inverso para tema
+      const temaMap = { "light": 1, "dark": 2, "superDark": 3 };
+      const temaId = temaMap[theme] || 2;
+
+      // Mapeo inverso para fuente
+      const fuenteMap = { 
+        "'Roboto', sans-serif": 1,
+        "'Open Sans', sans-serif": 2,
+        "'Montserrat', sans-serif": 3,
+        "'Lato', sans-serif": 4,
+        "'Poppins', sans-serif": 5
+      };
+      const fuenteId = fuenteMap[fontFamily] || 1;
+
+      // Mapeo para tamaño de fuente (convertir a píxeles)
+      let tamFuentePx;
+      switch(fontSize) {
+        case "pequeño": tamFuentePx = 14; break;
+        case "mediano": tamFuentePx = 18; break;
+        case "grande": tamFuentePx = 22; break;
+        case "muy-grande": tamFuentePx = 26; break;
+        default: tamFuentePx = 18;
+      }
+
+      // Determinar valor para colorhf (convertir hexadecimal a índice si es posible)
+      // Aquí asumimos que usamos el valor hexadecimal directamente
+      const colorhf = headerFooterColor;
+
+      // Determinar el valor para fondo
+      let fondoValue = "fondo1.jpg"; // Valor predeterminado
+      if (customBackground) {
+        // Si es una URL completa, extraer solo el nombre del archivo
+        const fileName = customBackground.split('/').pop();
+        fondoValue = fileName || customBackground;
+      }
+
+      // Crear objeto de configuración para enviar a la API
+      const configData = {
+        usuarioId: userId,
+        tema: temaId,
+        fondo: fondoValue,
+        colorhf: colorhf,
+        tamFuente: tamFuentePx,
+        fuente: fuenteId,
+        altoContraste: highContrast,
+        recomendacion: tags
+      };
+
+      // Enviar a la API
+      await axios.post('/api/config/save', configData);
+      return true;
+    } catch (error) {
+      console.error("Error al guardar en la base de datos:", error);
+      return false;
+    }
+  };
+
+  // Guardar cambios (en localStorage y DB si está logueado)
+  const saveChanges = async () => {
+    // Siempre guardar en localStorage como respaldo
+    saveToLocalStorage(theme, headerFooterColor, fontSize, fontFamily, customBackground, highContrast, tags);
+
+    // Si está logueado, guardar también en la base de datos
+    let dbSaveSuccess = true;
+    if (isLoggedIn) {
+      dbSaveSuccess = await saveToDatabase();
+    }
+
+    // Aplicar los cambios visualmente
     applyStyles(theme, headerFooterColor, fontSize, fontFamily, customBackground, highContrast);
 
     // Mostrar mensaje de confirmación
-    alert("Configuración guardada correctamente");
+    if (isLoggedIn && !dbSaveSuccess) {
+      alert("Configuración guardada localmente, pero hubo un error al guardar en la base de datos.");
+    } else {
+      alert("Configuración guardada correctamente");
+    }
   };
 
   // Restablecer configuración predeterminada
-  const resetToDefault = () => {
+  const resetToDefault = async () => {
     const defaultTheme = "dark";
     const defaultHeaderFooterColor = "#1a1a1a";
     const defaultFontSize = "mediano";
@@ -183,13 +395,29 @@ const Config = () => {
     document.body.style.backgroundImage = '';
 
     // Guardar en localStorage
-    localStorage.setItem("theme", defaultTheme);
-    localStorage.setItem("headerFooterColor", defaultHeaderFooterColor);
-    localStorage.setItem("fontSize", defaultFontSize);
-    localStorage.setItem("fontFamily", defaultFontFamily);
-    localStorage.setItem("preferredTags", JSON.stringify([]));
-    localStorage.removeItem("customBackground");
-    localStorage.setItem("highContrast", defaultHighContrast.toString());
+    saveToLocalStorage(defaultTheme, defaultHeaderFooterColor, defaultFontSize, defaultFontFamily, "", defaultHighContrast, []);
+
+    // Si está logueado, actualizar también en la base de datos
+    if (isLoggedIn) {
+      const resetConfig = {
+        usuarioId: userId,
+        tema: 2, // dark
+        fondo: "fondo1.jpg",
+        colorhf: "#1a1a1a",
+        tamFuente: 18, // mediano
+        fuente: 1, // Roboto
+        altoContraste: false,
+        recomendacion: []
+      };
+
+      try {
+        await axios.post('/api/config/save', resetConfig);
+      } catch (error) {
+        console.error("Error al restablecer configuración en la base de datos:", error);
+        alert("Configuración restablecida localmente, pero hubo un error al actualizar la base de datos.");
+        return;
+      }
+    }
 
     // Aplicar los cambios
     applyStyles(defaultTheme, defaultHeaderFooterColor, defaultFontSize, defaultFontFamily, "", defaultHighContrast);
@@ -210,7 +438,7 @@ const Config = () => {
     }
   };
 
-  // Vista previa del tema actual (para mostrar al usuario) DESACTIVADO
+  // Vista previa del tema actual (para mostrar al usuario)
   const getThemePreview = () => {
     if (customBackground) {
       return (
@@ -226,15 +454,11 @@ const Config = () => {
         case "superDark": themeName = "Super Oscuro con fondo dark"; break;
         default: themeName = "Oscuro con fondo dark";
       }
-      // return (
-      //   // <div className="theme-preview">
-      //   //   <small>Tema: {themeName}</small>
-      //   // </div>
-      // );
+      // Código comentado en el original
     }
   };
   
-  // Precargar las imágenes de fondo para asegurar que estén disponibles cuando se apliquen
+  // Precargar las imágenes de fondo
   useEffect(() => {
     // Precargar imágenes de fondo
     const lightBg = new Image();
@@ -277,9 +501,29 @@ const Config = () => {
     applyStyles(theme, headerFooterColor, fontSize, fontFamily, "", highContrast);
   };
 
+  // Mostrar cargando mientras verifica estado de inicio de sesión
+  if (isLoading) {
+    return (
+      <div className="loading-container">
+        <div className="loading-spinner"></div>
+        <p>Cargando configuración...</p>
+      </div>
+    );
+  }
+
   return (
     <div className="config-container">
       <h1 className="config-title">Configuración</h1>
+      
+      {isLoggedIn ? (
+        <div className="login-status">
+          <span className="logged-in-badge">✓ Cambios guardados en tu cuenta</span>
+        </div>
+      ) : (
+        <div className="login-status">
+          <span className="logged-out-badge">ⓘ Inicia sesión para guardar configuración en tu cuenta</span>
+        </div>
+      )}
       
       <div className="config-section">
         <button className="reset-button" onClick={resetToDefault}>
