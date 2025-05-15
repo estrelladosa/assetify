@@ -15,7 +15,7 @@
   /* Eliminada altura fija para permitir que se expanda con el contenido */
   width: 100%;
   /* Asegurando que el footer tenga al menos un alto mínimo pero pueda crecer */
-  min-height: 400px;
+  min-height: 200px;
   /* Asegura que el footer no tenga una altura máxima y pueda crecer según sea necesario */
   height: auto;
   /* Añade un padding adicional en la parte inferior para evitar que el contenido quede pegado al borde */

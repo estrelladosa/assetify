@@ -5,7 +5,7 @@ const fs = require('fs');
 const driveService = require('../drive');
 const upload = multer({ dest: 'uploads/' });
 
-const CARPETA_DRIVE_ID = '14ZsRkjizYgVypUdynFpXf4g2-d_bOJOs'; // Tu ID de carpeta
+const CARPETA_DRIVE_ID = '14ZsRkjizYgVypUdynFpXf4g2-d_bOJOs'; // ID de carpeta
 
 router.post('/subir', upload.single('archivo'), async (req, res) => {
   try {

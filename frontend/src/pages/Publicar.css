@@ -105,3 +105,12 @@ ul li button:hover {
 .botones button:hover {
   opacity: 0.9;
 }
+
+.login-required {
+  display: flex;
+  flex-direction: column;
+  margin-top: 150px;
+  justify-content: center; /* Vertical centering */
+  align-items: center; /* Horizontal centering */
+  text-align: center; /* Centra el texto dentro of the div */
+}

@@ -8,18 +8,39 @@ const Header = () => {
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState("");
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [userId, setUserId] = useState(null);
+  const [userName, setUserName] = useState(""); // Nuevo estado para el nombre del usuario
 
   useEffect(() => {
-    // Verifica si el token está en localStorage
     const token = localStorage.getItem("token");
-    setIsLoggedIn(!!token); // Cambia el estado según la existencia del token
+    const idUsuario = localStorage.getItem("userId");
+    setIsLoggedIn(!!token);
+    setUserId(idUsuario);
+
+    // Fetch user name if logged in
+    if (token && idUsuario) {
+      const fetchUserName = async () => {
+        try {
+          const response = await fetch(`http://localhost:4000/api/usuarios/${idUsuario}`);
+          if (response.ok) {
+            const data = await response.json();
+            setUserName(data.nombre_usuario); // Asume que el campo se llama 'nombre_usuario'
+          } else {
+            console.error("Failed to fetch user name");
+          }
+        } catch (error) {
+          console.error("Error fetching user name:", error);
+        }
+      };
+      fetchUserName();
+    }
   }, []);
 
   const handleLogout = () => {
-    // Elimina el token y redirige al usuario
     localStorage.removeItem("token");
     localStorage.removeItem("userId");
     setIsLoggedIn(false);
+    setUserId(null);
     navigate("/login");
   };
 
@@ -38,10 +59,12 @@ const Header = () => {
         onClick={() => navigate("/")}
         style={{ cursor: "pointer" }}
       />
+      
       <button className="header-button">Descubrir</button>
       <button className="header-button" onClick={() => navigate("/publicar")}>
         Publicar
       </button>
+
       <input
         type="text"
         placeholder="Buscar..."
@@ -56,10 +79,13 @@ const Header = () => {
       <button className="header-icon" onClick={() => navigate("/config")}>
         <FaCog size={30} />
       </button>
+
       {isLoggedIn ? (
-        <button className="header-button" onClick={handleLogout}>
-          Cerrar sesión
-        </button>
+        <div className="profile-section">
+          <button className="header-button" onClick={() => navigate(`/perfil/${userId}`)}>
+            {userName}
+          </button>
+        </div>
       ) : (
         <button className="header-button" onClick={() => navigate("/login")}>
           Iniciar sesión

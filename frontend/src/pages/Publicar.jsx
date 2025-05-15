@@ -6,6 +6,7 @@ import "./Publicar.css";
 
 const Publicar = () => {
   const navigate = useNavigate();
+  const [isLoggedIn, setIsLoggedIn] = useState(false); // Estado para verificar si el usuario está logueado
   const [archivos, setArchivos] = useState([]);
   const [imagenes, setImagenes] = useState([]);
   const [etiquetas, setEtiquetas] = useState([]);
@@ -22,6 +23,10 @@ const Publicar = () => {
   const [etiquetasDisponibles, setEtiquetasDisponibles] = useState([]);
 
   useEffect(() => {
+    // Verifica si el token está en localStorage al cargar el componente
+    const token = localStorage.getItem("token");
+    setIsLoggedIn(!!token);
+
     const fetchDatos = async () => {
       try {
         const categoriasResponse = await fetch("http://localhost:4000/api/categorias");
@@ -190,119 +195,128 @@ const Publicar = () => {
 
   return (
     <div className="publicar-container">
-      {mensaje && <p className="mensaje">{mensaje}</p>}
-      <form onSubmit={handleSubmit} className="publicar-columnas">
-        <div>
-          <h3>Nombre</h3>
-          <input
-            id="nombre"
-            type="text"
-            name="nombre"
-            placeholder="Nombre"
-            value={form.nombre}
-            onChange={handleChange}
-            required
-          />
-          <h3>Descripción</h3>
-          <textarea
-            id="descripcion"
-            name="descripcion"
-            placeholder="Descripción"
-            value={form.descripcion}
-            onChange={handleChange}
-            required
-          ></textarea>
-          <h3>Sube los archivos aquí</h3>
-          <label className="upload-button">
-            <img src={subirArchivoIcon} alt="Subir archivo" />
-            <input type="file" multiple onChange={handleArchivoSubido} />
-          </label>
-          <ul>
-            {archivos.map((archivo, index) => (
-              <li key={index}>
-                {archivo.name}{" "}
-                <button type="button" onClick={() => handleEliminarArchivo(index)}>
-                  Eliminar
-                </button>
-              </li>
-            ))}
-          </ul>
+      {!isLoggedIn ? (
+        <div className="login-required">
+          <p>Para poder publicar assets tienes que iniciar sesión.</p>
+          <button onClick={() => navigate("/login")}>Iniciar Sesión</button>
         </div>
+      ) : (
+        <>
+          {mensaje && <p className="mensaje">{mensaje}</p>}
+          <form onSubmit={handleSubmit} className="publicar-columnas">
+            <div>
+              <h3>Nombre</h3>
+              <input
+                id="nombre"
+                type="text"
+                name="nombre"
+                placeholder="Nombre"
+                value={form.nombre}
+                onChange={handleChange}
+                required
+              />
+              <h3>Descripción</h3>
+              <textarea
+                id="descripcion"
+                name="descripcion"
+                placeholder="Descripción"
+                value={form.descripcion}
+                onChange={handleChange}
+                required
+              ></textarea>
+              <h3>Sube los archivos aquí</h3>
+              <label className="upload-button">
+                <img src={subirArchivoIcon} alt="Subir archivo" />
+                <input type="file" multiple onChange={handleArchivoSubido} />
+              </label>
+              <ul>
+                {archivos.map((archivo, index) => (
+                  <li key={index}>
+                    {archivo.name}{" "}
+                    <button type="button" onClick={() => handleEliminarArchivo(index)}>
+                      Eliminar
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            </div>
 
-        <div>
-          <h3>Elige tus tags</h3>
-          <div className="translucent-background">
-            <input
-              list="etiquetas-disponibles"
-              type="text"
-              placeholder="Añadir nueva etiqueta"
-              value={nuevaEtiqueta}
-              onChange={(e) => setNuevaEtiqueta(e.target.value)}
-            />
-            <datalist id="etiquetas-disponibles">
-              {etiquetasDisponibles.map((etiqueta) => (
-                <option key={etiqueta._id} value={etiqueta.nombre} />
-              ))}
-            </datalist>
-            <button type="button" onClick={handleAgregarEtiqueta}>
-              Añadir
-            </button>
-            <ul>
-              {etiquetas.map((etiqueta, index) => (
-                <li key={index}>
-                  {etiqueta.nombre}{" "}
-                  <button type="button" onClick={() => handleEliminarEtiqueta(index)}>
-                    Eliminar
-                  </button>
-                </li>
-              ))}
-            </ul>
-          </div>
-          <h3>Subir fotos de vista previa</h3>
-          <label className="upload-button">
-            <img src={subirImagenIcon} alt="Subir imagen" />
-            <input type="file" multiple onChange={handleImagenSubida} />
-          </label>
-          <ul>
-            {imagenes.map((imagen, index) => (
-              <li key={index}>
-                {imagen.name}{" "}
-                <button type="button" onClick={() => handleEliminarImagen(index)}>
-                  Eliminar
+            <div>
+              <h3>Elige tus tags</h3>
+              <div className="translucent-background">
+                <input
+                  list="etiquetas-disponibles"
+                  type="text"
+                  placeholder="Añadir nueva etiqueta"
+                  value={nuevaEtiqueta}
+                  onChange={(e) => setNuevaEtiqueta(e.target.value)}
+                />
+                <datalist id="etiquetas-disponibles">
+                  {etiquetasDisponibles.map((etiqueta) => (
+                    <option key={etiqueta._id} value={etiqueta.nombre} />
+                  ))}
+                </datalist>
+                <button type="button" onClick={handleAgregarEtiqueta}>
+                  Añadir
                 </button>
-              </li>
-            ))}
-          </ul>
-        </div>
+                <ul>
+                  {etiquetas.map((etiqueta, index) => (
+                    <li key={index}>
+                      {etiqueta.nombre}{" "}
+                      <button type="button" onClick={() => handleEliminarEtiqueta(index)}>
+                        Eliminar
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+              <h3>Subir fotos de vista previa</h3>
+              <label className="upload-button">
+                <img src={subirImagenIcon} alt="Subir imagen" />
+                <input type="file" multiple onChange={handleImagenSubida} />
+              </label>
+              <ul>
+                {imagenes.map((imagen, index) => (
+                  <li key={index}>
+                    {imagen.name}{" "}
+                    <button type="button" onClick={() => handleEliminarImagen(index)}>
+                      Eliminar
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            </div>
 
-        <div>
-          <h3>Selecciona categoría</h3>
-          <div className="translucent-background">
-            <ul>
-              {categoriasDisponibles.map((categoria) => (
-                <li key={categoria._id}>
-                  <label>
-                    <input
-                      type="checkbox"
-                      name="categoria"
-                      value={categoria._id}
-                      checked={categoriasSeleccionadas.includes(categoria._id)}
-                      onChange={() => handleCategoriaSeleccionada(categoria._id)}
-                    />
-                    {categoria.nombre}
-                  </label>
-                </li>
-              ))}
-            </ul>
-          </div>
-          <div className="botones">
-            <button type="reset" onClick={handleCancelar}>
-              Cancelar
-            </button>
-            <button type="submit">Publicar</button>
-          </div>
-        </div>
-      </form>
+            <div>
+              <h3>Selecciona categoría</h3>
+              <div className="translucent-background">
+                <ul>
+                  {categoriasDisponibles.map((categoria) => (
+                    <li key={categoria._id}>
+                      <label>
+                        <input
+                          type="checkbox"
+                          name="categoria"
+                          value={categoria._id}
+                          checked={categoriasSeleccionadas.includes(categoria._id)} // Verifica si está seleccionada
+                          onChange={() => handleCategoriaSeleccionada(categoria._id)} // Llama a la función para actualizar el estado
+                        />
+                        {categoria.nombre}
+                      </label>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+              <div className="botones">
+                <button type="reset" onClick={handleCancelar}>
+                  Cancelar
+                </button>
+                <button type="submit">Publicar</button>
+              </div>
+            </div>
+          </form>
+        </>
+      )}
     </div>
   );
 };
