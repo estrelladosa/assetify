@@ -38,7 +38,7 @@ const Header = () => {
         onClick={() => navigate("/")}
         style={{ cursor: "pointer" }}
       />
-      <button className="header-button">Descubrir</button>
+      <button className="header-button">Inicio</button>
       <button className="header-button" onClick={() => navigate("/publicar")}>
         Publicar
       </button>
