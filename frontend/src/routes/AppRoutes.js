@@ -18,7 +18,7 @@ const AppRoutes = () => {
       <Route path="/buscar" element={<Search />} />
       <Route path="/config" element={<Config />} />
       <Route path="/publicar" element={<Publicar />} />
-      <Route path="/perfil/:userId" element={<Profile />} />
+      <Route path="/perfil" element={<Profile />} />
       <Route path="/asset/:assetId" element={<Asset />} /> {/* Ruta para la página del asset */}
     </Routes>
   );
