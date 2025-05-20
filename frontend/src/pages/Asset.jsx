@@ -2,7 +2,8 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import "./Asset.css";
 import { useCurrentUser } from "../hooks/useCurrentUser";
-import { FaUserPlus, FaCheck, FaHeart, FaRegHeart, FaBookmark, FaRegBookmark, FaPaperPlane } from "react-icons/fa";
+import { FaUserPlus, FaCheck, FaHeart, FaRegHeart, FaBookmark, FaRegBookmark, FaPaperPlane, FaTimes } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
 
 
 import {
@@ -19,6 +20,7 @@ import {
 
 export default function Asset() {
   const { assetId } = useParams();
+  const navigate = useNavigate();
   const { currentUser, loading, refetchUser } = useCurrentUser();
   const [asset, setAsset] = useState(null);
   const [usuario, setUsuario] = useState(null);
@@ -118,6 +120,36 @@ export default function Asset() {
       console.error("Error al seguir/dejar de seguir:", error);
     }
   };
+
+  const getDownloadLink = (url) => {
+  if (!url) return "#";
+
+  if (url.includes("uc?id=")) {
+    return `${url}&export=download`;
+  }
+
+  const match = url.match(/\/file\/d\/([a-zA-Z0-9_-]+)/);
+  if (match && match[1]) {
+    return `https://drive.google.com/uc?id=${match[1]}&export=download`;
+  }
+
+    return url;
+  };
+
+  const handleDownload = () => {
+    if (!asset.archivos || asset.archivos.length === 0) return;
+
+    const url = getDownloadLink(asset.archivos[0]); // Puedes cambiar el índice si lo deseas
+
+    const link = document.createElement("a");
+    link.href = url;
+    link.setAttribute("download", "");
+    link.setAttribute("target", "_blank");
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
   
 
   const getProperImageUrl = (url) => {
@@ -140,6 +172,9 @@ export default function Asset() {
 
   return (
     <div className="asset-container">
+       <button className="close-button" onClick={() => navigate(-1)}>
+        <FaTimes />
+      </button>
       {/* Carrusel */}
       <div className="asset-carousel-section">
         <div className="asset-carousel">
@@ -203,7 +238,7 @@ export default function Asset() {
         </div>
 
 
-        <button className="asset-download">Descargar</button>
+        <button className="asset-download"  onClick={handleDownload}>Descargar</button>
 
         {/* Comentarios */}
         <div className="asset-comments">

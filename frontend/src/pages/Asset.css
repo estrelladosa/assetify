@@ -9,6 +9,7 @@
   --yellow: #FFD646;
   --yellow-t: rgba(234, 179, 8, 0.5); /* amarillo semi-transparente */
   --back: #05051f;
+  --orange: #cb8400;
   --input-border-color: #ffffff;
   --focus-border-color: #80bdff;
   --focus-background-color: #e9f3ff;
@@ -17,14 +18,38 @@
 
 /* Estilo general para el contenedor de la página */
 .asset-container {
+    position: relative;
     display: flex;
     gap: 2rem;
     height: 100vh;
     padding: 1rem;
     box-sizing: border-box;
     color: var(--text);
+    margin-top: 5.3rem;
   }
   
+.close-button {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: none;
+  border: none;
+  color: var(--yellow);
+  font-size: 2rem;
+  cursor: pointer;
+  padding: 0;
+  margin: 0;
+  user-select: none;
+  display: inline-block; /* <-- clave */
+  width: auto;
+  height: auto;
+}
+
+.close-button:hover {
+   background: none;
+   color: var(--orange);
+}
+
   /* Carrusel de imágenes más grande */
   .asset-carousel-section {
     width: 90%;
@@ -95,8 +120,8 @@
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
     overflow-y: auto;
     max-height: 100%;
-    margin-top: 2rem; /* Para evitar que se pegue al header */
-    margin-bottom: 6rem;
+    margin-top: 3rem; /* Para evitar que se pegue al header */
+    margin-bottom: 6.2rem;
     border: 2px solid var(--yellow); 
   }
 
