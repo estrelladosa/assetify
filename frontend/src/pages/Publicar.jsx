@@ -21,6 +21,7 @@ const Publicar = () => {
 
   const [categoriasDisponibles, setCategoriasDisponibles] = useState([]);
   const [etiquetasDisponibles, setEtiquetasDisponibles] = useState([]);
+  const [popupExito, setPopupExito] = useState(false);
 
   useEffect(() => {
     // Verifica si el token está en localStorage al cargar el componente
@@ -147,7 +148,7 @@ const Publicar = () => {
       const urlsImagenes = imagenesSubidas.map((res) => res.link);
 
       // 2. Preparar y enviar el asset
-      const usuarioId = "680f55d62a63adb9232b058c";
+      const usuarioId = localStorage.getItem("userId");
       const fechaActual = new Date().toISOString();
 
       const formData = {
@@ -155,7 +156,7 @@ const Publicar = () => {
         descripcion: form.descripcion,
         usuario: usuarioId,
         imagenes: urlsImagenes,
-        archivos: archivos.map((archivo) => archivo.name), // aún no se suben a Drive
+        archivos: archivos.map((archivo) => archivo.name),
         formato: form.formato,
         etiquetas: etiquetas.map((etiqueta) => etiqueta._id),
         categorias: categoriasSeleccionadas,
@@ -173,12 +174,12 @@ const Publicar = () => {
       const data = await response.json();
 
       if (response.ok) {
-        setMensaje("✅ Asset publicado con éxito.");
         setForm({ nombre: "", descripcion: "", formato: "" });
         setArchivos([]);
         setImagenes([]);
         setEtiquetas([]);
         setCategoriasSeleccionadas([]);
+        setPopupExito(true); // Mostrar popup de éxito
       } else {
         setMensaje(`❌ Error: ${data.message || "No se pudo publicar el asset."}`);
       }
@@ -195,51 +196,55 @@ const Publicar = () => {
 
   return (
     <div className="publicar-container">
-      {!isLoggedIn ? (
-        <div className="login-required">
-          <p>Para poder publicar assets tienes que iniciar sesión.</p>
-          <button onClick={() => navigate("/login")}>Iniciar Sesión</button>
+      {/* POPUP DE ÉXITO */}
+      {popupExito && (
+        <div className="popup-exito">
+          <div className="popup-exito-contenido">
+            <h2>¡Asset publicado con éxito!</h2>
+            <p>Tu asset ha sido subido correctamente.</p>
+            <button onClick={() => { setPopupExito(false); navigate("/"); }}>
+              Ir al inicio
+            </button>
+          </div>
         </div>
-      ) : (
-        <>
-          {mensaje && <p className="mensaje">{mensaje}</p>}
-          <form onSubmit={handleSubmit} className="publicar-columnas">
-            <div>
-              <h3>Nombre</h3>
-              <input
-                id="nombre"
-                type="text"
-                name="nombre"
-                placeholder="Nombre"
-                value={form.nombre}
-                onChange={handleChange}
-                required
-              />
-              <h3>Descripción</h3>
-              <textarea
-                id="descripcion"
-                name="descripcion"
-                placeholder="Descripción"
-                value={form.descripcion}
-                onChange={handleChange}
-                required
-              ></textarea>
-              <h3>Sube los archivos aquí</h3>
-              <label className="upload-button">
-                <img src={subirArchivoIcon} alt="Subir archivo" />
-                <input type="file" multiple onChange={handleArchivoSubido} />
-              </label>
-              <ul>
-                {archivos.map((archivo, index) => (
-                  <li key={index}>
-                    {archivo.name}{" "}
-                    <button type="button" onClick={() => handleEliminarArchivo(index)}>
-                      Eliminar
-                    </button>
-                  </li>
-                ))}
-              </ul>
-            </div>
+      )}
+      <form onSubmit={handleSubmit} className="publicar-columnas">
+        <div>
+          <h3>Nombre</h3>
+          <input
+            id="nombre"
+            type="text"
+            name="nombre"
+            placeholder="Nombre"
+            value={form.nombre}
+            onChange={handleChange}
+            required
+          />
+          <h3>Descripción</h3>
+          <textarea
+            id="descripcion"
+            name="descripcion"
+            placeholder="Descripción"
+            value={form.descripcion}
+            onChange={handleChange}
+            required
+          ></textarea>
+          <h3>Sube los archivos aquí</h3>
+          <label className="upload-button">
+            <img src={subirArchivoIcon} alt="Subir archivo" />
+            <input type="file" multiple onChange={handleArchivoSubido} />
+          </label>
+          <ul>
+            {archivos.map((archivo, index) => (
+              <li key={index}>
+                {archivo.name}{" "}
+                <button type="button" onClick={() => handleEliminarArchivo(index)}>
+                  Eliminar
+                </button>
+              </li>
+            ))}
+          </ul>
+        </div>
 
             <div>
               <h3>Elige tus tags</h3>

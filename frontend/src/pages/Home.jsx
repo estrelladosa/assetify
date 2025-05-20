@@ -93,7 +93,7 @@ const Home = () => {
               <AssetCard 
                 key={asset._id} 
                 title={asset.nombre || asset.title} 
-                author={asset.usuario?.nombre || asset.author || "Usuario desconocido"} 
+                author={asset.usuario?.nombre_usuario || asset.author || "Usuario desconocido"} 
                 // Aquí aplicamos la función para corregir la URL
                 imageURL={asset.imagenes?.[0] ? getProperImageUrl(asset.imagenes[0]) : "./assets/placeholder.png"} 
               />
@@ -117,7 +117,7 @@ const Home = () => {
               <AssetCard 
                 key={asset._id} 
                 title={asset.nombre || asset.title} 
-                author={asset.usuario?.nombre || asset.author || "Usuario desconocido"} 
+                author={asset.usuario?.nombre_usuario || asset.author || "Usuario desconocido"} 
                 // Aquí aplicamos la función para corregir la URL
                 imageURL={asset.imagenes?.[0] ? getProperImageUrl(asset.imagenes[0]) : "./assets/placeholder.png"} 
                 className={`asset-${index % 4}`} 
@@ -150,7 +150,7 @@ const Home = () => {
               <AssetCard 
                 key={asset._id} 
                 title={asset.nombre || asset.title} 
-                author={asset.usuario?.nombre || asset.author || "Usuario desconocido"} 
+                author={asset.usuario?.nombre_usuario || asset.author || "Usuario desconocido"} 
                 // Aquí aplicamos la función para corregir la URL
                 imageURL={asset.imagenes?.[0] ? getProperImageUrl(asset.imagenes[0]) : "./assets/placeholder.png"}
                 className={`asset-${index % 4}`} 
