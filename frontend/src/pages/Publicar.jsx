@@ -260,9 +260,10 @@ const Publicar = () => {
                 <input
                   list="etiquetas-disponibles"
                   type="text"
-                  placeholder="Añadir nueva etiqueta"
+                  placeholder="Buscar etiqueta"
                   value={nuevaEtiqueta}
                   onChange={(e) => setNuevaEtiqueta(e.target.value)}
+                  className = "etiquetas-input"
                 />
                 <datalist id="etiquetas-disponibles">
                   {etiquetasDisponibles.map((etiqueta) => (

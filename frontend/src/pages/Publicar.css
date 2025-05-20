@@ -153,3 +153,8 @@ ul li button:hover {
   align-items: center; /* Horizontal centering */
   text-align: center; /* Centra el texto dentro of the div */
 }
+
+.etiquetas-input {
+  max-width: 510px;
+  width: 100%;
+}
