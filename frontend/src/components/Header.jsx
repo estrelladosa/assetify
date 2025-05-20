@@ -75,13 +75,13 @@ const Header = () => {
       <button className="header-icon">
         <FaGlobeEurope size={30} />
       </button>
-      <button className="header-icon" onClick={() => navigate("/perfil")}>
-        <FaUserCircle size={30} />
+      <button className="header-icon" onClick={() => navigate("/config")}>
+        <FaCog size={30} />
       </button>
 
       {isLoggedIn ? (
         <div className="profile-section">
-          <button className="header-button" onClick={() => navigate(`/perfil/${userId}`)}>
+          <button className="header-button" onClick={() => navigate(`/perfil`)}>
             {userName}
           </button>
         </div>

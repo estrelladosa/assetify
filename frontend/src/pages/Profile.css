@@ -92,3 +92,18 @@ margin-top: 60px;
   text-align: center;
   padding: 40px;
 }
+
+.cerrar-sesion-btn {
+  background: #e74c3c;
+  color: #fff;
+  border: none;
+  border-radius: 12px;
+  font-size: 1.2rem;
+  padding: 10px 32px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.cerrar-sesion-btn:hover {
+  background: #c0392b;
+}

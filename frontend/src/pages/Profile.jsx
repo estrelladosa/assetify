@@ -30,16 +30,20 @@ const Profile = () => {
 
   // Handlers de ejemplo para editar y eliminar
   const handleEdit = (asset) => {
-    // Lógica para editar el asset
     alert(`Editar asset: ${asset.nombre}`);
   };
 
   const handleDelete = (asset) => {
-    // Lógica para eliminar el asset
     if (window.confirm(`¿Eliminar asset "${asset.nombre}"?`)) {
-      // Aquí deberías llamar a tu API para eliminar el asset y actualizar el estado
       setMisAssets((prev) => prev.filter((a) => a._id !== asset._id));
     }
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("userId");
+    navigate("/login");
+    window.location.reload();
   };
 
   return (
@@ -58,10 +62,10 @@ const Profile = () => {
           Mis Guardados
         </button>
         <button
-          className={tab === "config" ? "active" : ""}
-          onClick={() => navigate("/config")}
+          className="cerrar-sesion-btn"
+          onClick={handleLogout}
         >
-          Configuración
+          Cerrar sesión
         </button>
       </div>
 
@@ -99,12 +103,7 @@ const Profile = () => {
           ) : (
             <p>No tienes assets guardados.</p>
           )
-        ) : (
-          <div className="profile-config">
-            <h2>Configuración</h2>
-            {/* Aquí puedes poner la configuración del usuario */}
-          </div>
-        )}
+        ) : null}
       </div>
     </div>
   );
