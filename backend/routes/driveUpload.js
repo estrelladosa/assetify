@@ -4,6 +4,7 @@ const multer = require('multer');
 const fs = require('fs');
 const driveService = require('../drive');
 const upload = multer({ dest: 'uploads/' });
+const archiver = require("archiver");
 
 const CARPETA_DRIVE_ID = '14ZsRkjizYgVypUdynFpXf4g2-d_bOJOs'; // ID de carpeta
 
@@ -77,5 +78,66 @@ router.post('/subir', upload.single('archivo'), async (req, res) => {
     });
   }
 });
+
+
+router.post("/subir-zip", upload.array("archivos"), async (req, res) => {
+  try {
+    const zipPath = `uploads/${Date.now()}_archivos.zip`;
+    const output = fs.createWriteStream(zipPath);
+    const archive = archiver("zip", { zlib: { level: 9 } });
+
+    archive.pipe(output);
+
+    req.files.forEach((file) => {
+      archive.file(file.path, { name: file.originalname });
+    });
+
+    await archive.finalize();
+
+    await new Promise((resolve, reject) => {
+      output.on("close", resolve);
+      output.on("error", reject);
+    });
+
+    const fileMetadata = {
+      name: `archivos_${Date.now()}.zip`,
+      parents: [CARPETA_DRIVE_ID],
+    };
+
+    const media = {
+      mimeType: "application/zip",
+      body: fs.createReadStream(zipPath),
+    };
+
+    const response = await driveService.files.create({
+      resource: fileMetadata,
+      media: media,
+      fields: "id",
+    });
+
+    await driveService.permissions.create({
+      fileId: response.data.id,
+      requestBody: {
+        role: "reader",
+        type: "anyone",
+      },
+    });
+
+    fs.unlinkSync(zipPath);
+    req.files.forEach((file) => fs.unlinkSync(file.path));
+
+    const downloadLink = `https://drive.google.com/uc?id=${response.data.id}&export=download`;
+
+    res.status(200).json({
+      id: response.data.id,
+      download: downloadLink,
+      link: `https://drive.google.com/file/d/${response.data.id}/view`,
+    });
+  } catch (error) {
+    console.error("Error al subir ZIP a Drive:", error);
+    res.status(500).json({ message: "Error al subir archivos ZIP", error: error.message });
+  }
+});
+
 
 module.exports = router;

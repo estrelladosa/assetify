@@ -22,6 +22,8 @@ const Publicar = () => {
   const [categoriasDisponibles, setCategoriasDisponibles] = useState([]);
   const [etiquetasDisponibles, setEtiquetasDisponibles] = useState([]);
   const [popupExito, setPopupExito] = useState(false);
+  const extensionesPermitidas = [".fbx", ".obj", ".stl", ".blend", ".wrl"];
+
 
   useEffect(() => {
     // Verifica si el token está en localStorage al cargar el componente
@@ -48,12 +50,32 @@ const Publicar = () => {
 
   const handleArchivoSubido = (e) => {
     const nuevosArchivos = Array.from(e.target.files);
-    setArchivos([...archivos, ...nuevosArchivos]);
+    const archivosValidos = nuevosArchivos.filter((archivo) => {
+      const extension = '.' + archivo.name.toLowerCase().split('.').pop();
+      const esValido = extensionesPermitidas.includes(extension);
+      if (!esValido) {
+        alert(`El archivo "${archivo.name}" tiene una extensión no permitida.`);
+      }
+      return esValido;
+    });
+    const archivosActualizados = [...archivos, ...archivosValidos];
+    setArchivos(archivosActualizados);
+  
+    // Actualizar formato
+    const formatoString = obtenerFormatoString(archivosActualizados);
+    setForm((prev) => ({ ...prev, formato: formatoString }));
   };
+  
 
   const handleEliminarArchivo = (index) => {
-    setArchivos(archivos.filter((_, i) => i !== index));
+    const archivosActualizados = archivos.filter((_, i) => i !== index);
+    setArchivos(archivosActualizados);
+  
+    // Actualizar formato
+    const formatoString = obtenerFormatoString(archivosActualizados);
+    setForm((prev) => ({ ...prev, formato: formatoString }));
   };
+  
 
   const handleImagenSubida = (e) => {
     const nuevasImagenes = Array.from(e.target.files);
@@ -134,6 +156,33 @@ const Publicar = () => {
     return data;
   };
 
+  const subirArchivosComoZipADrive = async (archivos) => {
+    const formData = new FormData();
+    archivos.forEach((archivo) => formData.append("archivos", archivo));
+  
+    const response = await fetch("http://localhost:4000/api/drive/subir-zip", {
+      method: "POST",
+      body: formData,
+    });
+  
+    const data = await response.json();
+  
+    if (!response.ok) {
+      throw new Error(data.message || "Error al subir ZIP a Drive");
+    }
+  
+    return data; // contiene el link del ZIP subido
+  };
+  
+  const obtenerFormatoString = (archivosArray) => {
+    const formatos = archivosArray
+      .map((archivo) => '.' + archivo.name.toLowerCase().split('.').pop())
+      .filter((formato, index, self) => self.indexOf(formato) === index); // formatos únicos
+  
+    return formatos.join('|');
+  };
+  
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -146,6 +195,8 @@ const Publicar = () => {
       // 1. Subir imágenes a Drive
       const imagenesSubidas = await Promise.all(imagenes.map((img) => subirImagenADrive(img)));
       const urlsImagenes = imagenesSubidas.map((res) => res.link);
+      const archivoZip = archivos.length > 0 ? await subirArchivosComoZipADrive(archivos) : null;
+
 
       // 2. Preparar y enviar el asset
       const usuarioId = localStorage.getItem("userId");
@@ -156,7 +207,7 @@ const Publicar = () => {
         descripcion: form.descripcion,
         usuario: usuarioId,
         imagenes: urlsImagenes,
-        archivos: archivos.map((archivo) => archivo.name),
+        archivos: archivoZip ? [archivoZip.download] : [], // o archivoZip.link si prefieres
         formato: form.formato,
         etiquetas: etiquetas.map((etiqueta) => etiqueta._id),
         categorias: categoriasSeleccionadas,
