@@ -10,7 +10,7 @@ const Usuario = require('../models/Usuario');
 // Ruta para obtener todos los assets
 router.get('/', async (req, res) => {
     try {
-        const assets = await Assets.find();  
+        const assets = await Assets.find().populate('usuario', 'nombre_usuario');  
         res.status(200).json(assets); 
     } catch (error) {
         res.status(500).json({ message: error.message }); 
@@ -30,7 +30,7 @@ router.get('/search', async (req, res) => {
       // Escapar caracteres especiales de regex si es necesario
       const terminoBusqueda = nombre.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
       
-      const assets = await Assets.find({ nombre: { $regex: terminoBusqueda, $options: 'i' } });
+      const assets = await Assets.find({ nombre: { $regex: terminoBusqueda, $options: 'i' } }).populate('usuario', 'nombre_usuario');
       console.log("Resultados encontrados:", assets.length);
       
       res.status(200).json(assets); 

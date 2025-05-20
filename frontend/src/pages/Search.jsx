@@ -12,31 +12,27 @@ const Search = () => {
   const [categorias, setCategorias] = useState([]);
   const [categoriaSeleccionada, setCategoriaSeleccionada] = useState("");
   const [filtros, setFiltros] = useState({
-    tags: "",
-    estilo: "",
+    tags: [],
     autor: "",
     fechaPublicacion: "",
     formato: "",
-    likes: "" // NUEVO
+    likes: ""
   });
   const [todosLosAssets, setTodosLosAssets] = useState([]);
-  const [autores, setAutores] = useState([]); // NUEVO
-  const [etiquetas, setEtiquetas] = useState([]); // NUEVO
+  const [autores, setAutores] = useState([]);
+  const [etiquetas, setEtiquetas] = useState([]);
 
   useEffect(() => {
-    // Cargar categorías
     fetch("http://localhost:4000/api/categorias")
       .then(res => res.json())
       .then(data => setCategorias(data))
       .catch(() => setCategorias([]));
 
-    // Cargar autores
     fetch("http://localhost:4000/api/usuarios")
       .then(res => res.json())
       .then(data => setAutores(data))
       .catch(() => setAutores([]));
 
-    // Cargar etiquetas
     fetch("http://localhost:4000/api/etiquetas")
       .then(res => res.json())
       .then(data => setEtiquetas(data))
@@ -53,7 +49,6 @@ const Search = () => {
     // eslint-disable-next-line
   }, [location.search]);
 
-  // Efecto para aplicar filtros
   useEffect(() => {
     if (todosLosAssets.length > 0) {
       aplicarFiltros();
@@ -67,7 +62,6 @@ const Search = () => {
       setTodosLosAssets(assets);
       aplicarFiltros(assets);
     } catch (error) {
-      console.error("Error al buscar assets:", error);
       setTodosLosAssets([]);
       setResults([]);
     }
@@ -76,7 +70,6 @@ const Search = () => {
   const aplicarFiltros = (assetsIniciales = todosLosAssets) => {
     let assetsFiltrados = [...assetsIniciales];
 
-    // Filtrar por categoría si está seleccionada
     if (categoriaSeleccionada) {
       assetsFiltrados = assetsFiltrados.filter(asset =>
         asset.categorias?.some(cat =>
@@ -87,21 +80,17 @@ const Search = () => {
       );
     }
 
-    // Filtrar por fecha de publicación
     if (filtros.fechaPublicacion) {
       const hoy = new Date();
       const fechaLimite = new Date();
-      
       switch (filtros.fechaPublicacion) {
         case "hoy":
-          // Filtrar por assets publicados hoy
           assetsFiltrados = assetsFiltrados.filter(asset => {
             const fechaPublicacion = new Date(asset.fecha);
             return fechaPublicacion.toDateString() === hoy.toDateString();
           });
           break;
         case "esta_semana":
-          // Filtrar por assets publicados esta semana (últimos 7 días)
           fechaLimite.setDate(hoy.getDate() - 7);
           assetsFiltrados = assetsFiltrados.filter(asset => {
             const fechaPublicacion = new Date(asset.fecha);
@@ -109,7 +98,6 @@ const Search = () => {
           });
           break;
         case "este_mes":
-          // Filtrar por assets publicados este mes (últimos 30 días)
           fechaLimite.setDate(hoy.getDate() - 30);
           assetsFiltrados = assetsFiltrados.filter(asset => {
             const fechaPublicacion = new Date(asset.fecha);
@@ -117,24 +105,20 @@ const Search = () => {
           });
           break;
         case "este_anio":
-          // Filtrar por assets publicados este año
-          fechaLimite.setFullYear(hoy.getFullYear(), 0, 1); // 1 de enero del año actual
+          fechaLimite.setFullYear(hoy.getFullYear(), 0, 1);
           assetsFiltrados = assetsFiltrados.filter(asset => {
             const fechaPublicacion = new Date(asset.fecha);
             return fechaPublicacion >= fechaLimite;
           });
           break;
         default:
-          // No filtrar si no hay un valor válido
           break;
       }
     }
 
-    // Filtrar por autor
     if (filtros.autor) {
       assetsFiltrados = assetsFiltrados.filter(asset => {
         if (!asset.usuario) return false;
-        // asset.usuario puede ser un string (id) o un objeto con _id
         const autorId = typeof asset.usuario === 'string'
           ? asset.usuario
           : asset.usuario._id;
@@ -142,25 +126,15 @@ const Search = () => {
       });
     }
 
-
-  // Filtrar por tags
-  if (filtros.tags) {
-    assetsFiltrados = assetsFiltrados.filter(asset => {
-      if (!asset.etiquetas || !Array.isArray(asset.etiquetas)) return false;
-      // Compara el ObjectId del tag seleccionado con los del asset
-      return asset.etiquetas.some(tagId => tagId === filtros.tags);
-    });
-  }
-
-    // Filtrar por estilo
-    if (filtros.estilo) {
+    // Filtrar por tags (varios)
+    if (filtros.tags.length > 0) {
       assetsFiltrados = assetsFiltrados.filter(asset => {
-        if (!asset.estilo) return false;
-        return asset.estilo.toLowerCase().includes(filtros.estilo.toLowerCase());
+        if (!asset.etiquetas || !Array.isArray(asset.etiquetas)) return false;
+        // Al menos uno de los tags seleccionados debe estar en el asset
+        return filtros.tags.some(tagId => asset.etiquetas.includes(tagId));
       });
     }
 
-    // Filtrar por formato
     if (filtros.formato) {
       assetsFiltrados = assetsFiltrados.filter(asset => {
         if (!asset.formato) return false;
@@ -168,7 +142,6 @@ const Search = () => {
       });
     }
 
-    // Ordenar por likes
     if (filtros.likes === "asc") {
       assetsFiltrados.sort((a, b) => (a.likes?.length || 0) - (b.likes?.length || 0));
     }
@@ -183,6 +156,24 @@ const Search = () => {
     setCategoriaSeleccionada(categoriaId === categoriaSeleccionada ? "" : categoriaId);
   };
 
+  // Cambia el filtro de tags para permitir múltiples selecciones
+  const handleTagChange = (e) => {
+    const value = e.target.value;
+    if (!value) return;
+    setFiltros((prev) => ({
+      ...prev,
+      tags: prev.tags.includes(value) ? prev.tags : [...prev.tags, value]
+    }));
+  };
+
+  // Eliminar un tag del filtro
+  const handleRemoveTag = (tagId) => {
+    setFiltros((prev) => ({
+      ...prev,
+      tags: prev.tags.filter((id) => id !== tagId)
+    }));
+  };
+
   const handleFiltroChange = (filtro, valor) => {
     setFiltros({
       ...filtros,
@@ -190,7 +181,6 @@ const Search = () => {
     });
   };
 
-  // Añade esta función dentro del componente Search:
   const contarAssetsPorCategoria = (categoriaId) => {
     return todosLosAssets.filter(asset =>
       asset.categorias?.some(cat =>
@@ -231,15 +221,17 @@ const Search = () => {
         
         <div className="filter-bar">
           <div className="filter-dropdown">
-          <select 
-            value={filtros.tags} 
-            onChange={(e) => handleFiltroChange("tags", e.target.value)}
-          >
-            <option value="">Tags</option>
-            {etiquetas.map((tag) => (
-              <option key={tag._id} value={tag._id}>{tag.nombre}</option>
-            ))}
-          </select>
+            <select 
+              value=""
+              onChange={handleTagChange}
+            >
+              <option value="">Tags</option>
+              {etiquetas
+                .filter(tag => !filtros.tags.includes(tag._id))
+                .map((tag) => (
+                  <option key={tag._id} value={tag._id}>{tag.nombre}</option>
+                ))}
+            </select>
           </div>
           
           {/* Ordenar por likes */}
@@ -295,18 +287,58 @@ const Search = () => {
             </select>
           </div>
         </div>
+
+        {/* Mostrar tags seleccionados */}
+        {filtros.tags.length > 0 && (
+          <div style={{ margin: "10px 0", display: "flex", gap: "8px", flexWrap: "wrap" }}>
+            {filtros.tags.map(tagId => {
+              const tag = etiquetas.find(t => t._id === tagId);
+              return (
+                <span
+                  key={tagId}
+                  style={{
+                    background: "#1a2942",
+                    color: "#fff",
+                    borderRadius: "16px",
+                    padding: "4px 12px",
+                    display: "flex",
+                    alignItems: "center",
+                    fontSize: "14px"
+                  }}
+                >
+                  {tag ? tag.nombre : tagId}
+                  <button
+                    onClick={() => handleRemoveTag(tagId)}
+                    style={{
+                      background: "transparent",
+                      border: "none",
+                      color: "#fff",
+                      marginLeft: "8px",
+                      cursor: "pointer",
+                      fontSize: "16px",
+                      lineHeight: "1"
+                    }}
+                    title="Quitar tag"
+                  >
+                    ×
+                  </button>
+                </span>
+              );
+            })}
+          </div>
+        )}
         
         <div className="asset-grid">
           {results.length > 0 ? (
             results.map((asset) => (
             <Link 
               key={asset._id} 
-              to={`/asset/${asset._id}`}  // <-- Pasa el ID en la URL
+              to={`/asset/${asset._id}`}  
             >    
               <AssetCard
                 key={asset._id}
                 title={asset.nombre}
-                author={asset.usuario?.nombre || "Usuario desconocido"}
+                author={asset.usuario?.nombre_usuario || "Usuario desconocido"}
                 imageURL={asset.imagenes && asset.imagenes.length > 0 ? asset.imagenes[0] : "./assets/placeholder.png"}
                 id={asset._id}
               />
@@ -336,7 +368,7 @@ const getCategoriaIcon = (nombre) => {
     "Web3": "fa-globe"
   };
   
-  return iconMap[nombre] || "fa-tag"; // Icono predeterminado si no hay coincidencia
+  return iconMap[nombre] || "fa-tag";
 };
 
 export default Search;
