@@ -6,6 +6,7 @@ import "./Publicar.css";
 
 const Publicar = () => {
   const navigate = useNavigate();
+  const [isLoggedIn, setIsLoggedIn] = useState(false); // Estado para verificar si el usuario está logueado
   const [archivos, setArchivos] = useState([]);
   const [imagenes, setImagenes] = useState([]);
   const [etiquetas, setEtiquetas] = useState([]);
@@ -21,8 +22,14 @@ const Publicar = () => {
   const [categoriasDisponibles, setCategoriasDisponibles] = useState([]);
   const [etiquetasDisponibles, setEtiquetasDisponibles] = useState([]);
   const [popupExito, setPopupExito] = useState(false);
+  const extensionesPermitidas = [".fbx", ".obj", ".stl", ".blend", ".wrl"];
+
 
   useEffect(() => {
+    // Verifica si el token está en localStorage al cargar el componente
+    const token = localStorage.getItem("token");
+    setIsLoggedIn(!!token);
+
     const fetchDatos = async () => {
       try {
         const categoriasResponse = await fetch("http://localhost:4000/api/categorias");
@@ -43,12 +50,32 @@ const Publicar = () => {
 
   const handleArchivoSubido = (e) => {
     const nuevosArchivos = Array.from(e.target.files);
-    setArchivos([...archivos, ...nuevosArchivos]);
+    const archivosValidos = nuevosArchivos.filter((archivo) => {
+      const extension = '.' + archivo.name.toLowerCase().split('.').pop();
+      const esValido = extensionesPermitidas.includes(extension);
+      if (!esValido) {
+        alert(`El archivo "${archivo.name}" tiene una extensión no permitida.`);
+      }
+      return esValido;
+    });
+    const archivosActualizados = [...archivos, ...archivosValidos];
+    setArchivos(archivosActualizados);
+  
+    // Actualizar formato
+    const formatoString = obtenerFormatoString(archivosActualizados);
+    setForm((prev) => ({ ...prev, formato: formatoString }));
   };
+  
 
   const handleEliminarArchivo = (index) => {
-    setArchivos(archivos.filter((_, i) => i !== index));
+    const archivosActualizados = archivos.filter((_, i) => i !== index);
+    setArchivos(archivosActualizados);
+  
+    // Actualizar formato
+    const formatoString = obtenerFormatoString(archivosActualizados);
+    setForm((prev) => ({ ...prev, formato: formatoString }));
   };
+  
 
   const handleImagenSubida = (e) => {
     const nuevasImagenes = Array.from(e.target.files);
@@ -129,6 +156,33 @@ const Publicar = () => {
     return data;
   };
 
+  const subirArchivosComoZipADrive = async (archivos) => {
+    const formData = new FormData();
+    archivos.forEach((archivo) => formData.append("archivos", archivo));
+  
+    const response = await fetch("http://localhost:4000/api/drive/subir-zip", {
+      method: "POST",
+      body: formData,
+    });
+  
+    const data = await response.json();
+  
+    if (!response.ok) {
+      throw new Error(data.message || "Error al subir ZIP a Drive");
+    }
+  
+    return data; // contiene el link del ZIP subido
+  };
+  
+  const obtenerFormatoString = (archivosArray) => {
+    const formatos = archivosArray
+      .map((archivo) => '.' + archivo.name.toLowerCase().split('.').pop())
+      .filter((formato, index, self) => self.indexOf(formato) === index); // formatos únicos
+  
+    return formatos.join('|');
+  };
+  
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -141,6 +195,8 @@ const Publicar = () => {
       // 1. Subir imágenes a Drive
       const imagenesSubidas = await Promise.all(imagenes.map((img) => subirImagenADrive(img)));
       const urlsImagenes = imagenesSubidas.map((res) => res.link);
+      const archivoZip = archivos.length > 0 ? await subirArchivosComoZipADrive(archivos) : null;
+
 
       // 2. Preparar y enviar el asset
       const usuarioId = localStorage.getItem("userId");
@@ -151,7 +207,7 @@ const Publicar = () => {
         descripcion: form.descripcion,
         usuario: usuarioId,
         imagenes: urlsImagenes,
-        archivos: archivos.map((archivo) => archivo.name),
+        archivos: archivoZip ? [archivoZip.download] : [], // o archivoZip.link si prefieres
         formato: form.formato,
         etiquetas: etiquetas.map((etiqueta) => etiqueta._id),
         categorias: categoriasSeleccionadas,
@@ -191,6 +247,14 @@ const Publicar = () => {
 
   return (
     <div className="publicar-container">
+      {!isLoggedIn ? (
+        <div className="login-required">
+          <p>Para poder publicar assets tienes que iniciar sesión.</p>
+          <button onClick={() => navigate("/login")}>Iniciar Sesión</button>
+        </div>
+      ) : (
+        <>
+      {mensaje && <p className="mensaje">{mensaje}</p>}
       {/* POPUP DE ÉXITO */}
       {popupExito && (
         <div className="popup-exito">
@@ -241,80 +305,83 @@ const Publicar = () => {
           </ul>
         </div>
 
-        <div>
-          <h3>Elige tus tags</h3>
-          <div className="translucent-background">
-            <input
-              list="etiquetas-disponibles"
-              type="text"
-              placeholder="Añadir nueva etiqueta"
-              value={nuevaEtiqueta}
-              onChange={(e) => setNuevaEtiqueta(e.target.value)}
-            />
-            <datalist id="etiquetas-disponibles">
-              {etiquetasDisponibles.map((etiqueta) => (
-                <option key={etiqueta._id} value={etiqueta.nombre} />
-              ))}
-            </datalist>
-            <button type="button" onClick={handleAgregarEtiqueta}>
-              Añadir
-            </button>
-            <ul>
-              {etiquetas.map((etiqueta, index) => (
-                <li key={index}>
-                  {etiqueta.nombre}{" "}
-                  <button type="button" onClick={() => handleEliminarEtiqueta(index)}>
-                    Eliminar
-                  </button>
-                </li>
-              ))}
-            </ul>
-          </div>
-          <h3>Subir fotos de vista previa</h3>
-          <label className="upload-button">
-            <img src={subirImagenIcon} alt="Subir imagen" />
-            <input type="file" multiple onChange={handleImagenSubida} />
-          </label>
-          <ul>
-            {imagenes.map((imagen, index) => (
-              <li key={index}>
-                {imagen.name}{" "}
-                <button type="button" onClick={() => handleEliminarImagen(index)}>
-                  Eliminar
+            <div>
+              <h3>Elige tus tags</h3>
+              <div className="translucent-background">
+                <input
+                  list="etiquetas-disponibles"
+                  type="text"
+                  placeholder="Buscar etiqueta"
+                  value={nuevaEtiqueta}
+                  onChange={(e) => setNuevaEtiqueta(e.target.value)}
+                  className = "etiquetas-input"
+                />
+                <datalist id="etiquetas-disponibles">
+                  {etiquetasDisponibles.map((etiqueta) => (
+                    <option key={etiqueta._id} value={etiqueta.nombre} />
+                  ))}
+                </datalist>
+                <button type="button" onClick={handleAgregarEtiqueta}>
+                  Añadir
                 </button>
-              </li>
-            ))}
-          </ul>
-        </div>
+                <ul>
+                  {etiquetas.map((etiqueta, index) => (
+                    <li key={index}>
+                      {etiqueta.nombre}{" "}
+                      <button type="button" onClick={() => handleEliminarEtiqueta(index)}>
+                        Eliminar
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+              <h3>Subir fotos de vista previa</h3>
+              <label className="upload-button">
+                <img src={subirImagenIcon} alt="Subir imagen" />
+                <input type="file" multiple onChange={handleImagenSubida} />
+              </label>
+              <ul>
+                {imagenes.map((imagen, index) => (
+                  <li key={index}>
+                    {imagen.name}{" "}
+                    <button type="button" onClick={() => handleEliminarImagen(index)}>
+                      Eliminar
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            </div>
 
-        <div>
-          <h3>Selecciona categoría</h3>
-          <div className="translucent-background">
-            <ul>
-              {categoriasDisponibles.map((categoria) => (
-                <li key={categoria._id}>
-                  <label>
-                    <input
-                      type="checkbox"
-                      name="categoria"
-                      value={categoria._id}
-                      checked={categoriasSeleccionadas.includes(categoria._id)}
-                      onChange={() => handleCategoriaSeleccionada(categoria._id)}
-                    />
-                    {categoria.nombre}
-                  </label>
-                </li>
-              ))}
-            </ul>
-          </div>
-          <div className="botones">
-            <button type="reset" onClick={handleCancelar}>
-              Cancelar
-            </button>
-            <button type="submit">Publicar</button>
-          </div>
-        </div>
-      </form>
+            <div>
+              <h3>Selecciona categoría</h3>
+              <div className="translucent-background">
+                <ul>
+                  {categoriasDisponibles.map((categoria) => (
+                    <li key={categoria._id}>
+                      <label>
+                        <input
+                          type="checkbox"
+                          name="categoria"
+                          value={categoria._id}
+                          checked={categoriasSeleccionadas.includes(categoria._id)} // Verifica si está seleccionada
+                          onChange={() => handleCategoriaSeleccionada(categoria._id)} // Llama a la función para actualizar el estado
+                        />
+                        {categoria.nombre}
+                      </label>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+              <div className="botones">
+                <button type="reset" onClick={handleCancelar}>
+                  Cancelar
+                </button>
+                <button type="submit">Publicar</button>
+              </div>
+            </div>
+          </form>
+        </>
+      )}
     </div>
   );
 };

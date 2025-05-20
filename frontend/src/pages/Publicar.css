@@ -1,6 +1,6 @@
 .publicar-container {
   padding: 20px;
-  margin-top: 20px;
+  margin-top: 50px;
 }
 
 .publicar-columnas {
@@ -143,4 +143,18 @@ ul li button:hover {
 }
 .popup-exito-contenido button:hover {
   background: #5ee6c1;
+}
+
+.login-required {
+  display: flex;
+  flex-direction: column;
+  margin-top: 150px;
+  justify-content: center; /* Vertical centering */
+  align-items: center; /* Horizontal centering */
+  text-align: center; /* Centra el texto dentro of the div */
+}
+
+.etiquetas-input {
+  max-width: 510px;
+  width: 100%;
 }

@@ -1,0 +1,23 @@
+.profile-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Center horizontally */
+  justify-content: center; /* Center vertically */
+  min-height: 100vh; /* Make the container take up the full viewport height */
+  text-align: center; /* Center text within the container */
+}
+
+.logout-button {
+  padding: 10px 20px;
+  background-color: #f44336; /* Red color for logout button */
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  margin-top: 20px; /* Add some space between the text and the button */
+}
+
+.logout-button:hover {
+  background-color: #d32f2f; /* Darker red on hover */
+}

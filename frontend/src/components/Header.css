@@ -30,10 +30,6 @@
   font-size: var(--font-size-3xl);
 }
 
-.header-button:hover {
-  background-color: var(--header-footer-hover);
-}
-
 .header-search {
   flex-grow: 1;
   min-width: 500px;
@@ -47,8 +43,8 @@
   transition: border-color 0.3s ease, background-color 0.3s ease;
 }
 
-.header-search:hover {
-  border-color: #1800b7;
+.header-search:hover, .header-icon:hover, .header-button:hover {
+  /* border-color: #1800b7; */
   background-color: #b5b5b5;
 }
 
@@ -61,8 +57,4 @@
   margin: 0 10px;
   cursor: pointer;
   transition: color 0.3s ease;
-}
-
-.header-icon:hover {
-  color: var(--header-footer-hover);
 }

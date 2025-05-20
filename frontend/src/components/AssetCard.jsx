@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
-import "./AssetCard.css"; // Importa el archivo CSS para estilos
+import "./AssetCard.css"; 
 
 const AssetCard = ({ title, author, imageURL }) => {
     const [imageError, setImageError] = useState(false);
     
     // Función para usar URL alternativa de Google Drive
     const getAlternativeUrl = (url) => {
-        if (!url) return "/assets/placeholder.png"; // Asegúrate de que esté en /public/assets
+        if (!url) return "/assets/placeholder.png"; 
       
         try {
           const parsed = new URL(url);
