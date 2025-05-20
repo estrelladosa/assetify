@@ -196,6 +196,14 @@ const Publicar = () => {
 
   return (
     <div className="publicar-container">
+      {!isLoggedIn ? (
+        <div className="login-required">
+          <p>Para poder publicar assets tienes que iniciar sesión.</p>
+          <button onClick={() => navigate("/login")}>Iniciar Sesión</button>
+        </div>
+      ) : (
+        <>
+      {mensaje && <p className="mensaje">{mensaje}</p>}
       {/* POPUP DE ÉXITO */}
       {popupExito && (
         <div className="popup-exito">
