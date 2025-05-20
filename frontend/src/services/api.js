@@ -190,3 +190,17 @@ export const cargarFondoPersonalizado = async (userId, fileData) => {
   
   return await response.json();
 };
+
+// Obtener assets subidos por un usuario
+export const obtenerAssetsPorUsuario = async (userId) => {
+  const response = await fetch(`${API_URL}/assets/usuario/${userId}`);
+  if (!response.ok) throw new Error("Error al obtener assets del usuario");
+  return await response.json();
+};
+
+// Obtener assets guardados por un usuario
+export const obtenerAssetsGuardados = async (userId) => {
+  const response = await fetch(`${API_URL}/usuarios/${userId}/guardados`);
+  if (!response.ok) throw new Error("Error al obtener assets guardados");
+  return await response.json();
+};

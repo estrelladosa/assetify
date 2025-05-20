@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import "../components/Header.css";
 import logo from "../assets/logo.png";
 import { useNavigate } from "react-router-dom";
-import { FaCog, FaSearch, FaGlobeEurope } from "react-icons/fa";
+import { FaCog, FaSearch, FaGlobeEurope, FaUserCircle } from "react-icons/fa";
 
 const Header = () => {
   const navigate = useNavigate();
@@ -53,8 +53,8 @@ const Header = () => {
       <button className="header-icon">
         <FaGlobeEurope size={30} />
       </button>
-      <button className="header-icon" onClick={() => navigate("/config")}>
-        <FaCog size={30} />
+      <button className="header-icon" onClick={() => navigate("/perfil")}>
+        <FaUserCircle size={30} />
       </button>
       {isLoggedIn ? (
         <button className="header-button" onClick={handleLogout}>
