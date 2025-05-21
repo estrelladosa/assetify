@@ -194,7 +194,7 @@ export default function Asset() {
       {/* Carrusel */}
       <div className="asset-carousel-section">
         <div className="asset-carousel">
-          {<img src={getProperImageUrl(asset.imagenes[currentImgIndex])} alt={t('asset.imageAlt')} />}
+          {<img src={getProperImageUrl(asset.imagenes[currentImgIndex])} alt={t('asset.nombre')} />}
         </div>
         <div className="asset-thumbnails">
           <button onClick={() => handleImageChange(-1)}>◀</button>
