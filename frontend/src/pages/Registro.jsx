@@ -13,6 +13,10 @@ const Registro = () => {
 
   const [mensaje, setMensaje] = useState("");
   const nombreImputRef = useRef(null);
+  const [imagenPerfil, setImagenPerfil] = useState(null);
+  const imagenInputRef = useRef(null);
+
+
 
   useEffect(() => {
     nombreImputRef.current?.focus();
@@ -29,8 +33,29 @@ const Registro = () => {
       setMensaje("❌ Las contraseñas no coinciden");
       return;
     }
+    
 
     try {
+      let urlImagenPerfil = "";
+
+        if (imagenPerfil) {
+          const formData = new FormData();
+          formData.append("archivo", imagenPerfil);
+
+          const responseImagen = await fetch("http://localhost:4000/api/drive/subir", {
+            method: "POST",
+            body: formData,
+          });
+
+          const dataImagen = await responseImagen.json();
+
+          if (!responseImagen.ok) {
+            throw new Error(dataImagen.message || "Error al subir imagen de perfil");
+          }
+
+          urlImagenPerfil = dataImagen.link;
+        }
+
       const response = await fetch("http://localhost:4000/api/usuarios", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -38,6 +63,7 @@ const Registro = () => {
           nombre_usuario: form.nombre_usuario,
           correo: form.correo,
           contraseña: form.contraseña,
+          foto: urlImagenPerfil,
         }),
       });
 
@@ -46,6 +72,9 @@ const Registro = () => {
       if (response.ok) {
         setMensaje("✅ Usuario registrado con éxito");
         setForm({ nombre_usuario: "", correo: "", contraseña: "", repetirContraseña: "" });
+        setImagenPerfil(null); // limpia el estado
+        if (imagenInputRef.current) imagenInputRef.current.value = ""; // limpia el input visible
+
       } else {
         setMensaje(`❌ Error: ${data.error || "No se pudo registrar el usuario"}`);
       }
@@ -65,6 +94,8 @@ const Registro = () => {
             <input type="email" name="correo" placeholder="Correo electrónico" value={form.correo} onChange={handleChange} required />
             <input type="password" name="contraseña" placeholder="Contraseña" value={form.contraseña} onChange={handleChange} required />
             <input type="password" name="repetirContraseña" placeholder="Repetir contraseña" value={form.repetirContraseña} onChange={handleChange} required />
+            <label htmlFor="fotoPerfil">Foto de perfil</label>
+            <input type="file" accept="image/*" ref={imagenInputRef} onChange={(e) => setImagenPerfil(e.target.files[0])} />
             <p className="register-link" onClick={() => navigate("/login")}>
               ¿Ya tienes cuenta? <span>Inicia sesión aquí</span>
             </p>

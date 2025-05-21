@@ -39,6 +39,9 @@ const usuarioSchema = new mongoose.Schema({
     type: [mongoose.Schema.Types.ObjectId],
     ref: 'Asset',
   },
+  foto: {
+    type: String,
+  },
 });
 
 //Password hasheada

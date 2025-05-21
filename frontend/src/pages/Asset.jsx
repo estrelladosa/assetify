@@ -213,7 +213,7 @@ export default function Asset() {
       {/* Información del asset */}
       <div className="asset-info">
       <div className="asset-user">
-        <img src={usuario.profileImage || "/imagenes/no-profile.png"}  alt="Usuario" className="asset-user-avatar" />
+        <img src={usuario.foto || "/imagenes/no-profile.png"}  alt="Usuario" className="asset-user-avatar" />
         <div className="asset-user-info">
           <p className="asset-username">{usuario.nombre_usuario}</p>
           <label>

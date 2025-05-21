@@ -30,7 +30,7 @@ router.get('/:id', async (req, res) => {
 
 // Crear un nuevo usuario
 router.post('/', async (req, res) => {
-    const { nombre_usuario, correo, contraseña, pais, descripcion, estilo, seguidores, seguidos, guardados } = req.body;
+    const { nombre_usuario, correo, contraseña, pais, descripcion, estilo, seguidores, seguidos, guardados,foto } = req.body;
   
     // Validación sencilla de campos obligatorios
     if (!nombre_usuario || !correo || !contraseña) {
@@ -47,6 +47,7 @@ router.post('/', async (req, res) => {
       seguidores,
       seguidos,
       guardados,
+      foto,
     });
   
     try {
