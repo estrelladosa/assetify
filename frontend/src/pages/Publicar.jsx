@@ -15,6 +15,8 @@ const Publicar = () => {
   const [etiquetas, setEtiquetas] = useState([]);
   const [nuevaEtiqueta, setNuevaEtiqueta] = useState("");
   const [categoriasSeleccionadas, setCategoriasSeleccionadas] = useState([]);
+  const [archivoInvalido, setArchivoInvalido] = useState(null);
+  const [mostrarPopupError, setMostrarPopupError] = useState(false);
   const [mensaje, setMensaje] = useState("");
   const [form, setForm] = useState({
     nombre: "",
@@ -65,8 +67,12 @@ const Publicar = () => {
       const esValido = Object.values(extensionesPorCategoria).some(exts => exts.includes(extension));
 
       if (!esValido) {
-        alert(`El archivo "${archivo.name}" no es un tipo de asset permitido.`);
+        setArchivoInvalido(archivo.name);
+        setMostrarPopupError(false); // Reseteo rápido para forzar cambio
+        setTimeout(() => setMostrarPopupError(true), 10);
+        return false;
       }
+
 
       return esValido;
     });
@@ -277,6 +283,15 @@ const Publicar = () => {
             <button onClick={() => { setPopupExito(false); navigate("/"); }}>
               {t("publish.goToHome")}
             </button>
+          </div>
+        </div>
+      )}
+      {mostrarPopupError && archivoInvalido && (
+        <div className="popup-error">
+          <div className="popup-error-contenido">
+            <h2>Archivo no permitido</h2>
+            <p>El archivo <strong>"{archivoInvalido}"</strong> no es un tipo de asset permitido.</p>
+            <button onClick={() => setMostrarPopupError(false)}>Cerrar</button>
           </div>
         </div>
       )}
