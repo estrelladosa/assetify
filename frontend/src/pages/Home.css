@@ -27,6 +27,7 @@
     flex-wrap: wrap;
     gap: 15px;
     padding-bottom: 10px;
+    justify-content: center; /* Centra los elementos en pantallas pequeñas */
   }
   
   /* ✅ Se asegura que SOLO 4 assets entren por fila */
@@ -89,3 +90,65 @@
     font-size: 44px;
   }
   
+  /* Responsive: 2 columnas en tablets, 1 columna en móviles */
+@media (max-width: 1024px) {
+  .destacados, .recientes, .tendencias {
+    gap: 10px;
+  }
+  .recientes .asset-card,
+  .tendencias .asset-card {
+    flex: 1 1 calc(50% - 20px);
+    min-width: 260px;
+    max-width: 350px;
+  }
+  .destacados .asset-card {
+    flex: 1 1 100%;
+    min-width: 260px;
+    max-width: 400px;
+  }
+  h2 {
+    font-size: 32px;
+  }
+}
+
+@media (max-width: 700px) {
+  .destacados, .recientes, .tendencias {
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+  }
+  .recientes .asset-card,
+  .tendencias .asset-card,
+  .destacados .asset-card {
+    flex: 1 1 100%;
+    min-width: 180px;
+    max-width: 98vw;
+    transform: scale(1); /* Elimina el escalado en móvil */
+  }
+  .botones {
+    flex-direction: column;
+    gap: 8px;
+  }
+  h2 {
+    font-size: 22px;
+    text-align: center;
+  }
+  .home {
+    padding: 8px;
+    margin-top: 20px;
+  }
+}
+
+/* Ajuste para que las tarjetas ocupen todo el ancho en móvil */
+@media (max-width: 480px) {
+  .recientes .asset-card,
+  .tendencias .asset-card,
+  .destacados .asset-card {
+    min-width: 120px;
+    max-width: 100vw;
+    padding: 0;
+  }
+  .destacados-box {
+    padding: 8px;
+  }
+}

@@ -204,3 +204,22 @@ export const obtenerAssetsGuardados = async (userId) => {
   if (!response.ok) throw new Error("Error al obtener assets guardados");
   return await response.json();
 };
+
+export const actualizarPerfilUsuario = async (userId, datos) => {
+  const response = await fetch(`http://localhost:4000/api/usuarios/${userId}`, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(datos),
+  });
+  if (!response.ok) throw new Error("Error al actualizar perfil");
+  return await response.json();
+};
+
+export const obtenerPaises = async () => {
+  const res = await fetch(`${API_URL}/paises`, {
+    method: "GET",
+    headers: { "Content-Type": "application/json" },
+  });
+  if (!res.ok) throw new Error("Error al obtener países");
+  return await res.json();
+};

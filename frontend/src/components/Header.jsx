@@ -2,15 +2,18 @@ import React, { useState, useEffect } from "react";
 import "../components/Header.css";
 import logo from "../assets/logo.png";
 import { useNavigate } from "react-router-dom";
-import { FaCog, FaSearch, FaGlobeEurope, FaUserCircle } from "react-icons/fa";
+import { FaCog, FaSearch, FaUserCircle } from "react-icons/fa";
 import { FaArrowUpFromBracket } from "react-icons/fa6";
+import { useTranslation } from "react-i18next"; // Importamos useTranslation
+import LanguageSwitcher from "./LanguageSwitcher"; // Importamos el componente LanguageSwitcher
 
 const Header = () => {
   const navigate = useNavigate();
+  const { t } = useTranslation(); // Hook para traducción
   const [searchQuery, setSearchQuery] = useState("");
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userId, setUserId] = useState(null);
-  const [userName, setUserName] = useState(""); // Nuevo estado para el nombre del usuario
+  const [userName, setUserName] = useState("");
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -25,7 +28,7 @@ const Header = () => {
           const response = await fetch(`http://localhost:4000/api/usuarios/${idUsuario}`);
           if (response.ok) {
             const data = await response.json();
-            setUserName(data.nombre_usuario); 
+            setUserName(data.nombre_usuario);
           } else {
             console.error("Failed to fetch user name");
           }
@@ -60,26 +63,31 @@ const Header = () => {
         onClick={() => navigate("/")}
         style={{ cursor: "pointer" }}
       />
-      <button className="header-button" onClick={() => navigate("/buscar")}>
-        <span className="header-button-icon"><FaSearch /></span>
-        <span className="header-button-text">Descubrir</span>
+      {/* Botón de inicio traducido */}
+      <button className="header-button" onClick={() => navigate("/")}>
+        {t('header.home')}
       </button>
+      
+      {/* Botón de publicar traducido */}
       <button className="header-button" onClick={() => navigate("/publicar")}>
         <span className="header-button-icon"><FaArrowUpFromBracket /></span>
-        <span className="header-button-text">Publicar</span>
+        <span className="header-button-text">{t('header.publish')}</span>
       </button>
 
+      {/* Input de búsqueda con placeholder traducido */}
       <input
         type="text"
-        placeholder="Buscar..."
+        placeholder={t('header.search')}
         className="header-search"
         value={searchQuery}
         onChange={(e) => setSearchQuery(e.target.value)}
         onKeyDown={handleSearch}
       />
-      <button className="header-icon">
-        <FaGlobeEurope size={30} />
-      </button>
+      
+      {/* Reemplazamos el botón de globo por nuestro LanguageSwitcher */}
+      <LanguageSwitcher />
+      
+      {/* Botón de configuración */}
       <button className="header-icon" onClick={() => navigate("/config")}>
         <FaCog size={30} />
       </button>
@@ -93,6 +101,7 @@ const Header = () => {
         </div>
       ) : (
         <button className="header-button" onClick={() => navigate("/login")}>
+          {t('header.login')}
           <span className="header-button-icon"><FaUserCircle /></span>
           <span className="header-button-text">Login</span>
         </button>
