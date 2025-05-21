@@ -223,3 +223,11 @@ export const obtenerPaises = async () => {
   if (!res.ok) throw new Error("Error al obtener países");
   return await res.json();
 };
+
+export const eliminarAsset = async (assetId) => {
+  const response = await fetch(`http://localhost:4000/api/assets/${assetId}`, {
+    method: "DELETE",
+  });
+  if (!response.ok) throw new Error("Error al eliminar asset");
+  return await response.json();
+};

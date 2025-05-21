@@ -1,10 +1,13 @@
 import React, { useState, useEffect } from "react";
+import Toast from "../components/Toast";
 import AssetCardOwn from "../components/AssetCardOwn";
 import AssetCard from "../components/AssetCard";
 import "./Profile.css";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { obtenerAssetsPorUsuario, obtenerAssetsGuardados, actualizarPerfilUsuario } from "../services/api";
+// Añade la función para eliminar asset
+import { eliminarAsset } from "../services/api";
 import { useCurrentUser } from "../hooks/useCurrentUser";
 
 const Profile = () => {
@@ -27,6 +30,12 @@ const Profile = () => {
       newPassword: "",
       confirmPassword: ""
     });
+    const [toast, setToast] = useState({ show: false, type: "success", message: "" });
+
+    const showToast = (type, message) => {
+      setToast({ show: true, type, message });
+      setTimeout(() => setToast({ show: false, type, message: "" }), 3500);
+    };
 
   useEffect(() => {
     if (!currentUser) return;
@@ -58,9 +67,15 @@ const Profile = () => {
     alert(`Editar asset: ${asset.nombre}`);
   };
 
-  const handleDelete = (asset) => {
+  const handleDelete = async (asset) => {
     if (window.confirm(`¿Eliminar asset "${asset.nombre}"?`)) {
-      setMisAssets((prev) => prev.filter((a) => a._id !== asset._id));
+      try {
+        await eliminarAsset(asset._id);
+        setMisAssets((prev) => prev.filter((a) => a._id !== asset._id));
+        showToast("success", "Asset eliminado correctamente");
+      } catch (error) {
+        showToast("error", "Error al eliminar el asset");
+      }
     }
   };
 
@@ -89,7 +104,7 @@ const Profile = () => {
     e.preventDefault();
 
     if (passwordForm.newPassword !== passwordForm.confirmPassword) {
-      alert("Las contraseñas no coinciden");
+      showToast("error", "Las contraseñas no coinciden");
       return;
     }
 
@@ -104,14 +119,14 @@ const Profile = () => {
       });
       const data = await response.json();
       if (!response.ok) throw new Error(data.message || "Error al cambiar la contraseña");
-      alert("Contraseña actualizada correctamente");
+      showToast("success", "Contraseña actualizada correctamente");
       setPasswordForm({
         currentPassword: "",
         newPassword: "",
         confirmPassword: ""
       });
     } catch (error) {
-      alert(error.message);
+      showToast("error", error.message);
     }
   };
 
@@ -123,10 +138,9 @@ const Profile = () => {
         correo: configForm.correo,
         foto: currentUser.avatar // o el nuevo avatar si lo cambiaste
       });
-      alert("Perfil actualizado correctamente");
-      // Opcional: recargar datos del usuario
+      showToast("success", "Perfil actualizado correctamente");
     } catch (error) {
-      alert("Error al actualizar el perfil");
+      showToast("error", "Error al actualizar el perfil");
     }
   };
 
@@ -154,10 +168,10 @@ const Profile = () => {
         foto: data.link, // URL devuelta por el backend
       });
 
-      alert("Avatar actualizado correctamente");
+      showToast("Avatar actualizado correctamente");
       // Opcional: recargar datos del usuario
     } catch (error) {
-      alert("Error al subir el avatar: " + error.message);
+      showToast("Error al subir el avatar: " + error.message);
     }
   };
 
@@ -173,6 +187,12 @@ const Profile = () => {
 
   return (
     <div className="profile-container">
+      <Toast
+        show={toast.show}
+        type={toast.type}
+        message={toast.message}
+        onClose={() => setToast({ ...toast, show: false })}
+      />
       <div className="profile-tabs">
         <button
           className={tab === "mis-assets" ? "active" : ""}

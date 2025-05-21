@@ -101,9 +101,9 @@ router.get('/usuario/:userId', async (req, res) => {
       // Buscar assets por el ObjectId del usuario
       const assets = await Assets.find({ usuario: userId });
   
-      if (assets.length === 0) {
-        return res.status(404).json({ message: 'No se encontraron assets para este usuario' });
-      }
+      // if (assets.length === 0) {
+      //   return res.status(404).json({ message: 'No se encontraron assets para este usuario' });
+      // }
   
       res.status(200).json(assets);
     } catch (error) {
@@ -171,12 +171,12 @@ router.delete('/:id', async (req, res) => {
       return res.status(404).json({ message: 'Asset no encontrado' });
     }
 
-    // Asegurarse de que el asset pertenece al usuario autenticado
-    if (asset.usuario.toString() !== req.usuario.id) {
-      return res.status(403).json({ message: 'No tienes permiso para eliminar este asset' });
-    }
+    // // Asegurarse de que el asset pertenece al usuario autenticado
+    // if (asset.usuario.toString() !== req.usuario.id) {
+    //   return res.status(403).json({ message: 'No tienes permiso para eliminar este asset' });
+    // }
 
-    await Asset.findByIdAndDelete(req.params.id);
+    await Assets.findByIdAndDelete(req.params.id);
 
     res.status(200).json({ message: 'Asset eliminado correctamente' });
   } catch (error) {
