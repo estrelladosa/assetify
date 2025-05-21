@@ -22,7 +22,8 @@ router.get('/search', async (req, res) => {
     const { nombre, categoria, formato, etiquetas } = req.query;
     let filtro = {};
 
-    if (nombre) {
+    // Solo añadir filtro por nombre si nombre no es vacío
+    if (nombre && nombre.trim() !== "") {
       filtro.$or = [
         { nombre: { $regex: nombre, $options: "i" } }
       ];
@@ -42,6 +43,7 @@ router.get('/search', async (req, res) => {
       }
     }
 
+    // Resto de filtros se aplican normalmente
     if (categoria) {
       filtro.categorias = categoria;
     }

@@ -127,11 +127,11 @@ ul li button:hover {
 }
 .popup-exito-contenido h2 {
   margin-bottom: 16px;
-  color: #7fffd4;
+  color: #ffffff;
 }
 .popup-exito-contenido button {
   margin-top: 18px;
-  background: #7fffd4;
+  background: #0a58ca;
   color: #18243a;
   border: none;
   border-radius: 8px;
@@ -142,7 +142,7 @@ ul li button:hover {
   transition: background 0.2s;
 }
 .popup-exito-contenido button:hover {
-  background: #5ee6c1;
+  background: #80bdff;
 }
 
 .login-required {
