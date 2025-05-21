@@ -63,9 +63,10 @@ const Header = () => {
         onClick={() => navigate("/")}
         style={{ cursor: "pointer" }}
       />
-      {/* Botón de inicio traducido */}
-      <button className="header-button" onClick={() => navigate("/")}>
-        {t('header.home')}
+      {/* Botón de busqueda traducido */}
+      <button className="header-button" onClick={() => navigate("/buscar")}>
+        <span className="header-button-icon"><FaSearch /></span>
+        <span className="header-button-text">{t('header.search')}</span>
       </button>
       
       {/* Botón de publicar traducido */}
