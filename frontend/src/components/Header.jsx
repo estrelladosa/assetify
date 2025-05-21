@@ -3,6 +3,7 @@ import "../components/Header.css";
 import logo from "../assets/logo.png";
 import { useNavigate } from "react-router-dom";
 import { FaCog, FaSearch, FaGlobeEurope, FaUserCircle } from "react-icons/fa";
+import { FaArrowUpFromBracket } from "react-icons/fa6";
 
 const Header = () => {
   const navigate = useNavigate();
@@ -24,7 +25,7 @@ const Header = () => {
           const response = await fetch(`http://localhost:4000/api/usuarios/${idUsuario}`);
           if (response.ok) {
             const data = await response.json();
-            setUserName(data.nombre_usuario); // Asume que el campo se llama 'nombre_usuario'
+            setUserName(data.nombre_usuario); 
           } else {
             console.error("Failed to fetch user name");
           }
@@ -59,9 +60,13 @@ const Header = () => {
         onClick={() => navigate("/")}
         style={{ cursor: "pointer" }}
       />
-      <button className="header-button" onClick={() => navigate("/")}>Inicio</button>
+      <button className="header-button" onClick={() => navigate("/buscar")}>
+        <span className="header-button-icon"><FaSearch /></span>
+        <span className="header-button-text">Descubrir</span>
+      </button>
       <button className="header-button" onClick={() => navigate("/publicar")}>
-        Publicar
+        <span className="header-button-icon"><FaArrowUpFromBracket /></span>
+        <span className="header-button-text">Publicar</span>
       </button>
 
       <input
@@ -82,12 +87,14 @@ const Header = () => {
       {isLoggedIn ? (
         <div className="profile-section">
           <button className="header-button" onClick={() => navigate(`/perfil`)}>
-            {userName}
+            <span className="header-button-icon"><FaUserCircle /></span>
+            <span className="header-button-text">{userName}</span>
           </button>
         </div>
       ) : (
         <button className="header-button" onClick={() => navigate("/login")}>
-          Iniciar sesión
+          <span className="header-button-icon"><FaUserCircle /></span>
+          <span className="header-button-text">Login</span>
         </button>
       )}
     </header>
