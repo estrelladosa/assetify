@@ -101,10 +101,9 @@ const Header = () => {
           </button>
         </div>
       ) : (
-        <button className="header-button" onClick={() => navigate("/login")}>
-          {t('header.login')}
-          <span className="header-button-icon"><FaUserCircle /></span>
-          <span className="header-button-text">Login</span>
+        <button className="header-button" onClick={() => navigate(`/login`)}>
+            <span className="header-button-icon"><FaUserCircle /></span>
+            <span className="header-button-text">{t('header.login')}</span>
         </button>
       )}
     </header>
