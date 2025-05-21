@@ -677,7 +677,7 @@ const Config = () => {
         </div>
       </div>
 
-      <div className="config-section">
+      {/* <div className="config-section">
         <h2>{t("config.recommendation")}</h2>
         <div className="config-option">
           <label>{t("config.tags")}</label>
@@ -700,7 +700,7 @@ const Config = () => {
             ))}
           </div>
         </div>
-      </div>
+      </div> */}
 
       <div className="config-section">
         <h2>{t("config.accessibility")}</h2>
