@@ -6,8 +6,8 @@ import LanguageDetector from 'i18next-browser-languagedetector';
 // Importamos los archivos de traducción
 import translationES from './locales/es/translation.json';
 import translationEN from './locales/en/translation.json';
-import translationFR from './locales/fr/translation.json'; // Añadimos el idioma francés
-import translationIT from './locales/it/translation.json'; // Añadimos el idioma italiano
+import translationFR from './locales/fr/translation.json';
+import translationIT from './locales/it/translation.json';
 
 // Recursos con las traducciones
 const resources = {
