@@ -36,6 +36,18 @@ const LanguageSwitcher = () => {
         >
           EN
         </button>
+        <button 
+          className={`language-option ${i18n.language === 'fr' ? 'active' : ''}`}
+          onClick={() => changeLanguage('fr')}
+        >
+          FR
+        </button>
+        <button 
+          className={`language-option ${i18n.language === 'it' ? 'active' : ''}`}
+          onClick={() => changeLanguage('it')}
+        >
+          IT
+        </button>
       </div>
     </div>
   );
