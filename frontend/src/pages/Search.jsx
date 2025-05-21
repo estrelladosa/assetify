@@ -215,7 +215,21 @@ const Search = () => {
           ))}
         </ul>
       </div>
-      
+
+      {/* Select de categorías solo visible en móvil */}
+      <select
+        className="mobile-categorias-dropdown"
+        value={categoriaSeleccionada}
+        onChange={e => setCategoriaSeleccionada(e.target.value)}
+      >
+        <option value="">Todos los productos</option>
+        {categorias.map((cat) => (
+          <option key={cat._id} value={cat._id}>
+            {cat.nombre}
+          </option>
+        ))}
+      </select>
+
       <div className="main-content">
         <h1>Resultados de búsqueda para: "{query}"</h1>
         
