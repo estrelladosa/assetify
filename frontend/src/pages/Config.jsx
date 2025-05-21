@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios"; // Necesitarás instalar axios si aún no lo tienes
 import "./Config.css";
+import { useTranslation } from "react-i18next";
+
 
 const Config = () => {
   // Estados para las diferentes configuraciones
@@ -15,6 +17,8 @@ const Config = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userId, setUserId] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+  const { t } = useTranslation(); // Hook para traducción
+  
 
   // Verificar el estado de inicio de sesión al cargar el componente
   useEffect(() => {
@@ -506,76 +510,73 @@ const Config = () => {
     return (
       <div className="loading-container">
         <div className="loading-spinner"></div>
-        <p>Cargando configuración...</p>
+        <p>{t("config.loading")}</p>
       </div>
     );
   }
 
   return (
     <div className="config-container">
-      <h1 className="config-title">Configuración</h1>
+      <h1 className="config-title">{t("config.title")}</h1>
       
-      {isLoggedIn ? (
+      {/* {isLoggedIn ? (
         <div className="login-status">
-          <span className="logged-in-badge">✓ Cambios guardados en tu cuenta</span>
+          <span className="logged-in-badge">✓ {t("config.savedInAccount")}</span>
         </div>
       ) : (
         <div className="login-status">
-          <span className="logged-out-badge">ⓘ Inicia sesión para guardar configuración en tu cuenta</span>
+          <span className="logged-out-badge">ⓘ {t("config.savedInLocal")}</span>
         </div>
-      )}
+      )} */}
       
       <div className="config-section">
         <button className="reset-button" onClick={resetToDefault}>
-          Restablecer configuración predeterminada
+          {t("config.resetDefaults")}
         </button>
       </div>
 
       <div className="config-section">
-        <h2>Estética</h2>
+        <h2>{t("config.aesthetics")}</h2>
         
         <div className="config-option">
-          <label>Tema</label>
+          <label>{t("config.theme")}</label>
           <div className="theme-options">
             <button 
               className={`theme-button ${theme === "light" ? "active" : ""}`}
               onClick={() => {
                 setTheme("light");
-                // Aplicar inmediatamente para mostrar el cambio
                 applyStyles("light", headerFooterColor, fontSize, fontFamily, customBackground, highContrast);
               }}
               disabled={highContrast}
             >
-              Claro
+              {t("config.themeLight")}
             </button>
             <button 
               className={`theme-button ${theme === "dark" ? "active" : ""}`}
               onClick={() => {
                 setTheme("dark");
-                // Aplicar inmediatamente para mostrar el cambio
                 applyStyles("dark", headerFooterColor, fontSize, fontFamily, customBackground, highContrast);
               }}
               disabled={highContrast}
             >
-              Oscuro
+              {t("config.themeDark")}
             </button>
             <button 
               className={`theme-button ${theme === "superDark" ? "active" : ""}`}
               onClick={() => {
                 setTheme("superDark");
-                // Aplicar inmediatamente para mostrar el cambio
                 applyStyles("superDark", headerFooterColor, fontSize, fontFamily, customBackground, highContrast);
               }}
               disabled={highContrast}
             >
-              Super Oscuro
+              {t("config.themeSuperDark")}
             </button>
           </div>
           {!highContrast && getThemePreview()}
         </div>
         
         <div className="config-option">
-          <label>Fondo personalizado</label>
+          <label>{t("config.customBackground")}</label>
           <input
             type="file"
             accept="image/*"
@@ -585,20 +586,19 @@ const Config = () => {
           />
           {customBackground && !highContrast && (
             <div className="background-preview">
-              <img src={customBackground} alt="Fondo personalizado" />
-              <button onClick={clearCustomBackground}>Eliminar</button>
+              <img src={customBackground} alt={t("config.customBackground")} />
+              <button onClick={clearCustomBackground}>{t("config.remove")}</button>
             </div>
           )}
         </div>
         
         <div className="config-option">
-          <label>Color de header y footer</label>
+          <label>{t("config.headerFooterColor")}</label>
           <input
             type="color"
             value={headerFooterColor}
             onChange={(e) => {
               setHeaderFooterColor(e.target.value);
-              // Opcional: aplicar inmediatamente para mejor UX
               applyStyles(theme, e.target.value, fontSize, fontFamily, customBackground, highContrast);
             }}
             className="color-picker"
@@ -606,68 +606,63 @@ const Config = () => {
           />
           <div className="color-preview" style={{ backgroundColor: highContrast ? "#000000" : headerFooterColor }}>
             <span style={{ color: highContrast ? "#ffffff" : (getLuminance(headerFooterColor) < 0.5 ? "#fff" : "#000") }}>
-              Vista previa
+              {t("config.preview")}
             </span>
           </div>
         </div>
         
         <div className="config-option">
-          <label>Tamaño de fuente: {getFontSizeLabel(highContrast ? "mediano" : fontSize)}</label>
+          <label>{t("config.fontSize")}: {getFontSizeLabel(highContrast ? "mediano" : fontSize, t)}</label>
           <div className="font-size-options">
             <button 
               className={`font-size-button ${fontSize === "pequeño" && !highContrast ? "active" : ""}`}
               onClick={() => {
                 setFontSize("pequeño");
-                // Aplicar inmediatamente para mejor UX
                 applyStyles(theme, headerFooterColor, "pequeño", fontFamily, customBackground, highContrast);
               }}
               disabled={highContrast}
             >
-              Pequeño
+              {t("config.fontSizeSmall")}
             </button>
             <button 
               className={`font-size-button ${(fontSize === "mediano" || highContrast) ? "active" : ""}`}
               onClick={() => {
                 setFontSize("mediano");
-                // Aplicar inmediatamente para mejor UX
                 applyStyles(theme, headerFooterColor, "mediano", fontFamily, customBackground, highContrast);
               }}
               disabled={highContrast}
             >
-              Mediano
+              {t("config.fontSizeMedium")}
             </button>
             <button 
               className={`font-size-button ${fontSize === "grande" && !highContrast ? "active" : ""}`}
               onClick={() => {
                 setFontSize("grande");
-                // Aplicar inmediatamente para mejor UX
                 applyStyles(theme, headerFooterColor, "grande", fontFamily, customBackground, highContrast);
               }}
               disabled={highContrast}
             >
-              Grande
+              {t("config.fontSizeLarge")}
             </button>
             <button 
               className={`font-size-button ${fontSize === "muy-grande" && !highContrast ? "active" : ""}`}
               onClick={() => {
                 setFontSize("muy-grande");
-                // Aplicar inmediatamente para mejor UX
                 applyStyles(theme, headerFooterColor, "muy-grande", fontFamily, customBackground, highContrast);
               }}
               disabled={highContrast}
             >
-              Muy grande
+              {t("config.fontSizeXLarge")}
             </button>
           </div>
         </div>
         
         <div className="config-option">
-          <label>Fuente</label>
+          <label>{t("config.font")}</label>
           <select 
             value={highContrast ? "'Roboto', sans-serif" : fontFamily}
             onChange={(e) => {
               setFontFamily(e.target.value);
-              // Aplicar inmediatamente para mejor UX
               applyStyles(theme, headerFooterColor, fontSize, e.target.value, customBackground, highContrast);
             }}
             className="select"
@@ -683,18 +678,18 @@ const Config = () => {
       </div>
 
       <div className="config-section">
-        <h2>Recomendación</h2>
+        <h2>{t("config.recommendation")}</h2>
         <div className="config-option">
-          <label>Tags de preferencia</label>
+          <label>{t("config.tags")}</label>
           <div className="tag-input-container">
             <input
               type="text"
               value={currentTag}
               onChange={(e) => setCurrentTag(e.target.value)}
-              placeholder="Añadir tag"
+              placeholder={t("config.addTag")}
               className="tag-input"
             />
-            <button onClick={addTag} className="tag-button">Añadir</button>
+            <button onClick={addTag} className="tag-button">{t("config.add")}</button>
           </div>
           <div className="tags-container">
             {tags.map((tag, index) => (
@@ -708,9 +703,9 @@ const Config = () => {
       </div>
 
       <div className="config-section">
-        <h2>Accesibilidad</h2>
+        <h2>{t("config.accessibility")}</h2>
         <div className="config-option">
-          <label>Contraste alto "desactiva otras funciones estéticas"</label>
+          <label>{t("config.highContrastNote")}</label>
           <div className="toggle-switch">
             <input 
               type="checkbox" 
@@ -719,7 +714,6 @@ const Config = () => {
               checked={highContrast}
               onChange={(e) => {
                 setHighContrast(e.target.checked);
-                // Aplicar inmediatamente para mejorar la experiencia del usuario
                 applyStyles(theme, headerFooterColor, fontSize, fontFamily, customBackground, e.target.checked);
               }}
             />
@@ -729,10 +723,11 @@ const Config = () => {
       </div>
 
       <button className="save-button" onClick={saveChanges}>
-        Guardar cambios
+        {t("config.saveChanges")}
       </button>
     </div>
   );
+
 };
 
 export default Config;

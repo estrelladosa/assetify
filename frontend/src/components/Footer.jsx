@@ -1,10 +1,13 @@
 import React from "react";
 import "../components/Footer.css";
 import logo from "../assets/logo.png"; 
-import { Navigate, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next"; // Importamos useTranslation
 
 const Footer = () => {
   const navigate = useNavigate();
+  const { t } = useTranslation(); // Hook para traducción
+
   return (
     <footer className="footer">
       <h2 className="footer-title">
@@ -19,42 +22,42 @@ const Footer = () => {
       <div className="footer-columns">
         {/* Primera columna */}
         <div className="footer-column">
-          <h3>Sobre Nosotros</h3>
+          <h3>{t('footer.aboutUs')}</h3>
           <ul>
-            <li><a href="/Configuracion">Info</a></li>
-            <li><a href="/Configuracion">Estudiantes</a></li>
-            <li><a href="/Configuracion">Investigación UX</a></li>
-            <li><a href="/Configuracion">Accesibilidad</a></li>
+            <li><a href="/Configuracion">{t('footer.info')}</a></li>
+            <li><a href="/Configuracion">{t('footer.students')}</a></li>
+            <li><a href="/Configuracion">{t('footer.uxResearch')}</a></li>
+            <li><a href="/Configuracion">{t('footer.accessibility')}</a></li>
           </ul>
         </div>
         {/* Segunda columna */}
         <div className="footer-column">
-          <h3>Ayuda</h3>
+          <h3>{t('footer.help')}</h3>
           <ul>
-            <li><a href="/index">FAQ</a></li>
-            <li><a href="/index">Servicio al cliente</a></li>
+            <li><a href="/index">{t('footer.faq')}</a></li>
+            <li><a href="/index">{t('footer.customerService')}</a></li>
           </ul>
         </div>
         {/* Tercera columna */}
         <div className="footer-column">
-          <h3>Categorías</h3>
+          <h3>{t('footer.categories')}</h3>
           <ul>
-            <li><a href="/buscar">Esenciales</a></li>
-            <li><a href="/buscar">Complementos</a></li>
-            <li><a href="/buscar">Audio</a></li>
-            <li><a href="/buscar">Herramientas</a></li>
-            <li><a href="/buscar">Efectos</a></li>
-            <li><a href="/buscar">Plantillas</a></li>
+            <li><a href="/buscar">{t('footer.essentials')}</a></li>
+            <li><a href="/buscar">{t('footer.addons')}</a></li>
+            <li><a href="/buscar">{t('footer.audio')}</a></li>
+            <li><a href="/buscar">{t('footer.tools')}</a></li>
+            <li><a href="/buscar">{t('footer.effects')}</a></li>
+            <li><a href="/buscar">{t('footer.templates')}</a></li>
           </ul>
         </div>
         {/* Cuarta columna */}
         <div className="footer-column">
-          <h3>Descubrir</h3>
+          <h3>{t('footer.discover')}</h3>
           <ul>
-            <li><a href="/buscar">Ofertas</a></li>
-            <li><a href="/buscar">Tendencias</a></li>
-            <li><a href="/buscar">Destacados</a></li>
-            <li><a href="/buscar">Más descargados</a></li>
+            <li><a href="/buscar">{t('footer.deals')}</a></li>
+            <li><a href="/buscar">{t('footer.trends')}</a></li>
+            <li><a href="/buscar">{t('footer.featured')}</a></li>
+            <li><a href="/buscar">{t('footer.mostDownloaded')}</a></li>
           </ul>
         </div>
       </div>

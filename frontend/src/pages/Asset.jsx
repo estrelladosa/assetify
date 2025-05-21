@@ -4,7 +4,7 @@ import "./Asset.css";
 import { useCurrentUser } from "../hooks/useCurrentUser";
 import { FaUserPlus, FaCheck, FaHeart, FaRegHeart, FaBookmark, FaRegBookmark, FaPaperPlane, FaTimes } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
-
+import { useTranslation } from "react-i18next"; // Importamos useTranslation
 
 import {
   obtenerAssetPorId,
@@ -22,6 +22,8 @@ export default function Asset() {
   const { assetId } = useParams();
   const navigate = useNavigate();
   const { currentUser, loading, refetchUser } = useCurrentUser();
+  const { t } = useTranslation(); // Hook para traducción
+  
   const [asset, setAsset] = useState(null);
   const [usuario, setUsuario] = useState(null);
   const [comments, setComments] = useState([]);
@@ -122,7 +124,7 @@ export default function Asset() {
     }
   };
 
-    const formatearFecha = (fechaMongo) => {
+  const formatearFecha = (fechaMongo) => {
     const fecha = new Date(fechaMongo);
     const dia = String(fecha.getDate()).padStart(2, '0');
     const mes = String(fecha.getMonth() + 1).padStart(2, '0');
@@ -132,23 +134,23 @@ export default function Asset() {
 
 
   const getDownloadLink = (url) => {
-  if (!url) return "#";
+    if (!url) return "#";
 
-  if (url.includes("uc?id=")) {
-    return `${url}&export=download`;
-  }
+    if (url.includes("uc?id=")) {
+      return `${url}&export=download`;
+    }
 
-  const match = url.match(/\/file\/d\/([a-zA-Z0-9_-]+)/);
-  if (match && match[1]) {
-    return `https://drive.google.com/uc?id=${match[1]}&export=download`;
-  }
+    const match = url.match(/\/file\/d\/([a-zA-Z0-9_-]+)/);
+    if (match && match[1]) {
+      return `https://drive.google.com/uc?id=${match[1]}&export=download`;
+    }
 
     return url;
   };
 
   const handleDownload = () => {
     if (!asset.archivos || asset.archivos.length === 0) return;
-     if (!currentUser) {
+    if (!currentUser) {
       setShowLoginPrompt(true);
       return;
     }
@@ -182,7 +184,7 @@ export default function Asset() {
   };
   
   
-  if (!asset || !usuario) return <div>Cargando...</div>;
+  if (!asset || !usuario) return <div>{t('asset.loading')}</div>;
 
   return (
     <div className="asset-container">
@@ -192,19 +194,18 @@ export default function Asset() {
       {/* Carrusel */}
       <div className="asset-carousel-section">
         <div className="asset-carousel">
-          {<img src={getProperImageUrl(asset.imagenes[currentImgIndex])} alt="Asset" />}
-          {/* Esto hay que revisarlo */}
+          {<img src={getProperImageUrl(asset.imagenes[currentImgIndex])} alt={t('asset.imageAlt')} />}
         </div>
         <div className="asset-thumbnails">
           <button onClick={() => handleImageChange(-1)}>◀</button>
           {asset.imagenes.map((img, index) => (
             <img
-            key={index}
-            src={getProperImageUrl(img)}
-            onClick={() => setCurrentImgIndex(index)}
-            className={`asset-thumbnail ${currentImgIndex === index ? "selected" : ""}`}
-            alt={`thumbnail-${index}`}
-          />          
+              key={index}
+              src={getProperImageUrl(img)}
+              onClick={() => setCurrentImgIndex(index)}
+              className={`asset-thumbnail ${currentImgIndex === index ? "selected" : ""}`}
+              alt={`${t('asset.thumbnail')}-${index}`}
+            />          
           ))}
           <button onClick={() => handleImageChange(1)}>▶</button>
         </div>
@@ -212,40 +213,39 @@ export default function Asset() {
 
       {/* Información del asset */}
       <div className="asset-info">
-      <div className="asset-user">
-        <img src={usuario.foto || "/imagenes/no-profile.png"}  alt="Usuario" className="asset-user-avatar" />
-        <div className="asset-user-info">
-          <p className="asset-username">{usuario.nombre_usuario}</p>
+        <div className="asset-user">
+          <img src={usuario.foto || "/imagenes/no-profile.png"} alt={t('asset.userProfileAlt')} className="asset-user-avatar" />
+          <div className="asset-user-info">
+            <p className="asset-username">{usuario.nombre_usuario}</p>
+            <label>
+              <input type="checkbox" checked={following} onChange={handleToggleFollow} className="follow NoCheckBox" />
+              <span className="asset-button asset-follow">
+                {following ? <><FaCheck /> {t('asset.following')}</> : <><FaUserPlus /> {t('asset.follow')}</>}
+              </span>
+            </label>
+          </div>
+        </div>
+
+        <div className="asset-actions">
           <label>
-            <input type="checkbox" checked={following} onChange={handleToggleFollow} className="follow NoCheckBox" />
-            <span className="asset-button asset-follow">
-              {following ?  <><FaCheck /> Siguiendo</> : <><FaUserPlus /> Seguir</>}
+            <input type="checkbox" checked={liked} onChange={handleToggleLike} className="like NoCheckBox" />
+            <span className="asset-button asset-like">
+              {liked ? <><FaHeart /> {t('asset.liked')}</> : <><FaRegHeart /> {t('asset.like')}</>}
+            </span>
+          </label>
+          <label>
+            <input type="checkbox" checked={saved} onChange={handleToggleSave} className="save NoCheckBox" />
+            <span className="asset-button asset-save">
+              {saved ? <><FaBookmark /> {t('asset.saved')}</> : <><FaRegBookmark /> {t('asset.save')}</>}
             </span>
           </label>
         </div>
-      </div>
-
-      <div className="asset-actions">
-        <label>
-          <input type="checkbox" checked={liked} onChange={handleToggleLike} className="like NoCheckBox" />
-          <span className="asset-button asset-like">
-            {liked ? <><FaHeart /> Liked</> : <><FaRegHeart /> Like</>}
-          </span>
-        </label>
-        <label>
-          <input type="checkbox" checked={saved} onChange={handleToggleSave} className="save NoCheckBox" />
-          <span className="asset-button asset-save">
-            {saved ? <><FaBookmark /> Guardado</> : <><FaRegBookmark /> Guardar</>}
-          </span>
-        </label>
-      </div>
-
 
         <h2>{asset.nombre}</h2>
         <p className="desc">{asset.descripcion}</p>
-        <p className="texto"><strong>Fecha de creación:</strong> {formatearFecha(asset.fecha)}</p>
-        <p className="texto"><strong>Formatos:</strong> {asset.formato.split('|').join(', ')}</p>
-        <p className="eti">Etiquetas:</p>
+        <p className="texto"><strong>{t('asset.creationDate')}:</strong> {formatearFecha(asset.fecha)}</p>
+        <p className="texto"><strong>{t('asset.formats')}:</strong> {asset.formato.split('|').join(', ')}</p>
+        <p className="eti">{t('asset.tags')}:</p>
         {/* Mostrar las etiquetas */}
         <div className="asset-tags">
           {etiquetas.map((etiqueta, i) => (
@@ -253,12 +253,11 @@ export default function Asset() {
           ))}
         </div>
 
-
-        <button className="asset-download"  onClick={handleDownload}>Descargar</button>
+        <button className="asset-download" onClick={handleDownload}>{t('asset.download')}</button>
 
         {/* Comentarios */}
         <div className="asset-comments">
-          <h3>Comentarios</h3>
+          <h3>{t('asset.comments')}</h3>
           <div>
             {comments.map((c, i) => (
               <div key={i} className="comment-box">
@@ -273,22 +272,21 @@ export default function Asset() {
               type="text"
               value={newComment}
               onChange={(e) => setNewComment(e.target.value)}
-              placeholder="Escribe un comentario..."
+              placeholder={t('asset.writeComment')}
             />
-            <button type="submit"> <FaPaperPlane /></button>
+            <button type="submit"><FaPaperPlane /></button>
           </form>
         </div>
       </div>
       {showLoginPrompt && (
-  <div className="login-prompt-modal">
-    <div className="login-prompt-content">
-      <p>Debes iniciar sesión para realizar esta acción.</p>
-      <a href="/login">Ir a iniciar sesión</a>
-      <button onClick={() => setShowLoginPrompt(false)}>Cerrar</button>
-    </div>
-  </div>
-)}
-
+        <div className="login-prompt-modal">
+          <div className="login-prompt-content">
+            <p>{t('asset.loginRequired')}</p>
+            <a href="/login">{t('asset.goToLogin')}</a>
+            <button onClick={() => setShowLoginPrompt(false)}>{t('asset.close')}</button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

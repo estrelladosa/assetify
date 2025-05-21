@@ -2,10 +2,13 @@ import React, { useState, useEffect } from "react";
 import subirArchivoIcon from "../assets/subirarchivo.png";
 import subirImagenIcon from "../assets/subirimagen.png";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next"; // Importamos useTranslation
 import "./Publicar.css";
 
 const Publicar = () => {
   const navigate = useNavigate();
+  const { t } = useTranslation(); // Hook para traducción
+  
   const [isLoggedIn, setIsLoggedIn] = useState(false); // Estado para verificar si el usuario está logueado
   const [archivos, setArchivos] = useState([]);
   const [imagenes, setImagenes] = useState([]);
@@ -197,7 +200,7 @@ const Publicar = () => {
     e.preventDefault();
 
     if (!form.nombre || !form.descripcion || categoriasSeleccionadas.length === 0) {
-      setMensaje("❌ Por favor, completa todos los campos obligatorios.");
+      setMensaje(t("publish.requiredFields"));
       return;
     }
 
@@ -245,7 +248,7 @@ const Publicar = () => {
         setMensaje(`❌ Error: ${data.message || "No se pudo publicar el asset."}`);
       }
     } catch (error) {
-      setMensaje("❌ Error al subir las imágenes: " + error.message);
+      setMensaje(t("publish.uploadError") + error.message);
     }
   };
 
@@ -259,8 +262,8 @@ const Publicar = () => {
     <div className="publicar-container">
       {!isLoggedIn ? (
         <div className="login-required">
-          <p>Para poder publicar assets tienes que iniciar sesión.</p>
-          <button onClick={() => navigate("/login")}>Iniciar Sesión</button>
+          <p>{t("publish.loginRequired")}</p>
+          <button onClick={() => navigate("/login")}>{t("publish.loginButton")}</button>
         </div>
       ) : (
         <>
@@ -269,36 +272,36 @@ const Publicar = () => {
       {popupExito && (
         <div className="popup-exito">
           <div className="popup-exito-contenido">
-            <h2>¡Asset publicado con éxito!</h2>
-            <p>Tu asset ha sido subido correctamente.</p>
+            <h2>{t("publish.successTitle")}</h2>
+            <p>{t("publish.successMessage")}</p>
             <button onClick={() => { setPopupExito(false); navigate("/"); }}>
-              Ir al inicio
+              {t("publish.goToHome")}
             </button>
           </div>
         </div>
       )}
       <form onSubmit={handleSubmit} className="publicar-columnas">
         <div>
-          <h3>Nombre</h3>
+          <h3>{t("publish.name")}</h3>
           <input
             id="nombre"
             type="text"
             name="nombre"
-            placeholder="Nombre"
+            placeholder={t("publish.name")}
             value={form.nombre}
             onChange={handleChange}
             required
           />
-          <h3>Descripción</h3>
+          <h3>{t("publish.description")}</h3>
           <textarea
             id="descripcion"
             name="descripcion"
-            placeholder="Descripción"
+            placeholder={t("publish.description")}
             value={form.descripcion}
             onChange={handleChange}
             required
           ></textarea>
-          <h3>Sube los archivos aquí</h3>
+          <h3>{t("publish.uploadFiles")}</h3>
           <label className="upload-button">
             <img src={subirArchivoIcon} alt="Subir archivo" />
             <input type="file" multiple onChange={handleArchivoSubido} />
@@ -308,7 +311,7 @@ const Publicar = () => {
               <li key={index}>
                 {archivo.name}{" "}
                 <button type="button" onClick={() => handleEliminarArchivo(index)}>
-                  Eliminar
+                  {t("publish.remove")}
                 </button>
               </li>
             ))}
@@ -316,12 +319,12 @@ const Publicar = () => {
         </div>
 
             <div>
-              <h3>Elige tus tags</h3>
+              <h3>{t("publish.chooseTags")}</h3>
               <div className="translucent-background">
                 <input
                   list="etiquetas-disponibles"
                   type="text"
-                  placeholder="Buscar etiqueta"
+                  placeholder={t("publish.searchTag")}
                   value={nuevaEtiqueta}
                   onChange={(e) => setNuevaEtiqueta(e.target.value)}
                   className = "etiquetas-input"
@@ -332,20 +335,20 @@ const Publicar = () => {
                   ))}
                 </datalist>
                 <button type="button" onClick={handleAgregarEtiqueta}>
-                  Añadir
+                  {t("publish.add")}
                 </button>
                 <ul>
                   {etiquetas.map((etiqueta, index) => (
                     <li key={index}>
                       {etiqueta.nombre}{" "}
                       <button type="button" onClick={() => handleEliminarEtiqueta(index)}>
-                        Eliminar
+                        {t("publish.remove")}
                       </button>
                     </li>
                   ))}
                 </ul>
               </div>
-              <h3>Subir fotos de vista previa</h3>
+              <h3>{t("publish.uploadPreviewImages")}</h3>
               <label className="upload-button">
                 <img src={subirImagenIcon} alt="Subir imagen" />
                 <input type="file" multiple onChange={handleImagenSubida} />
@@ -355,7 +358,7 @@ const Publicar = () => {
                   <li key={index}>
                     {imagen.name}{" "}
                     <button type="button" onClick={() => handleEliminarImagen(index)}>
-                      Eliminar
+                      {t("publish.remove")}
                     </button>
                   </li>
                 ))}
@@ -363,7 +366,7 @@ const Publicar = () => {
             </div>
 
             <div>
-              <h3>Selecciona categoría</h3>
+              <h3>{t("publish.selectCategory")}</h3>
               <div className="translucent-background">
                 <ul>
                   {categoriasDisponibles.map((categoria) => (
@@ -384,9 +387,9 @@ const Publicar = () => {
               </div>
               <div className="botones">
                 <button type="reset" onClick={handleCancelar}>
-                  Cancelar
+                  {t("publish.cancel")}
                 </button>
-                <button type="submit">Publicar</button>
+                <button type="submit">{t("publish.publish")}</button>
               </div>
             </div>
           </form>
