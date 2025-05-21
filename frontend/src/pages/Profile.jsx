@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import AssetCardOwn from "../components/AssetCardOwn";
 import AssetCard from "../components/AssetCard";
 import "./Profile.css";
+import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { obtenerAssetsPorUsuario, obtenerAssetsGuardados } from "../services/api";
 import { useCurrentUser } from "../hooks/useCurrentUser";
@@ -76,6 +77,10 @@ const Profile = () => {
           misAssets.length > 0 ? (
             misAssets.map((asset) => (
               <div className="profile-asset-card" key={asset._id}>
+                <Link 
+                  key={asset._id} 
+                  to={`/asset/${asset._id}`}  // <-- Pasa el ID en la URL
+                >     
                 <AssetCardOwn
                   title={asset.nombre}
                   author={asset.usuario?.nombre_usuario || "Usuario desconocido"}
@@ -84,6 +89,7 @@ const Profile = () => {
                   onEdit={() => handleEdit(asset)}
                   onDelete={() => handleDelete(asset)}
                 />
+                </Link>
               </div>
             ))
           ) : (
@@ -93,11 +99,16 @@ const Profile = () => {
           guardados.length > 0 ? (
             guardados.map((asset) => (
               <div className="profile-asset-card" key={asset._id}>
+                <Link 
+                  key={asset._id} 
+                  to={`/asset/${asset._id}`}  // <-- Pasa el ID en la URL
+                >     
                 <AssetCard
                   title={asset.nombre}
                   author={asset.usuario?.nombre_usuario || "Usuario desconocido"}
                   imageURL={asset.imagenes?.[0]}
                 />
+                </Link>
               </div>
             ))
           ) : (

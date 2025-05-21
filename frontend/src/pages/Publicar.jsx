@@ -22,7 +22,7 @@ const Publicar = () => {
   const [categoriasDisponibles, setCategoriasDisponibles] = useState([]);
   const [etiquetasDisponibles, setEtiquetasDisponibles] = useState([]);
   const [popupExito, setPopupExito] = useState(false);
-  const extensionesPermitidas = [".fbx", ".obj", ".stl", ".blend", ".wrl"];
+  const extensionesPermitidas = [".fbx", ".obj", ".stl", ".blend", ".wrl", ".gltf", ".glb", ".zip", ".rar", ".7z", ".jpg", ".jpeg", ".png", ".gif", ".mp3", ".wav"];
 
 
   useEffect(() => {
