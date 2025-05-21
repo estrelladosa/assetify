@@ -123,24 +123,20 @@ router.get('/:assetId/categorias', async (req, res) => {
 
 // Obtener los assets que ha creado un usuario
 router.get('/usuario/:userId', async (req, res) => {
-    const { userId } = req.params;
-  
-    try {
-      // Buscar assets por el ObjectId del usuario
-      const assets = await Assets.find({ usuario: userId });
-  
-      // if (assets.length === 0) {
-      //   return res.status(404).json({ message: 'No se encontraron assets para este usuario' });
-      // }
-  
-      res.status(200).json(assets);
-    } catch (error) {
-      res.status(500).json({
-        message: 'Error al obtener los assets del usuario',
-        error: error.message
-      });
-    }
-  });
+  const { userId } = req.params;
+
+  try {
+    // Buscar assets por el ObjectId del usuario Y POPULAR el campo usuario
+    const assets = await Assets.find({ usuario: userId }).populate('usuario', 'nombre_usuario');
+
+    res.status(200).json(assets);
+  } catch (error) {
+    res.status(500).json({
+      message: 'Error al obtener los assets del usuario',
+      error: error.message
+    });
+  }
+});
 
 
 // Ruta para obtener todos los assets

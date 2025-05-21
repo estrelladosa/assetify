@@ -80,24 +80,31 @@ router.post('/', async (req, res) => {
   });
 
   // Ruta para obtener los assets guardados por un usuario
-  router.get('/:userId/guardados', async (req, res) => {
-    const { userId } = req.params; // Obtiene el ID del usuario desde los parámetros de la ruta
+router.get('/:userId/guardados', async (req, res) => {
+  const { userId } = req.params; // Obtiene el ID del usuario desde los parámetros de la ruta
 
-    try {
-        // Buscar al usuario en la base de datos usando el userId
-        const usuario = await Usuario.findById(userId).populate('guardados'); 
-
-        if (!usuario) {
-            return res.status(404).json({ message: 'Usuario no encontrado' }); // Si no se encuentra el usuario, devolver 404
+  try {
+    // Buscar al usuario en la base de datos usando el userId
+    const usuario = await Usuario.findById(userId)
+      .populate({
+        path: 'guardados',
+        populate: {
+          path: 'usuario',
+          select: 'nombre_usuario foto'
         }
+      });
 
-        // Los assets guardados están en el array `guardados` del usuario
-        // Si guardados contiene IDs de assets, `populate` los convierte en documentos completos
-        res.status(200).json(usuario.guardados); // Devuelve los assets guardados en formato JSON
-    } catch (error) {
-        res.status(500).json({ message: error.message }); // En caso de error en la consulta
+    if (!usuario) {
+      return res.status(404).json({ message: 'Usuario no encontrado' }); // Si no se encuentra el usuario, devolver 404
     }
-  });
+
+    // Los assets guardados están en el array `guardados` del usuario
+    // ahora cada asset tiene su usuario populado
+    res.status(200).json(usuario.guardados); // Devuelve los assets guardados en formato JSON
+  } catch (error) {
+    res.status(500).json({ message: error.message }); // En caso de error en la consulta
+  }
+});
 
   // Si el asset ya estaba guardado en la lista del usuario, lo elimina, sino, lo guarda
   router.put('/:userId/guardados/:assetId', async (req, res) => {
