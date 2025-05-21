@@ -3,12 +3,11 @@
   display: inline-block;
 }
 
-.language-icon {
+/* .language-icon {
   background: none;
   border: none;
   cursor: pointer;
-  color: inherit;
-}
+} */
 
 .language-dropdown {
   display: none;
@@ -36,13 +35,4 @@
   background: none;
   border: none;
   cursor: pointer;
-}
-
-.language-option:hover {
-  background-color: #f1f1f1;
-}
-
-.language-option.active {
-  background-color: #e0e0e0;
-  font-weight: bold;
 }
