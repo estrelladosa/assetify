@@ -36,7 +36,29 @@ textarea {
   background-color: rgba(255, 255, 255, 0.5);
   padding: 20px;
   border-radius: 8px;
+  text-align: left;
   margin-bottom: 20px;
+}
+
+.translucent-background ul li {
+  display: flex;
+  align-items: center;
+  margin-bottom: 15px; /* Aumentado de 8px a 15px para mayor interlineado */
+  justify-content: flex-start;
+}
+
+.translucent-background ul li label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  justify-content: flex-start; /* Alinea el contenido del label a la izquierda */
+}
+
+.translucent-background ul li input[type="checkbox"] {
+  margin: 0;
+  cursor: pointer;
+  order: -1; /* Asegura que el checkbox siempre esté primero */
 }
 
 .upload-button {
@@ -66,9 +88,10 @@ ul {
 }
 
 ul li {
+  list-style: none;
+  padding: 0;
   margin-bottom: 10px;
   display: flex;
-  justify-content: space-between;
   align-items: center;
 }
 
