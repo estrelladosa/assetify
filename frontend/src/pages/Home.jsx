@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next"; // Importamos useTranslation
 import AssetCard from "../components/AssetCard";
 import "../pages/Home.css";
 import { obtenerAssets } from "../services/api";
-//import { link } from "../../../backend/routes/usuarioRoutes";
 
 const Home = () => {
+  const { t } = useTranslation(); // Hook para traducción
   const [allAssets, setAllAssets] = useState([]);
   const [cargando, setCargando] = useState(true);
   const [error, setError] = useState(null);
@@ -21,14 +22,14 @@ const Home = () => {
         setError(null);
       } catch (err) {
         console.error("Error al cargar los assets:", err);
-        setError("No se pudieron cargar los assets. Por favor, intenta de nuevo más tarde.");
+        setError(t('home.error'));
       } finally {
         setCargando(false);
       }
     };
 
     cargarAssets();
-  }, []);
+  }, [t]); // Agregamos t como dependencia para que se actualice si cambia el idioma
 
   // Función para asegurar que las URLs de Drive sean correctas
   const getProperImageUrl = (url) => {
@@ -72,7 +73,7 @@ const Home = () => {
   };
 
   if (cargando) {
-    return <div className="home loading">Cargando assets...</div>;
+    return <div className="home loading">{t('home.loading')}</div>;
   }
 
   if (error) {
@@ -81,20 +82,19 @@ const Home = () => {
 
   return (
     <div className="home">
-      <h2>Destacados del día</h2>
+      <h2>{t('home.featuredToday')}</h2>
       {destacados.length > 0 ? (
         <div className="destacados-box">
           <div className="destacados">
             {destacados.map((asset) => (
              <Link 
              key={asset._id} 
-             to={`/asset/${asset._id}`}  // <-- Pasa el ID en la URL
+             to={`/asset/${asset._id}`}
               >           
               <AssetCard 
                 key={asset._id} 
                 title={asset.nombre || asset.title} 
-                author={asset.usuario?.nombre_usuario || asset.author || "Usuario desconocido"} 
-                // Aquí aplicamos la función para corregir la URL
+                author={asset.usuario?.nombre_usuario || asset.author || t('home.unknownUser')} 
                 imageURL={asset.imagenes?.[0] ? getProperImageUrl(asset.imagenes[0]) : "./assets/placeholder.png"} 
               />
               </Link>
@@ -102,23 +102,22 @@ const Home = () => {
           </div>
         </div>
       ) : (
-        <p>No hay assets destacados disponibles.</p>
+        <p>{t('home.noFeatured')}</p>
       )}
 
-      <h2>Subidos recientemente</h2>
+      <h2>{t('home.recentlyUploaded')}</h2>
       {recientes.length > 0 ? (
         <>
           <div className="recientes">
             {recientes.slice(0, visibleRecientes).map((asset, index) => (
               <Link 
               key={asset._id} 
-              to={`/asset/${asset._id}`}  // <-- Pasa el ID en la URL
+              to={`/asset/${asset._id}`}
             >            
               <AssetCard 
                 key={asset._id} 
                 title={asset.nombre || asset.title} 
-                author={asset.usuario?.nombre_usuario || asset.author || "Usuario desconocido"} 
-                // Aquí aplicamos la función para corregir la URL
+                author={asset.usuario?.nombre_usuario || asset.author || t('home.unknownUser')} 
                 imageURL={asset.imagenes?.[0] ? getProperImageUrl(asset.imagenes[0]) : "./assets/placeholder.png"} 
                 className={`asset-${index % 4}`} 
               />
@@ -127,31 +126,34 @@ const Home = () => {
           </div>
           <div className="botones">
             {recientes.length > visibleRecientes && (
-              <p className="mostrar-mas" onClick={() => mostrarMas(setVisibleRecientes, recientes.length)}>Mostrar más</p>
+              <p className="mostrar-mas" onClick={() => mostrarMas(setVisibleRecientes, recientes.length)}>
+                {t('home.showMore')}
+              </p>
             )}
             {visibleRecientes > 4 && (
-              <p className="mostrar-menos" onClick={() => mostrarMenos(setVisibleRecientes)}>Mostrar menos</p>
+              <p className="mostrar-menos" onClick={() => mostrarMenos(setVisibleRecientes)}>
+                {t('home.showLess')}
+              </p>
             )}
           </div>
         </>
       ) : (
-        <p>No hay assets recientes disponibles.</p>
+        <p>{t('home.noRecent')}</p>
       )}
 
-      <h2>Tendencias</h2>
+      <h2>{t('home.trends')}</h2>
       {tendencias.length > 0 ? (
         <>
           <div className="tendencias">
             {tendencias.slice(0, visibleTendencias).map((asset, index) => (
                <Link 
                key={asset._id} 
-               to={`/asset/${asset._id}`}  // <-- Pasa el ID en la URL
+               to={`/asset/${asset._id}`}
                >             
               <AssetCard 
                 key={asset._id} 
                 title={asset.nombre || asset.title} 
-                author={asset.usuario?.nombre_usuario || asset.author || "Usuario desconocido"} 
-                // Aquí aplicamos la función para corregir la URL
+                author={asset.usuario?.nombre_usuario || asset.author || t('home.unknownUser')} 
                 imageURL={asset.imagenes?.[0] ? getProperImageUrl(asset.imagenes[0]) : "./assets/placeholder.png"}
                 className={`asset-${index % 4}`} 
               />
@@ -160,15 +162,19 @@ const Home = () => {
           </div>
           <div className="botones">
             {tendencias.length > visibleTendencias && (
-              <p className="mostrar-mas" onClick={() => mostrarMas(setVisibleTendencias, tendencias.length)}>Mostrar más</p>
+              <p className="mostrar-mas" onClick={() => mostrarMas(setVisibleTendencias, tendencias.length)}>
+                {t('home.showMore')}
+              </p>
             )}
             {visibleTendencias > 4 && (
-              <p className="mostrar-menos" onClick={() => mostrarMenos(setVisibleTendencias)}>Mostrar menos</p>
+              <p className="mostrar-menos" onClick={() => mostrarMenos(setVisibleTendencias)}>
+                {t('home.showLess')}
+              </p>
             )}
           </div>
         </>
       ) : (
-        <p>No hay tendencias disponibles.</p>
+        <p>{t('home.noTrends')}</p>
       )}
     </div>
   );
