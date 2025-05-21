@@ -2,6 +2,7 @@
   --header-footer-bg: #212121;
   --header-footer-text: #ffffff;
   --header-footer-hover: #5d5d5d;
+  --icon-size: 30px;
 }
 
 .header {
@@ -66,7 +67,7 @@
   background: none;
   border: none;
   /* Cambiar tamaño fijo por variable CSS */
-  font-size: var(--font-size-xl);
+  font-size: var(--icon-size);
   color: var(--header-footer-text);
   margin: 0 5px;
   cursor: pointer;
@@ -81,6 +82,15 @@
 .header-button .header-button-icon {
   display: none;
 }
+
+
+.profile-photo {
+  width: 80px; /* Adjust as needed */
+  height: 60px; /* Adjust as needed */
+  border-radius: 50%; /* Make it circular */
+  object-fit: cover; /* Ensure the image fills the container */
+}
+
 
 @media (max-width: 950px) {
   /* En pantallas pequeñas, ocultar texto y mostrar iconos */

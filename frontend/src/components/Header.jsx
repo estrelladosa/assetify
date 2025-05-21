@@ -14,6 +14,7 @@ const Header = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userId, setUserId] = useState(null);
   const [userName, setUserName] = useState("");
+  const [userPhoto, setUserPhoto] = useState(null); // Nuevo estado para la foto de perfil
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -21,22 +22,23 @@ const Header = () => {
     setIsLoggedIn(!!token);
     setUserId(idUsuario);
 
-    // Fetch user name if logged in
+    // Fetch user name and photo if logged in
     if (token && idUsuario) {
-      const fetchUserName = async () => {
+      const fetchUserData = async () => {
         try {
           const response = await fetch(`http://localhost:4000/api/usuarios/${idUsuario}`);
           if (response.ok) {
             const data = await response.json();
             setUserName(data.nombre_usuario);
+            setUserPhoto(data.foto); // Asumiendo que el campo se llama 'foto'
           } else {
-            console.error("Failed to fetch user name");
+            console.error("Failed to fetch user data");
           }
         } catch (error) {
-          console.error("Error fetching user name:", error);
+          console.error("Error fetching user data:", error);
         }
       };
-      fetchUserName();
+      fetchUserData();
     }
   }, []);
 
@@ -85,9 +87,10 @@ const Header = () => {
         onKeyDown={handleSearch}
       />
       
-      {/* Reemplazamos el botón de globo por nuestro LanguageSwitcher */}
-      <LanguageSwitcher />
-      
+      <button className="header-icon">
+        <LanguageSwitcher />
+      </button>
+          
       {/* Botón de configuración */}
       <button className="header-icon" onClick={() => navigate("/config")}>
         <FaCog size={30} />
@@ -96,14 +99,17 @@ const Header = () => {
       {isLoggedIn ? (
         <div className="profile-section">
           <button className="header-button" onClick={() => navigate(`/perfil`)}>
-            <span className="header-button-icon"><FaUserCircle /></span>
-            <span className="header-button-text">{userName}</span>
+            {userPhoto ? (
+              <img src={userPhoto} alt="Profile" className="profile-photo" />
+            ) : (
+              <FaUserCircle size={30} />
+            )}
           </button>
         </div>
       ) : (
         <button className="header-button" onClick={() => navigate(`/login`)}>
-            <span className="header-button-icon"><FaUserCircle /></span>
-            <span className="header-button-text">{t('header.login')}</span>
+          <span className="header-button-icon"><FaUserCircle /></span>
+          <span className="header-button-text">{t('header.login')}</span>
         </button>
       )}
     </header>
