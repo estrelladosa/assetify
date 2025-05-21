@@ -32,7 +32,10 @@ const Publicar = () => {
   "3D": [".fbx", ".obj", ".stl", ".blend", ".wrl", ".gltf", ".glb", ".dae"],
   "Audio": [".mp3", ".wav", ".ogg", ".flac", ".aac", ".m4a"],
   "Video": [".mp4", ".mov", ".avi", ".mkv", ".webm"],
-  "Código": [".js", ".ts", ".py", ".cpp", ".c", ".java", ".cs", ".html", ".css", ".json", ".xml", ".txt", ".md"]
+  "Código": [
+  ".js", ".ts", ".py", ".cpp", ".c", ".h", ".java", ".cs", ".html", ".htm", ".css", ".scss", ".less",
+  ".json", ".xml", ".yml", ".yaml", ".txt", ".md", ".sh", ".bat", ".ps1", ".php", ".rb", ".go", ".rs",
+  ".swift", ".kt", ".m", ".pl", ".lua", ".sql", ".r", ".jl", ".asm", ".vb", ".fs", ".dart", ".scala"]
 };
 
 
