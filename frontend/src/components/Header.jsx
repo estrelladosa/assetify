@@ -4,17 +4,17 @@ import logo from "../assets/logo.png";
 import { useNavigate } from "react-router-dom";
 import { FaCog, FaSearch, FaUserCircle } from "react-icons/fa";
 import { FaArrowUpFromBracket } from "react-icons/fa6";
-import { useTranslation } from "react-i18next"; // Importamos useTranslation
-import LanguageSwitcher from "./LanguageSwitcher"; // Importamos el componente LanguageSwitcher
+import { useTranslation } from "react-i18next";
+import LanguageSwitcher from "./LanguageSwitcher";
 
 const Header = () => {
   const navigate = useNavigate();
-  const { t } = useTranslation(); // Hook para traducción
+  const { t } = useTranslation();
   const [searchQuery, setSearchQuery] = useState("");
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userId, setUserId] = useState(null);
   const [userName, setUserName] = useState("");
-  const [userPhoto, setUserPhoto] = useState(null); // Nuevo estado para la foto de perfil
+  const [userPhoto, setUserPhoto] = useState(null);
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -30,7 +30,7 @@ const Header = () => {
           if (response.ok) {
             const data = await response.json();
             setUserName(data.nombre_usuario);
-            setUserPhoto(data.foto); // Asumiendo que el campo se llama 'foto'
+            setUserPhoto(data.foto);
           } else {
             console.error("Failed to fetch user data");
           }
@@ -87,9 +87,10 @@ const Header = () => {
         onKeyDown={handleSearch}
       />
       
-      <button className="header-icon">
+      {/* Botón de idioma - Modificado para usar la clase header-button */}
+      <div className="header-button language-container">
         <LanguageSwitcher />
-      </button>
+      </div>
           
       {/* Botón de configuración */}
       <button className="header-icon" onClick={() => navigate("/config")}>
