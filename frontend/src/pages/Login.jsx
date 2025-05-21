@@ -58,23 +58,29 @@ const Login = () => {
           <h2>INICIA SESIÓN</h2>
           {mensaje && <p className="mensaje">{mensaje}</p>}
           <form onSubmit={handleSubmit} className="login-form">
-            <input
-              type="email"
-              name="correo"
-              placeholder="Correo electrónico"
-              value={form.correo}
-              onChange={handleChange}
-              required
-              ref={correoInputRef}
-            />
-            <input
-              type="password"
-              name="contraseña"
-              placeholder="Contraseña"
-              value={form.contraseña}
-              onChange={handleChange}
-              required
-            />
+            <div className="input-container">
+              <label className="input-label" htmlFor="correo">Correo electrónico</label>
+              <input
+                type="email"
+                name="correo"
+                id="correo"
+                value={form.correo}
+                onChange={handleChange}
+                required
+                ref={correoInputRef}
+              />
+            </div>
+            <div className="input-container">
+              <label className="input-label" htmlFor="contraseña">Contraseña</label>
+              <input
+                type="password"
+                name="contraseña"
+                id="contraseña"
+                value={form.contraseña}
+                onChange={handleChange}
+                required
+              />
+            </div>
             <p className="register-link" onClick={() => navigate("/registro")}>
               ¿No tienes cuenta? <span>Regístrate aquí</span></p>
             <button type="submit">Iniciar Sesión</button>

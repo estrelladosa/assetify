@@ -90,12 +90,26 @@ const Registro = () => {
           <h2>REGÍSTRATE</h2>
           {mensaje && <p className="mensaje">{mensaje}</p>}
           <form onSubmit={handleSubmit} className="registro-form">
-            <input ref={nombreImputRef} type="text" name="nombre_usuario" placeholder="Nombre de usuario" value={form.nombre_usuario} onChange={handleChange} required />
-            <input type="email" name="correo" placeholder="Correo electrónico" value={form.correo} onChange={handleChange} required />
-            <input type="password" name="contraseña" placeholder="Contraseña" value={form.contraseña} onChange={handleChange} required />
-            <input type="password" name="repetirContraseña" placeholder="Repetir contraseña" value={form.repetirContraseña} onChange={handleChange} required />
-            <label htmlFor="fotoPerfil">Foto de perfil</label>
-            <input type="file" accept="image/*" ref={imagenInputRef} onChange={(e) => setImagenPerfil(e.target.files[0])} />
+            <div className="input-container-name">
+              <label className="input-label-name" htmlFor="nombre_usuario">Nombre de usuario</label>
+              <input ref={nombreImputRef} type="text" name="nombre_usuario" id="nombre_usuario" value={form.nombre_usuario} onChange={handleChange} required />
+            </div>
+            <div className="input-container">
+              <label className="input-label" htmlFor="correo">Correo electrónico</label>
+              <input type="email" name="correo" id="correo" value={form.correo} onChange={handleChange} required />
+            </div>
+            <div className="input-container">
+              <label className="input-label" htmlFor="contraseña">Contraseña</label>
+              <input type="password" name="contraseña" id="contraseña" value={form.contraseña} onChange={handleChange} required />
+            </div>
+            <div className="input-container">
+              <label className="input-label" htmlFor="repetirContraseña">Repetir contraseña</label>
+              <input type="password" name="repetirContraseña" id="repetirContraseña" value={form.repetirContraseña} onChange={handleChange} required />
+            </div>
+             <div className="input-container">
+              <label className="input-label" htmlFor="fotoPerfil">Foto de perfil</label>
+              <input type="file" accept="image/*" ref={imagenInputRef} id="fotoPerfil" onChange={(e) => setImagenPerfil(e.target.files[0])} />
+            </div>
             <p className="register-link" onClick={() => navigate("/login")}>
               ¿Ya tienes cuenta? <span>Inicia sesión aquí</span>
             </p>
