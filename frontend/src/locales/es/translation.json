@@ -61,7 +61,7 @@
     "requiredFields": "❌ Por favor, completa todos los campos obligatorios.",
     "uploadError": "❌ Error al subir las imágenes: "
   },
-   "config": {
+  "config": {
     "title": "Configuración",
     "loading": "Cargando configuración...",
     "savedInAccount": "Cambios guardados en tu cuenta",
@@ -90,7 +90,7 @@
     "highContrastNote": "Contraste alto \"desactiva otras funciones estéticas\"",
     "saveChanges": "Guardar cambios"
   },
-   "asset": {
+  "asset": {
     "loading": "Cargando...",
     "imageAlt": "Asset",
     "thumbnail": "miniatura",
@@ -110,5 +110,72 @@
     "loginRequired": "Debes iniciar sesión para realizar esta acción.",
     "goToLogin": "Ir a iniciar sesión",
     "close": "Cerrar"
+  },
+  "search": {
+    "productTypes": "TIPOS DE PRODUCTO",
+    "allProducts": "Todos los productos",
+    "resultsFor": "Resultados de búsqueda para",
+    "tags": "Etiquetas",
+    "sortByLikes": "Ordenar por Likes",
+    "likesAscending": "Likes (ascendente)",
+    "likesDescending": "Likes (descendente)",
+    "author": "Autor",
+    "publicationDate": "Fecha publicación",
+    "today": "Hoy",
+    "thisWeek": "Esta semana",
+    "thisMonth": "Este mes",
+    "thisYear": "Este año",
+    "format": "Formato",
+    "removeTag": "Quitar etiqueta",
+    "unknownUser": "Usuario desconocido",
+    "noResults": "No se encontraron resultados."
+  },
+  "profile": {
+    "myAssets": "Mis Assets",
+    "saved": "Mis Guardados",
+    "settings": "Configuración",
+    "profile": "Perfil",
+    "changePassword": "Cambiar contraseña",
+    "logout": "Cerrar sesión",
+    "currentPassword": "Contraseña actual",
+    "newPassword": "Nueva contraseña",
+    "confirmPassword": "Confirmar contraseña",
+    "name": "Nombre",
+    "email": "Dirección email",
+    "avatar": "Avatar",
+    "save": "Guardar",
+    "loading": "Cargando...",
+    "noAssets": "No tienes assets subidos.",
+    "noSaved": "No tienes assets guardados.",
+    "unknownUser": "Usuario desconocido"
+  },
+  "login": {
+    "title": "INICIA SESIÓN",
+    "email": "Correo electrónico",
+    "password": "Contraseña",
+    "loginButton": "Iniciar Sesión",
+    "noAccount": "¿No tienes cuenta?",
+    "registerHere": "Regístrate aquí",
+    "success": "Inicio de sesión exitoso",
+    "error": "Error",
+    "invalidCredentials": "Credenciales incorrectas",
+    "connectionError": "Error de conexión con el servidor"
+  },
+  "register": {
+    "title": "REGÍSTRATE",
+    "username": "Nombre de usuario",
+    "email": "Correo electrónico",
+    "password": "Contraseña",
+    "repeatPassword": "Repetir contraseña",
+    "avatar": "Foto de perfil",
+    "registerButton": "Registrarme",
+    "haveAccount": "¿Ya tienes cuenta?",
+    "loginHere": "Inicia sesión aquí",
+    "success": "Usuario registrado con éxito",
+    "error": "Error",
+    "couldNotRegister": "No se pudo registrar el usuario",
+    "connectionError": "Error de conexión con el servidor",
+    "passwordsDontMatch": "Las contraseñas no coinciden",
+    "avatarUploadError": "Error al subir imagen de perfil"
   }
 }

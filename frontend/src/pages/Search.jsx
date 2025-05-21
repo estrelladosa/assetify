@@ -3,10 +3,12 @@ import { useLocation } from "react-router-dom";
 import { searchAssets } from "../services/api";
 import AssetCard from "../components/AssetCard";
 import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next"; // Importamos useTranslation
 import "./Search.css";
 
 const Search = () => {
   const location = useLocation();
+  const { t } = useTranslation(); // Hook para traducción
   const [query, setQuery] = useState("");
   const [results, setResults] = useState([]);
   const [categorias, setCategorias] = useState([]);
@@ -216,13 +218,13 @@ const realizarBusqueda = async (nombre) => {
   return (
     <div className="search-container">
       <div className="sidebar">
-        <h2>TIPOS DE PRODUCTO</h2>
+        <h2>{t('search.productTypes')}</h2>
         <ul className="categoria-list">
           <li 
             className={categoriaSeleccionada === "" ? "active" : ""}
             onClick={() => handleCategoriaClick("")}
           >
-            <i className="fas fa-th-list"></i> Todos los productos
+            <i className="fas fa-th-list"></i> {t('search.allProducts')}
             <span className="categoria-count">{todosLosAssets.length}</span>
           </li>
           {categorias.map((cat) => (
@@ -244,7 +246,7 @@ const realizarBusqueda = async (nombre) => {
         value={categoriaSeleccionada}
         onChange={e => setCategoriaSeleccionada(e.target.value)}
       >
-        <option value="">Todos los productos</option>
+        <option value="">{t('search.allProducts')}</option>
         {categorias.map((cat) => (
           <option key={cat._id} value={cat._id}>
             {cat.nombre}
@@ -261,7 +263,7 @@ const realizarBusqueda = async (nombre) => {
               value=""
               onChange={handleTagChange}
             >
-              <option value="">Tags</option>
+              <option value="">{t('search.tags')}</option>
               {etiquetas
                 .filter(tag => !filtros.tags.includes(tag._id))
                 .map((tag) => (
@@ -276,9 +278,9 @@ const realizarBusqueda = async (nombre) => {
               value={filtros.likes || ""}
               onChange={(e) => handleFiltroChange("likes", e.target.value)}
             >
-              <option value="">Ordenar por Likes</option>
-              <option value="asc">Likes (ascendente)</option>
-              <option value="desc">Likes (descendente)</option>
+              <option value="">{t('search.sortByLikes')}</option>
+              <option value="asc">{t('search.likesAscending')}</option>
+              <option value="desc">{t('search.likesDescending')}</option>
             </select>
           </div>  
           
@@ -287,7 +289,7 @@ const realizarBusqueda = async (nombre) => {
               value={filtros.autor} 
               onChange={(e) => handleFiltroChange("autor", e.target.value)}
             >
-              <option value="">Autor</option>
+              <option value="">{t('search.author')}</option>
               {autores.map((autor) => (
                 <option key={autor._id} value={autor._id}>{autor.nombre_usuario}</option>
               ))}
@@ -299,11 +301,11 @@ const realizarBusqueda = async (nombre) => {
               value={filtros.fechaPublicacion} 
               onChange={(e) => handleFiltroChange("fechaPublicacion", e.target.value)}
             >
-              <option value="">Fecha publicación</option>
-              <option value="hoy">Hoy</option>
-              <option value="esta_semana">Esta semana</option>
-              <option value="este_mes">Este mes</option>
-              <option value="este_anio">Este año</option>
+              <option value="">{t('search.publicationDate')}</option>
+              <option value="hoy">{t('search.today')}</option>
+              <option value="esta_semana">{t('search.thisWeek')}</option>
+              <option value="este_mes">{t('search.thisMonth')}</option>
+              <option value="este_anio">{t('search.thisYear')}</option>
             </select>
           </div>
           
@@ -356,7 +358,7 @@ const realizarBusqueda = async (nombre) => {
                       fontSize: "16px",
                       lineHeight: "1"
                     }}
-                    title="Quitar tag"
+                    title={t('search.removeTag')}
                   >
                     ×
                   </button>
@@ -376,14 +378,14 @@ const realizarBusqueda = async (nombre) => {
               <AssetCard
                 key={asset._id}
                 title={asset.nombre}
-                author={asset.usuario?.nombre_usuario || "Usuario desconocido"}
+                author={asset.usuario?.nombre_usuario || t('search.unknownUser')}
                 imageURL={asset.imagenes && asset.imagenes.length > 0 ? asset.imagenes[0] : "./assets/placeholder.png"}
                 id={asset._id}
               />
             </Link>
             ))
           ) : (
-            <p className="no-results">No se encontraron resultados.</p>
+            <p className="no-results">{t('search.noResults')}</p>
           )}
         </div>
       </div>

@@ -6,25 +6,24 @@ import "./Profile.css";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { obtenerAssetsPorUsuario, obtenerAssetsGuardados, actualizarPerfilUsuario } from "../services/api";
-// Añade la función para eliminar asset
 import { eliminarAsset } from "../services/api";
 import { useCurrentUser } from "../hooks/useCurrentUser";
+import { useTranslation } from "react-i18next";
 
 const Profile = () => {
     const navigate = useNavigate();
     const { currentUser } = useCurrentUser();
+    const { t, i18n } = useTranslation();
     const [tab, setTab] = useState("mis-assets");
     const [configSection, setConfigSection] = useState(null);
     const [misAssets, setMisAssets] = useState([]);
     const [guardados, setGuardados] = useState([]);
     const [cargando, setCargando] = useState(true);
     const [paises, setPaises] = useState([]);
-    // Estado para el formulario de configuración
     const [configForm, setConfigForm] = useState({
       nombre: currentUser?.nombre_usuario || "",
       correo: currentUser?.correo || ""
     });
-    // Estado para el formulario de cambio de contraseña
     const [passwordForm, setPasswordForm] = useState({
       currentPassword: "",
       newPassword: "",
@@ -49,20 +48,10 @@ const Profile = () => {
         .then(setGuardados)
         .finally(() => setCargando(false));
     } else if (tab === "configuracion") {
-      // Aquí podrías cargar datos del perfil si es necesario
       setCargando(false);
     }
   }, [tab, currentUser]);
 
-  // Elimina este useEffect:
-  // useEffect(() => {
-  //   fetch("http://localhost:4000/api/paises")
-  //     .then(res => res.json())
-  //     .then(data => setPaises(data))
-  //     .catch(() => setPaises([]));
-  // }, []);
-
-  // Handlers de ejemplo para editar y eliminar
   const handleEdit = (asset) => {
     alert(`Editar asset: ${asset.nombre}`);
   };
@@ -136,7 +125,7 @@ const Profile = () => {
       await actualizarPerfilUsuario(currentUser._id, {
         nombre_usuario: configForm.nombre,
         correo: configForm.correo,
-        foto: currentUser.avatar // o el nuevo avatar si lo cambiaste
+        foto: currentUser.avatar
       });
       showToast("success", "Perfil actualizado correctamente");
     } catch (error) {
@@ -144,13 +133,11 @@ const Profile = () => {
     }
   };
 
-  // Función para subir avatar y actualizar perfil
   const handleAvatarUpload = async (e) => {
     const file = e.target.files[0];
     if (!file) return;
 
     try {
-      // 1. Subir imagen a drive
       const formData = new FormData();
       formData.append("archivo", file);
 
@@ -161,21 +148,18 @@ const Profile = () => {
       const data = await response.json();
       if (!response.ok) throw new Error(data.message || "Error al subir avatar");
 
-      // 2. Actualizar usuario con la nueva URL de foto
       await actualizarPerfilUsuario(currentUser._id, {
         nombre_usuario: configForm.nombre,
         correo: configForm.correo,
-        foto: data.link, // URL devuelta por el backend
+        foto: data.link,
       });
 
       showToast("Avatar actualizado correctamente");
-      // Opcional: recargar datos del usuario
     } catch (error) {
       showToast("Error al subir el avatar: " + error.message);
     }
   };
 
-  // Añade este useEffect para autorrellenar los campos cuando currentUser cambie
   useEffect(() => {
     if (currentUser) {
       setConfigForm({
@@ -187,6 +171,16 @@ const Profile = () => {
 
   return (
     <div className="profile-container">
+      {/* <div style={{ textAlign: "right", marginBottom: 10 }}>
+        <select
+          value={i18n.language}
+          onChange={e => i18n.changeLanguage(e.target.value)}
+          style={{ padding: 4, borderRadius: 4 }}
+        >
+          <option value="es">Español</option>
+          <option value="en">English</option>
+        </select>
+      </div> */}
       <Toast
         show={toast.show}
         type={toast.type}
@@ -198,19 +192,19 @@ const Profile = () => {
           className={tab === "mis-assets" ? "active" : ""}
           onClick={() => setTab("mis-assets")}
         >
-          Mis Assets
+          {t("profile.myAssets")}
         </button>
         <button
           className={tab === "guardados" ? "active" : ""}
           onClick={() => setTab("guardados")}
         >
-          Mis Guardados
+          {t("profile.saved")}
         </button>
         <button
           className={tab === "configuracion" ? "active" : ""}
           onClick={() => setTab("configuracion")}
         >
-          Configuración
+          {t("profile.settings")}
         </button>
       </div>
 
@@ -225,24 +219,24 @@ const Profile = () => {
                 className={`sidebar-item ${tab === "configuracion" && !configSection ? "active" : ""}`}
                 onClick={() => setConfigSection(null)}
               >
-                Perfil
+                {t("profile.profile")}
               </div>
               <div 
                 className={`sidebar-item ${configSection === "cambiar-password" ? "active" : ""}`}
                 onClick={() => setConfigSection("cambiar-password")}
               >
-                Cambiar contraseña
+                {t("profile.changePassword")}
               </div>
-              <div className="sidebar-item logout" onClick={handleLogout}>Cerrar sesión</div>
+              <div className="sidebar-item logout" onClick={handleLogout}>{t("profile.logout")}</div>
             </div>
           </div>
           <div className="profile-config-content">
             {configSection === "cambiar-password" ? (
               <>
-                <h2>Cambiar contraseña</h2>
+                <h2>{t("profile.changePassword")}</h2>
                 <form onSubmit={handlePasswordSubmit} className="profile-form">
                   <div className="form-group">
-                    <label htmlFor="currentPassword">Contraseña actual</label>
+                    <label htmlFor="currentPassword">{t("profile.currentPassword")}</label>
                     <input
                       type="password"
                       id="currentPassword"
@@ -254,7 +248,7 @@ const Profile = () => {
                     />
                   </div>
                   <div className="form-group">
-                    <label htmlFor="newPassword">Nueva contraseña</label>
+                    <label htmlFor="newPassword">{t("profile.newPassword")}</label>
                     <input
                       type="password"
                       id="newPassword"
@@ -266,7 +260,7 @@ const Profile = () => {
                     />
                   </div>
                   <div className="form-group">
-                    <label htmlFor="confirmPassword">Confirmar contraseña</label>
+                    <label htmlFor="confirmPassword">{t("profile.confirmPassword")}</label>
                     <input
                       type="password"
                       id="confirmPassword"
@@ -278,16 +272,16 @@ const Profile = () => {
                     />
                   </div>
                   <div className="form-actions">
-                    <button type="submit" className="save-btn">Cambiar contraseña</button>
+                    <button type="submit" className="save-btn">{t("profile.changePassword")}</button>
                   </div>
                 </form>
               </>
             ) : (
               <>
-                <h2>Perfil</h2>
+                <h2>{t("profile.profile")}</h2>
                 <form onSubmit={handleProfileSubmit} className="profile-form">
                   <div className="form-group">
-                    <label htmlFor="nombre">Nombre</label>
+                    <label htmlFor="nombre">{t("profile.name")}</label>
                     <input
                       type="text"
                       id="nombre"
@@ -298,7 +292,7 @@ const Profile = () => {
                     />
                   </div>
                   <div className="form-group">
-                    <label htmlFor="correo">Dirección email</label>
+                    <label htmlFor="correo">{t("profile.email")}</label>
                     <input
                       type="email"
                       id="correo"
@@ -309,7 +303,7 @@ const Profile = () => {
                     />
                   </div>
                   <div className="form-group">
-                    <label htmlFor="avatar">Avatar</label>
+                    <label htmlFor="avatar">{t("profile.avatar")}</label>
                     <input
                       type="file"
                       id="avatar"
@@ -318,7 +312,7 @@ const Profile = () => {
                     />
                   </div>
                   <div className="form-actions">
-                    <button type="submit" className="save-btn">Guardar</button>
+                    <button type="submit" className="save-btn">{t("profile.save")}</button>
                   </div>
                 </form>
               </>
@@ -328,7 +322,7 @@ const Profile = () => {
       ) : (
         <div className="profile-assets-grid">
           {cargando ? (
-            <p>Cargando...</p>
+            <p>{t("profile.loading")}</p>
           ) : tab === "mis-assets" ? (
             misAssets.length > 0 ? (
               misAssets.map((asset) => (
@@ -339,7 +333,7 @@ const Profile = () => {
                   >     
                   <AssetCardOwn
                     title={asset.nombre}
-                    author={asset.usuario?.nombre_usuario || "Usuario desconocido"}
+                    author={asset.usuario?.nombre_usuario || t("profile.unknownUser")}
                     imageURL={asset.imagenes?.[0]}
                     archivos={asset.archivos}
                     onEdit={() => handleEdit(asset)}
@@ -349,7 +343,7 @@ const Profile = () => {
                 </div>
               ))
             ) : (
-              <p>No tienes assets subidos.</p>
+              <p>{t("profile.noAssets")}</p>
             )
           ) : tab === "guardados" ? (
             guardados.length > 0 ? (
@@ -361,14 +355,14 @@ const Profile = () => {
                   >     
                   <AssetCard
                     title={asset.nombre}
-                    author={asset.usuario?.nombre_usuario || "Usuario desconocido"}
+                    author={asset.usuario?.nombre_usuario || t("profile.unknownUser")}
                     imageURL={asset.imagenes?.[0]}
                   />
                   </Link>
                 </div>
               ))
             ) : (
-              <p>No tienes assets guardados.</p>
+              <p>{t("profile.noSaved")}</p>
             )
           ) : null}
         </div>

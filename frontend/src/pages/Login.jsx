@@ -1,9 +1,11 @@
 import React, { useState, useEffect, useRef } from "react";
 import "./Login.css";
-import {useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 const Login = () => {
   const navigate = useNavigate();
+  const { t, i18n } = useTranslation();
   const [form, setForm] = useState({
     correo: "",
     contraseña: "",
@@ -36,18 +38,16 @@ const Login = () => {
       const data = await response.json();
 
       if (response.ok) {
-        setMensaje("✅ Inicio de sesión exitoso");
-        // Aquí puedes redirigir al usuario o guardar el token en el localStorage
+        setMensaje("✅ " + t("login.success"));
         localStorage.setItem("token", data.token);
         localStorage.setItem("userId", data.userId);
         navigate("/");
         window.location.reload();
-
       } else {
-        setMensaje(`❌ Error: ${data.error || "Credenciales incorrectas"}`);
+        setMensaje(`❌ ${t("login.error")}: ${data.error || t("login.invalidCredentials")}`);
       }
     } catch (error) {
-      setMensaje("❌ Error de conexión con el servidor");
+      setMensaje("❌ " + t("login.connectionError"));
     }
   };
 
@@ -55,11 +55,22 @@ const Login = () => {
     <>
       <div className="login-wrapper">
         <div className="login-container">
-          <h2>INICIA SESIÓN</h2>
+          {/* Selector de idioma
+          <div style={{ textAlign: "right", marginBottom: 10 }}>
+            <select
+              value={i18n.language}
+              onChange={e => i18n.changeLanguage(e.target.value)}
+              style={{ padding: 4, borderRadius: 4 }}
+            >
+              <option value="es">Español</option>
+              <option value="en">English</option>
+            </select>
+          </div> */}
+          <h2>{t("login.title")}</h2>
           {mensaje && <p className="mensaje">{mensaje}</p>}
           <form onSubmit={handleSubmit} className="login-form">
             <div className="input-container">
-              <label className="input-label" htmlFor="correo">Correo electrónico</label>
+              <label className="input-label" htmlFor="correo">{t("login.email")}</label>
               <input
                 type="email"
                 name="correo"
@@ -71,7 +82,7 @@ const Login = () => {
               />
             </div>
             <div className="input-container">
-              <label className="input-label" htmlFor="contraseña">Contraseña</label>
+              <label className="input-label" htmlFor="contraseña">{t("login.password")}</label>
               <input
                 type="password"
                 name="contraseña"
@@ -82,8 +93,9 @@ const Login = () => {
               />
             </div>
             <p className="register-link" onClick={() => navigate("/registro")}>
-              ¿No tienes cuenta? <span>Regístrate aquí</span></p>
-            <button type="submit">Iniciar Sesión</button>
+              {t("login.noAccount")} <span>{t("login.registerHere")}</span>
+            </p>
+            <button type="submit">{t("login.loginButton")}</button>
           </form>
         </div>
       </div>
