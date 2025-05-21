@@ -5,6 +5,7 @@ const cors = require("cors");
 const usuarioRoutes = require('./routes/usuarioRoutes'); // Importar las rutas
 const assetsRoutes = require('./routes/assetsRoutes');
 const catEtiRoutes = require('./routes/catEtiRoutes');
+const paisRoutes = require('./routes/paisRoutes'); // Importar las rutas de paises
 const driveUploadRoutes = require('./routes/driveUpload'); // Importar las rutas de subida a Google Drive
 
 
@@ -24,6 +25,7 @@ app.use('/api/usuarios', usuarioRoutes);
 // Rutas de los assets
 app.use('/api/assets', assetsRoutes);
 
+app.use('/api/paises', paisRoutes); // Usar las rutas de paises
 
 app.use('/api', catEtiRoutes);
 

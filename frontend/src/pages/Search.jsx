@@ -56,16 +56,22 @@ const Search = () => {
     // eslint-disable-next-line
   }, [categoriaSeleccionada, filtros]);
 
-  const realizarBusqueda = async (nombre) => {
-    try {
-      const assets = await searchAssets(nombre);
-      setTodosLosAssets(assets);
-      aplicarFiltros(assets);
-    } catch (error) {
-      setTodosLosAssets([]);
-      setResults([]);
-    }
-  };
+const realizarBusqueda = async (nombre) => {
+  try {
+    const params = {
+      nombre,
+      categoria: categoriaSeleccionada,
+      etiquetas: filtros.tags,
+      formato: filtros.formato
+    };
+    const assets = await searchAssets(params);
+    setTodosLosAssets(assets);
+    aplicarFiltros(assets);
+  } catch (error) {
+    setTodosLosAssets([]);
+    setResults([]);
+  }
+};
 
   const aplicarFiltros = (assetsIniciales = todosLosAssets) => {
     let assetsFiltrados = [...assetsIniciales];
@@ -215,7 +221,21 @@ const Search = () => {
           ))}
         </ul>
       </div>
-      
+
+      {/* Select de categorías solo visible en móvil */}
+      <select
+        className="mobile-categorias-dropdown"
+        value={categoriaSeleccionada}
+        onChange={e => setCategoriaSeleccionada(e.target.value)}
+      >
+        <option value="">Todos los productos</option>
+        {categorias.map((cat) => (
+          <option key={cat._id} value={cat._id}>
+            {cat.nombre}
+          </option>
+        ))}
+      </select>
+
       <div className="main-content">
         <h1>Resultados de búsqueda para: "{query}"</h1>
         

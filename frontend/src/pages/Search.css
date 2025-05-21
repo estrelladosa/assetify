@@ -108,3 +108,97 @@
   grid-template-columns: repeat(auto-fill, minmax(400px, 1fr)); /* Ajustado al ancho de tus tarjetas */
   gap: 20px;
 }
+
+/* Tablets: sidebar más pequeño y grid más flexible */
+@media (max-width: 900px) {
+  .search-container {
+    flex-direction: column;
+    margin-top: 150px;
+  }
+  .sidebar {
+    width: 100%;
+    border-right: none;
+    border-bottom: 1px solid #1a2942;
+    padding: 10px 0;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  .main-content {
+    padding: 14px;
+  }
+  .asset-grid {
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 14px;
+  }
+
+  .mobile-categorias-dropdown {
+    display: block;
+  }
+}
+
+/* Móviles: todo en columna, grid de 1 columna */
+@media (max-width: 600px) {
+  .search-container {
+    flex-direction: column;
+    margin-top: 130px;
+  }
+  .sidebar {
+    width: 100%;
+    padding: 6px 0;
+    flex-direction: column;
+    align-items: stretch;
+    border-bottom: 1px solid #1a2942;
+  }
+  .sidebar h2 {
+    font-size: 15px;
+    margin-bottom: 8px;
+    padding: 0 10px;
+  }
+  .categoria-list li {
+    padding: 8px 10px;
+    font-size: 15px;
+  }
+  .main-content {
+    padding: 8px;
+  }
+  .main-content h1 {
+    font-size: 18px;
+    margin-bottom: 12px;
+  }
+  .filter-bar {
+    flex-direction: column;
+    gap: 6px;
+  }
+  .filter-dropdown {
+    min-width: 100px;
+  }
+  .asset-grid {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+}
+
+/* Oculta el sidebar y muestra el select en pantallas menores a 900px */
+@media (max-width: 900px) {
+  .sidebar {
+    display: none;
+  }
+  .mobile-categorias-dropdown {
+    display: block;
+    width: 100%;
+    margin-bottom: 12px;
+    background: #0f2747;
+    color: white;
+    border: 1px solid #1a3b63;
+    border-radius: 4px;
+    font-size: 15px;
+    padding: 8px 12px;
+  }
+}
+
+@media (min-width: 900px) {
+  .mobile-categorias-dropdown {
+    display: none;
+  }
+}

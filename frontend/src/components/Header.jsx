@@ -3,6 +3,7 @@ import "../components/Header.css";
 import logo from "../assets/logo.png";
 import { useNavigate } from "react-router-dom";
 import { FaCog, FaSearch, FaUserCircle } from "react-icons/fa";
+import { FaArrowUpFromBracket } from "react-icons/fa6";
 import { useTranslation } from "react-i18next"; // Importamos useTranslation
 import LanguageSwitcher from "./LanguageSwitcher"; // Importamos el componente LanguageSwitcher
 
@@ -62,14 +63,16 @@ const Header = () => {
         onClick={() => navigate("/")}
         style={{ cursor: "pointer" }}
       />
-      {/* Botón de inicio traducido */}
-      <button className="header-button" onClick={() => navigate("/")}>
-        {t('header.home')}
+      {/* Botón de busqueda traducido */}
+      <button className="header-button" onClick={() => navigate("/buscar")}>
+        <span className="header-button-icon"><FaSearch /></span>
+        <span className="header-button-text">{t('header.search')}</span>
       </button>
       
       {/* Botón de publicar traducido */}
       <button className="header-button" onClick={() => navigate("/publicar")}>
-        {t('header.publish')}
+        <span className="header-button-icon"><FaArrowUpFromBracket /></span>
+        <span className="header-button-text">{t('header.publish')}</span>
       </button>
 
       {/* Input de búsqueda con placeholder traducido */}
@@ -93,12 +96,14 @@ const Header = () => {
       {isLoggedIn ? (
         <div className="profile-section">
           <button className="header-button" onClick={() => navigate(`/perfil`)}>
-            {userName}
+            <span className="header-button-icon"><FaUserCircle /></span>
+            <span className="header-button-text">{userName}</span>
           </button>
         </div>
       ) : (
-        <button className="header-button" onClick={() => navigate("/login")}>
-          {t('header.login')}
+        <button className="header-button" onClick={() => navigate(`/login`)}>
+            <span className="header-button-icon"><FaUserCircle /></span>
+            <span className="header-button-text">{t('header.login')}</span>
         </button>
       )}
     </header>

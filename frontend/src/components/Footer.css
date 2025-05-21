@@ -102,6 +102,49 @@
   }
 }
 
+/* Responsive Footer extra */
+@media (max-width: 900px) {
+  .footer-title {
+    font-size: 1.5rem;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+  .footer-logo {
+    width: 38px;
+    margin-bottom: 6px;
+  }
+  .footer-columns {
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+  }
+  .footer-column {
+    width: 90%;
+    min-width: 120px;
+    margin: 0 0 18px 0;
+    text-align: center;
+  }
+}
+
+@media (max-width: 500px) {
+  .footer-title {
+    font-size: 1.1rem;
+    margin-bottom: 10px;
+  }
+  .footer-logo {
+    width: 28px;
+  }
+  .footer {
+    padding: 8px 2px 18px 2px;
+    min-height: 120px;
+  }
+  .footer-column {
+    font-size: 13px;
+    margin-bottom: 10px;
+  }
+}
+
 /* Estilos adicionales para tamaños de fuente muy grandes */
 html[data-font-size="grande"] .footer,
 html[data-font-size="muy-grande"] .footer {

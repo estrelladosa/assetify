@@ -7,16 +7,6 @@ const bcrypt = require('bcrypt');
 
 const router = express.Router();
 
-// Obtener todos los usuarios
-router.get('/', async (req, res) => {
-  try {
-    const usuarios = await Usuario.find();
-    res.json(usuarios);
-  } catch (err) {
-    res.status(500).json({ message: err.message });
-  }
-});
-
 // Obtener un usuario por ID
 router.get('/:id', async (req, res) => {
   try {
@@ -211,6 +201,42 @@ router.put('/:userId/seguidores/:seguidorId', async (req, res) => {
     res.status(200).json(usuarioActualizado);
   } catch (error) {
     res.status(500).json({ message: error.message });
+  }
+});
+
+// Actualizar información de un usuario
+router.put('/:id', async (req, res) => {
+  try {
+    const { nombre_usuario, correo, pais, foto } = req.body;
+    const usuario = await Usuario.findByIdAndUpdate(
+      req.params.id,
+      { nombre_usuario, correo, pais, foto },
+      { new: true }
+    );
+    res.json(usuario);
+  } catch (err) {
+    res.status(400).json({ message: err.message });
+  }
+});
+
+// Cambiar contraseña de usuario
+router.put('/:id/password', async (req, res) => {
+  try {
+    const { currentPassword, newPassword } = req.body;
+    const usuario = await Usuario.findById(req.params.id);
+    if (!usuario) return res.status(404).json({ message: 'Usuario no encontrado' });
+
+    // Verifica la contraseña actual
+    const esCorrecta = await bcrypt.compare(currentPassword, usuario.contraseña);
+    if (!esCorrecta) return res.status(400).json({ message: 'Contraseña actual incorrecta' });
+
+    // Hashea la nueva contraseña y guarda
+    usuario.contraseña = newPassword;
+    await usuario.save();
+
+    res.json({ message: 'Contraseña actualizada correctamente' });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
   }
 });
 

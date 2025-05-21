@@ -20,20 +20,16 @@ export const loginUsuario = async (datos) => {
   return await response.json();
 };
 
-export const searchAssets = async (nombre) => {
-  console.log(`Buscando assets con el nombre: ${nombre}`); // Log para depuración
-
-  const response = await fetch(`${API_URL}/assets/search?nombre=${nombre}`, {
-    method: "GET",
-    headers: { "Content-Type": "application/json" },
-  });
-
-  if (!response.ok) {
-    const errorMessage = await response.text();
-    console.error("Error en la respuesta del servidor:", errorMessage); // Log para depuración
-    throw new Error("Error al buscar assets");
+export const searchAssets = async (params) => {
+  const query = new URLSearchParams();
+  if (params.nombre) query.append("nombre", params.nombre);
+  if (params.categoria) query.append("categoria", params.categoria);
+  if (params.formato) query.append("formato", params.formato);
+  if (params.etiquetas && params.etiquetas.length > 0) {
+    params.etiquetas.forEach(tag => query.append("etiquetas", tag));
   }
-
+  const response = await fetch(`http://localhost:4000/api/assets/search?${query.toString()}`);
+  if (!response.ok) throw new Error("Error en la búsqueda");
   return await response.json();
 };
 
@@ -202,5 +198,32 @@ export const obtenerAssetsPorUsuario = async (userId) => {
 export const obtenerAssetsGuardados = async (userId) => {
   const response = await fetch(`${API_URL}/usuarios/${userId}/guardados`);
   if (!response.ok) throw new Error("Error al obtener assets guardados");
+  return await response.json();
+};
+
+export const actualizarPerfilUsuario = async (userId, datos) => {
+  const response = await fetch(`http://localhost:4000/api/usuarios/${userId}`, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(datos),
+  });
+  if (!response.ok) throw new Error("Error al actualizar perfil");
+  return await response.json();
+};
+
+export const obtenerPaises = async () => {
+  const res = await fetch(`${API_URL}/paises`, {
+    method: "GET",
+    headers: { "Content-Type": "application/json" },
+  });
+  if (!res.ok) throw new Error("Error al obtener países");
+  return await res.json();
+};
+
+export const eliminarAsset = async (assetId) => {
+  const response = await fetch(`http://localhost:4000/api/assets/${assetId}`, {
+    method: "DELETE",
+  });
+  if (!response.ok) throw new Error("Error al eliminar asset");
   return await response.json();
 };

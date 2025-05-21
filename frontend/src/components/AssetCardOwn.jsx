@@ -54,7 +54,15 @@ const AssetCardOwn = ({
               <FaDownload />
             </a>
           )}
-          <button className="profile-delete-btn" title="Eliminar" onClick={onDelete}>
+          <button
+            className="profile-delete-btn"
+            title="Eliminar"
+            onClick={e => {
+              e.stopPropagation();
+              e.preventDefault();
+              onDelete();
+            }}
+          >
             <FaTrash /> Eliminar
           </button>
         </div>

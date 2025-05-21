@@ -18,25 +18,51 @@ router.get('/', async (req, res) => {
 });
 
 router.get('/search', async (req, res) => {
-  const {nombre} = req.query;
   try {
-      console.log("Término de búsqueda:", nombre);
-      
-      // Validar que el término no esté vacío
-      if (!nombre || nombre.trim() === '') {
-          return res.status(400).json({ message: "El término de búsqueda no puede estar vacío" });
+    const { nombre, categoria, formato, etiquetas } = req.query;
+    let filtro = {};
+
+    if (nombre) {
+      filtro.$or = [
+        { nombre: { $regex: nombre, $options: "i" } }
+      ];
+
+      // Buscar etiquetas cuyo nombre coincida
+      const etiquetasCoinciden = await Etiqueta.find({ nombre: { $regex: nombre, $options: "i" } });
+      if (etiquetasCoinciden.length > 0) {
+        const idsEtiquetas = etiquetasCoinciden.map(e => e._id);
+        filtro.$or.push({ etiquetas: { $in: idsEtiquetas } });
       }
-      
-      // Escapar caracteres especiales de regex si es necesario
-      const terminoBusqueda = nombre.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-      
-      const assets = await Assets.find({ nombre: { $regex: terminoBusqueda, $options: 'i' } }).populate('usuario', 'nombre_usuario');
-      console.log("Resultados encontrados:", assets.length);
-      
-      res.status(200).json(assets); 
+
+      // Buscar categorías cuyo nombre coincida
+      const categoriasCoinciden = await Categoria.find({ nombre: { $regex: nombre, $options: "i" } });
+      if (categoriasCoinciden.length > 0) {
+        const idsCategorias = categoriasCoinciden.map(c => c._id);
+        filtro.$or.push({ categorias: { $in: idsCategorias } });
+      }
+    }
+
+    if (categoria) {
+      filtro.categorias = categoria;
+    }
+    if (formato) {
+      filtro.formato = formato;
+    }
+    if (etiquetas) {
+      let etiquetasArray = etiquetas;
+      if (typeof etiquetas === "string") {
+        etiquetasArray = [etiquetas];
+      }
+      filtro.etiquetas = { $in: etiquetasArray };
+    }
+
+    const assets = await Assets.find(filtro)
+      .populate("usuario", "nombre_usuario")
+      .populate("categorias")
+      .populate("etiquetas");
+    res.json(assets);
   } catch (error) {
-      console.error("Error en búsqueda:", error);
-      res.status(500).json({ message: error.message });
+    res.status(500).json({ message: error.message });
   }
 });
 
@@ -101,9 +127,9 @@ router.get('/usuario/:userId', async (req, res) => {
       // Buscar assets por el ObjectId del usuario
       const assets = await Assets.find({ usuario: userId });
   
-      if (assets.length === 0) {
-        return res.status(404).json({ message: 'No se encontraron assets para este usuario' });
-      }
+      // if (assets.length === 0) {
+      //   return res.status(404).json({ message: 'No se encontraron assets para este usuario' });
+      // }
   
       res.status(200).json(assets);
     } catch (error) {
@@ -171,12 +197,12 @@ router.delete('/:id', async (req, res) => {
       return res.status(404).json({ message: 'Asset no encontrado' });
     }
 
-    // Asegurarse de que el asset pertenece al usuario autenticado
-    if (asset.usuario.toString() !== req.usuario.id) {
-      return res.status(403).json({ message: 'No tienes permiso para eliminar este asset' });
-    }
+    // // Asegurarse de que el asset pertenece al usuario autenticado
+    // if (asset.usuario.toString() !== req.usuario.id) {
+    //   return res.status(403).json({ message: 'No tienes permiso para eliminar este asset' });
+    // }
 
-    await Asset.findByIdAndDelete(req.params.id);
+    await Assets.findByIdAndDelete(req.params.id);
 
     res.status(200).json({ message: 'Asset eliminado correctamente' });
   } catch (error) {
