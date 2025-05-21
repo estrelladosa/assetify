@@ -67,20 +67,21 @@ export default function Asset() {
   };
 
   const handleCommentSubmit = async (e) => {
+    e.preventDefault(); // Esto debe ir siempre primero
+
     if (!currentUser) {
       setShowLoginPrompt(true);
       return;
-    } else {
+    }
 
-    e.preventDefault();
     if (!newComment.trim()) return;
 
-    await publicarComentario({ usuario:currentUser._id, asset, comentario: newComment });
+    await publicarComentario({ usuario: currentUser._id, asset, comentario: newComment });
     const commentsData = await obtenerComentariosPorAsset(assetId);
     setComments(commentsData);
     setNewComment("");
-  }
   };
+
 
   const handleToggleLike = async () => {
     if (!currentUser) {
@@ -121,6 +122,15 @@ export default function Asset() {
     }
   };
 
+    const formatearFecha = (fechaMongo) => {
+    const fecha = new Date(fechaMongo);
+    const dia = String(fecha.getDate()).padStart(2, '0');
+    const mes = String(fecha.getMonth() + 1).padStart(2, '0');
+    const anio = fecha.getFullYear();
+    return `${dia}-${mes}-${anio}`;
+  };
+
+
   const getDownloadLink = (url) => {
   if (!url) return "#";
 
@@ -138,6 +148,10 @@ export default function Asset() {
 
   const handleDownload = () => {
     if (!asset.archivos || asset.archivos.length === 0) return;
+     if (!currentUser) {
+      setShowLoginPrompt(true);
+      return;
+    }
 
     const url = getDownloadLink(asset.archivos[0]); // Puedes cambiar el índice si lo deseas
 
@@ -229,6 +243,8 @@ export default function Asset() {
 
         <h2>{asset.nombre}</h2>
         <p className="desc">{asset.descripcion}</p>
+        <p className="texto"><strong>Fecha de creación:</strong> {formatearFecha(asset.fecha)}</p>
+        <p className="texto"><strong>Formatos:</strong> {asset.formato.split('|').join(', ')}</p>
         <p className="eti">Etiquetas:</p>
         {/* Mostrar las etiquetas */}
         <div className="asset-tags">

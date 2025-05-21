@@ -22,7 +22,13 @@ const Publicar = () => {
   const [categoriasDisponibles, setCategoriasDisponibles] = useState([]);
   const [etiquetasDisponibles, setEtiquetasDisponibles] = useState([]);
   const [popupExito, setPopupExito] = useState(false);
-  const extensionesPermitidas = [".fbx", ".obj", ".stl", ".blend", ".wrl", ".gltf", ".glb", ".zip", ".rar", ".7z", ".jpg", ".jpeg", ".png", ".gif", ".mp3", ".wav"];
+  const extensionesPorCategoria = {
+  "2D": [".jpg", ".jpeg", ".png", ".svg", ".gif", ".bmp", ".tiff", ".webp"],
+  "3D": [".fbx", ".obj", ".stl", ".blend", ".wrl", ".gltf", ".glb", ".dae"],
+  "Audio": [".mp3", ".wav", ".ogg", ".flac", ".aac", ".m4a"],
+  "Video": [".mp4", ".mov", ".avi", ".mkv", ".webm"],
+  "Código": [".js", ".ts", ".py", ".cpp", ".c", ".java", ".cs", ".html", ".css", ".json", ".xml", ".txt", ".md"]
+};
 
 
   useEffect(() => {
@@ -50,21 +56,25 @@ const Publicar = () => {
 
   const handleArchivoSubido = (e) => {
     const nuevosArchivos = Array.from(e.target.files);
+
     const archivosValidos = nuevosArchivos.filter((archivo) => {
       const extension = '.' + archivo.name.toLowerCase().split('.').pop();
-      const esValido = extensionesPermitidas.includes(extension);
+      const esValido = Object.values(extensionesPorCategoria).some(exts => exts.includes(extension));
+
       if (!esValido) {
-        alert(`El archivo "${archivo.name}" tiene una extensión no permitida.`);
+        alert(`El archivo "${archivo.name}" no es un tipo de asset permitido.`);
       }
+
       return esValido;
     });
+
     const archivosActualizados = [...archivos, ...archivosValidos];
     setArchivos(archivosActualizados);
-  
-    // Actualizar formato
+
     const formatoString = obtenerFormatoString(archivosActualizados);
     setForm((prev) => ({ ...prev, formato: formatoString }));
   };
+
   
 
   const handleEliminarArchivo = (index) => {
