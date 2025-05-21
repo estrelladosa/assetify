@@ -1,0 +1,22 @@
+{
+  "header": {
+    "home": "Home",
+    "publish": "Publish",
+    "search": "Search...",
+    "login": "Login",
+    "config": "Settings"
+  },
+  "home": {
+    "featuredToday": "Featured Today",
+    "recentlyUploaded": "Recently Uploaded",
+    "trends": "Trending",
+    "showMore": "Show more",
+    "showLess": "Show less",
+    "loading": "Loading assets...",
+    "error": "Failed to load assets. Please try again later.",
+    "noFeatured": "No featured assets available.",
+    "noRecent": "No recent assets available.",
+    "noTrends": "No trending assets available.",
+    "unknownUser": "Unknown User"
+  }
+}

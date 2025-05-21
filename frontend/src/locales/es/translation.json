@@ -1,0 +1,22 @@
+{
+  "header": {
+    "home": "Inicio",
+    "publish": "Publicar",
+    "search": "Buscar...",
+    "login": "Iniciar sesión",
+    "config": "Configuración"
+  },
+  "home": {
+    "featuredToday": "Destacados del día",
+    "recentlyUploaded": "Subidos recientemente",
+    "trends": "Tendencias",
+    "showMore": "Mostrar más",
+    "showLess": "Mostrar menos",
+    "loading": "Cargando assets...",
+    "error": "No se pudieron cargar los assets. Por favor, intenta de nuevo más tarde.",
+    "noFeatured": "No hay assets destacados disponibles.",
+    "noRecent": "No hay assets recientes disponibles.",
+    "noTrends": "No hay tendencias disponibles.",
+    "unknownUser": "Usuario desconocido"
+  }
+}
