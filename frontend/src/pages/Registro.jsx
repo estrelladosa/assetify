@@ -2,7 +2,7 @@ import React, { useState , useRef, useEffect} from "react";
 import { useNavigate } from "react-router-dom";
 import "../pages/Registro.css";
 import { useTranslation } from "react-i18next";
-
+/* cambiar */
 const Registro = () => {
   const navigate = useNavigate();
   const { t, i18n } = useTranslation();
