@@ -28,6 +28,8 @@ export const searchAssets = async (params) => {
   if (params.etiquetas && params.etiquetas.length > 0) {
     params.etiquetas.forEach(tag => query.append("etiquetas", tag));
   }
+  
+  // Incluso con query vacía, haz la petición
   const response = await fetch(`http://localhost:4000/api/assets/search?${query.toString()}`);
   if (!response.ok) throw new Error("Error en la búsqueda");
   return await response.json();

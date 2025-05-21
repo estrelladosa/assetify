@@ -3,7 +3,7 @@
   --bg-primary: #0a192f;
   --bg-secondary: #1a2942;
   --text-primary: #fff;
-  --accent-primary: #7fffd4;
+  --accent-primary: #1a3b63;
   --accent-warning: #ffd646;
   --accent-danger: #e74c3c;
   --danger-dark: #c0392b;
@@ -56,7 +56,7 @@
 
 .profile-tabs button.active {
   background: var(--accent-primary);
-  color: var(--bg-primary);
+  color: var(--text-primary);
   box-shadow: 0 4px 10px rgba(127, 255, 212, 0.3);
 }
 
@@ -215,7 +215,7 @@
 }
 
 .sidebar-item.active {
-  background: rgba(127, 255, 212, 0.2);
+  background: var(--accent-primary);
   border-left: 4px solid var(--accent-primary);
 }
 
@@ -320,7 +320,7 @@ input[type="password"] {
 
 .save-btn {
   background: var(--accent-primary);
-  color: var(--bg-primary);
+  color: var(--text-primary);
   border: none;
   border-radius: var(--button-radius);
   padding: 12px 24px;
@@ -331,7 +331,8 @@ input[type="password"] {
 }
 
 .save-btn:hover {
-  background: #6eeec3;
+  background: rgba(127, 255, 212, 0.1);
+  color: var(--text-primary);
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(127, 255, 212, 0.3);
 }

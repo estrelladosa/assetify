@@ -37,6 +37,9 @@ const Search = () => {
       .then(res => res.json())
       .then(data => setEtiquetas(data))
       .catch(() => setEtiquetas([]));
+    
+    // Cargar todos los assets al inicio
+    realizarBusqueda("");
   }, []);
 
   useEffect(() => {
@@ -58,16 +61,21 @@ const Search = () => {
 
 const realizarBusqueda = async (nombre) => {
   try {
+    // Si nombre es vacío, obtener todos los assets (sin filtrar por nombre)
     const params = {
-      nombre,
+      nombre: nombre,
       categoria: categoriaSeleccionada,
       etiquetas: filtros.tags,
+      autor: filtros.autor,
       formato: filtros.formato
     };
+    
+    // Usar la función searchAssets para todos los casos
     const assets = await searchAssets(params);
     setTodosLosAssets(assets);
     aplicarFiltros(assets);
   } catch (error) {
+    console.error("Error al buscar assets:", error);
     setTodosLosAssets([]);
     setResults([]);
   }
@@ -197,6 +205,14 @@ const realizarBusqueda = async (nombre) => {
     ).length;
   };
 
+  const extensionesPorCategoria = {
+    "2D": [".jpg", ".jpeg", ".png", ".svg", ".gif", ".bmp", ".tiff", ".webp"],
+    "3D": [".fbx", ".obj", ".stl", ".blend", ".wrl", ".gltf", ".glb", ".dae"],
+    "Audio": [".mp3", ".wav", ".ogg", ".flac", ".aac", ".m4a"],
+    "Video": [".mp4", ".mov", ".avi", ".mkv", ".webm"],
+    "Código": [".js", ".ts", ".py", ".cpp", ".c", ".java", ".cs", ".html", ".css", ".json", ".xml", ".txt", ".md"]
+  };
+
   return (
     <div className="search-container">
       <div className="sidebar">
@@ -237,7 +253,7 @@ const realizarBusqueda = async (nombre) => {
       </select>
 
       <div className="main-content">
-        <h1>Resultados de búsqueda para: "{query}"</h1>
+        <h1>{query ? `Resultados de búsqueda para: "${query}"` : "Todos los assets"}</h1>
         
         <div className="filter-bar">
           <div className="filter-dropdown">
@@ -297,13 +313,15 @@ const realizarBusqueda = async (nombre) => {
               onChange={(e) => handleFiltroChange("formato", e.target.value)}
             >
               <option value="">Formato</option>
-              <option value="png">PNG</option>
-              <option value="jpg">JPG</option>
-              <option value="svg">SVG</option>
-              <option value="obj">OBJ</option>
-              <option value="fbx">FBX</option>
-              <option value="mp3">MP3</option>
-              <option value="wav">WAV</option>
+              {Object.entries(extensionesPorCategoria).map(([categoria, extensiones]) => (
+                <optgroup key={categoria} label={categoria}>
+                  {extensiones.map((ext) => (
+                    <option key={ext} value={ext.replace('.', '.').toLowerCase()}>
+                      {ext.toUpperCase()}
+                    </option>
+                  ))}
+                </optgroup>
+              ))}
             </select>
           </div>
         </div>
