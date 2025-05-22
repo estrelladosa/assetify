@@ -204,7 +204,7 @@ export const obtenerAssetsGuardados = async (userId) => {
 };
 
 export const actualizarPerfilUsuario = async (userId, datos) => {
-  const response = await fetch(`${API_URL}/api/usuarios/${userId}`, {
+  const response = await fetch(`${API_URL}/usuarios/${userId}`, {
     method: "PUT",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(datos),
@@ -223,7 +223,7 @@ export const obtenerPaises = async () => {
 };
 
 export const eliminarAsset = async (assetId) => {
-  const response = await fetch(`${API_URL}/api/assets/${assetId}`, {
+  const response = await fetch(`${API_URL}/assets/${assetId}`, {
     method: "DELETE",
   });
   if (!response.ok) throw new Error("Error al eliminar asset");
