@@ -100,15 +100,20 @@ const Header = () => {
       </button>
 
       {isLoggedIn ? (
-        <div className="profile-section">
+       <div className="profile-section">
           <button className="header-button" onClick={() => navigate(`/perfil`)}>
             {userPhoto ? (
               <img src={userPhoto} alt="Profile" className="profile-photo" />
             ) : (
-              <FaUserCircle size={30} />
+              <img
+                src="./assets/no-profile.png" // Asegúrate de tener esta imagen en tu carpeta pública
+                alt="Default Profile"
+                className="profile-photo"
+              />
             )}
           </button>
         </div>
+
       ) : (
         <button className="header-button" onClick={() => navigate(`/login`)}>
           <span className="header-button-icon"><FaUserCircle /></span>
