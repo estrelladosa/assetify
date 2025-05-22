@@ -11,12 +11,7 @@ const driveUploadRoutes = require('./routes/driveUpload'); // Importar las rutas
 
 const app = express();
 app.use(express.json());
-// app.use(cors());
-// deploy
-app.use(cors({
-  origin: 'https://assetify-delta.vercel.app/', // Reemplaza con tu URL real de Vercel
-  credentials: true
-}));
+app.use(cors());
 
 // Conexión a MongoDB
 mongoose.connect(process.env.MONGO_URI)

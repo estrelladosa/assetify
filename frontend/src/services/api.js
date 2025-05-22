@@ -1,5 +1,4 @@
-// const API_URL = "http://localhost:4000/api";
-const API_URL = process.env.REACT_APP_BACKEND_URL; // Cambia esto según tu entorno
+const API_URL = "http://localhost:4000/api";
 
 export const registrarUsuario = async (datos) => {
   const response = await fetch(`${API_URL}/usuarios`, {
