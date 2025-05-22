@@ -7,7 +7,7 @@ import { FaArrowUpFromBracket } from "react-icons/fa6";
 import { useTranslation } from "react-i18next";
 import LanguageSwitcher from "./LanguageSwitcher";
 import {API_URL} from "../services/api"; 
-
+// funciona
 
 const Header = () => {
   const navigate = useNavigate();
