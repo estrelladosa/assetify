@@ -6,6 +6,8 @@ import { FaCog, FaSearch, FaUserCircle } from "react-icons/fa";
 import { FaArrowUpFromBracket } from "react-icons/fa6";
 import { useTranslation } from "react-i18next";
 import LanguageSwitcher from "./LanguageSwitcher";
+import {API_URL} from "../services/api"; 
+
 
 const Header = () => {
   const navigate = useNavigate();
@@ -26,7 +28,7 @@ const Header = () => {
     if (token && idUsuario) {
       const fetchUserData = async () => {
         try {
-          const response = await fetch(`http://localhost:4000/api/usuarios/${idUsuario}`);
+          const response = await fetch(`${API_URL}/usuarios/${idUsuario}`);
           if (response.ok) {
             const data = await response.json();
             setUserName(data.nombre_usuario);
