@@ -14,6 +14,8 @@ const Login = () => {
 
   const [mensaje, setMensaje] = useState("");
   const correoInputRef = useRef(null);
+  const [mensajeTipo, setMensajeTipo] = useState(""); // 'success' o 'error'
+
 
   useEffect(() => {
     correoInputRef.current?.focus();
@@ -40,15 +42,18 @@ const Login = () => {
 
       if (response.ok) {
         setMensaje("✅ " + t("login.success"));
+        setMensajeTipo("success");
         localStorage.setItem("token", data.token);
         localStorage.setItem("userId", data.userId);
         navigate("/");
         window.location.reload();
       } else {
         setMensaje(`❌ ${t("login.error")}: ${data.error || t("login.invalidCredentials")}`);
+        setMensajeTipo("error");
       }
     } catch (error) {
       setMensaje("❌ " + t("login.connectionError"));
+      setMensajeTipo("error");
     }
   };
 
@@ -68,7 +73,11 @@ const Login = () => {
             </select>
           </div> */}
           <h2>{t("login.title")}</h2>
-          {mensaje && <p className="mensaje">{mensaje}</p>}
+          {mensaje && (
+              <p className={`mensaje ${mensajeTipo === "success" ? "mensaje-exito" : "mensaje-error"}`}>
+                {mensaje}
+              </p>
+            )}
           <form onSubmit={handleSubmit} className="login-form">
             <div className="input-container">
               <label className="input-label" htmlFor="correo">{t("login.email")}</label>

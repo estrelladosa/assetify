@@ -104,6 +104,13 @@ button:hover {
 .mensaje {
   color: rgb(232, 79, 79);
 }
+.mensaje-exito {
+  color: #28a745; /* Verde */
+}
+
+.mensaje-error {
+  color: #dc3545; /* Rojo */
+}
 
 .link {
   margin-top: 20px;

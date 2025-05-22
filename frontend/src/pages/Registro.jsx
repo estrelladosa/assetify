@@ -18,6 +18,8 @@ const Registro = () => {
   const nombreImputRef = useRef(null);
   const [imagenPerfil, setImagenPerfil] = useState(null);
   const imagenInputRef = useRef(null);
+  const [mensajeTipo, setMensajeTipo] = useState(""); // 'success' o 'error'
+
 
   useEffect(() => {
     nombreImputRef.current?.focus();
@@ -32,6 +34,7 @@ const Registro = () => {
 
     if (form.contraseña !== form.repetirContraseña) {
       setMensaje("❌ " + t("register.passwordsDontMatch"));
+      setMensajeTipo("error");
       return;
     }
 
@@ -71,14 +74,17 @@ const Registro = () => {
 
       if (response.ok) {
         setMensaje("✅ " + t("register.success"));
+        setMensajeTipo("success");
         setForm({ nombre_usuario: "", correo: "", contraseña: "", repetirContraseña: "" });
         setImagenPerfil(null);
         if (imagenInputRef.current) imagenInputRef.current.value = "";
       } else {
         setMensaje(`❌ ${t("register.error")}: ${data.error || t("register.couldNotRegister")}`);
+        setMensajeTipo("error");
       }
     } catch (error) {
       setMensaje("❌ " + t("register.connectionError"));
+      setMensajeTipo("error");
     }
   };
 
@@ -87,7 +93,11 @@ const Registro = () => {
       <div className="registro-wrapper">
         <div className="registro-container">
           <h2>{t("register.title")}</h2>
-          {mensaje && <p className="mensaje">{mensaje}</p>}
+          {mensaje && (
+            <p className={`mensaje ${mensajeTipo === "success" ? "mensaje-exito" : "mensaje-error"}`}>
+              {mensaje}
+            </p>
+          )}
           <form onSubmit={handleSubmit} className="registro-form">
             <div className="input-container-name">
               <label className="input-label-name" htmlFor="nombre_usuario">{t("register.username")}</label>
