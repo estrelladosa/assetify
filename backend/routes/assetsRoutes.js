@@ -43,21 +43,6 @@ router.get('/search', async (req, res) => {
       }
     }
 
-    // Resto de filtros se aplican normalmente
-    if (categoria) {
-      filtro.categorias = categoria;
-    }
-    if (formato) {
-      filtro.formato = formato;
-    }
-    if (etiquetas) {
-      let etiquetasArray = etiquetas;
-      if (typeof etiquetas === "string") {
-        etiquetasArray = [etiquetas];
-      }
-      filtro.etiquetas = { $in: etiquetasArray };
-    }
-
     const assets = await Assets.find(filtro)
       .populate("usuario", "nombre_usuario")
       .populate("categorias")

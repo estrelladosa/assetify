@@ -284,3 +284,53 @@ ul li button:hover {
   .popup-error-contenido button:hover {
     background-color: #b80000; /* gray-700 */
   }
+
+/* Estilos para el spinner de carga */
+.loading-spinner {
+  display: inline-block;
+  width: 50px;
+  height: 50px;
+  border: 5px solid rgba(10, 88, 202, 0.2);
+  border-radius: 50%;
+  border-top-color: var(--blue);
+  animation: spin 1s ease-in-out infinite;
+  margin-bottom: 15px;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.popup-loading {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+
+.popup-loading-contenido {
+  background: #18243a;
+  color: #fff;
+  border-radius: 16px;
+  padding: 30px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.25);
+  text-align: center;
+  max-width: 90vw;
+  width: 320px;
+}
+
+.popup-loading-contenido h2 {
+  margin-bottom: 20px;
+  color: #ffffff;
+}
+
+.popup-loading-contenido p {
+  margin-bottom: 10px;
+  color: #e0e0e0;
+}

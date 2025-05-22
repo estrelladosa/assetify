@@ -229,8 +229,16 @@ export default function Asset() {
         <div className="asset-actions">
           <label>
             <input type="checkbox" checked={liked} onChange={handleToggleLike} className="like NoCheckBox" />
-            <span className="asset-button asset-like">
-              {liked ? <><FaHeart /> {t('asset.liked')}</> : <><FaRegHeart /> {t('asset.like')}</>}
+            <span 
+              className="asset-button asset-like"
+              role="button"
+              aria-pressed={liked}
+              aria-label={liked ? `Eliminar me gusta (${asset.likes?.length || 0} me gusta)` : `Me gusta (${asset.likes?.length || 0} me gusta)`}
+            >
+              {liked ? <><FaHeart /> {asset.likes?.length || 0}</> : <><FaRegHeart /> {asset.likes?.length || 0}</>}
+              <span className="sr-only">
+                {liked ? "Quitar me gusta" : "Me gusta"}
+              </span>
             </span>
           </label>
           <label>

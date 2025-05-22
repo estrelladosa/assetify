@@ -27,6 +27,7 @@ const Publicar = () => {
   const [categoriasDisponibles, setCategoriasDisponibles] = useState([]);
   const [etiquetasDisponibles, setEtiquetasDisponibles] = useState([]);
   const [popupExito, setPopupExito] = useState(false);
+  const [isUploading, setIsUploading] = useState(false); // Añade este estado
   const extensionesPorCategoria = {
   "2D": [".jpg", ".jpeg", ".png", ".svg", ".gif", ".bmp", ".tiff", ".webp"],
   "3D": [".fbx", ".obj", ".stl", ".blend", ".wrl", ".gltf", ".glb", ".dae"],
@@ -205,17 +206,36 @@ const Publicar = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!form.nombre || !form.descripcion || categoriasSeleccionadas.length === 0) {
-      setMensaje(t("publish.requiredFields"));
+    if (!isLoggedIn) {
+      setMostrarPopupError(true);
       return;
     }
 
+    if (archivos.length === 0) {
+      setMensaje("❌ " + t("publish.noFiles"));
+      return;
+    }
+
+    if (imagenes.length === 0) {
+      setMensaje("❌ " + t("publish.noImages"));
+      return;
+    }
+
+    if (categoriasSeleccionadas.length === 0) {
+      setMensaje("❌ " + t("publish.noCategories"));
+      return;
+    }
+
+    setMensaje("");
+    
     try {
+      // Mostrar spinner de carga
+      setIsUploading(true);
+
       // 1. Subir imágenes a Drive
       const imagenesSubidas = await Promise.all(imagenes.map((img) => subirImagenADrive(img)));
       const urlsImagenes = imagenesSubidas.map((res) => res.link);
       const archivoZip = archivos.length > 0 ? await subirArchivosComoZipADrive(archivos) : null;
-
 
       // 2. Preparar y enviar el asset
       const usuarioId = localStorage.getItem("userId");
@@ -226,7 +246,7 @@ const Publicar = () => {
         descripcion: form.descripcion,
         usuario: usuarioId,
         imagenes: urlsImagenes,
-        archivos: archivoZip ? [archivoZip.download] : [], // o archivoZip.link si prefieres
+        archivos: archivoZip ? [archivoZip.download] : [],
         formato: form.formato,
         etiquetas: etiquetas.map((etiqueta) => etiqueta._id),
         categorias: categoriasSeleccionadas,
@@ -243,6 +263,9 @@ const Publicar = () => {
 
       const data = await response.json();
 
+      // Ocultar spinner de carga
+      setIsUploading(false);
+
       if (response.ok) {
         setForm({ nombre: "", descripcion: "", formato: "" });
         setArchivos([]);
@@ -254,6 +277,7 @@ const Publicar = () => {
         setMensaje(`❌ Error: ${data.message || "No se pudo publicar el asset."}`);
       }
     } catch (error) {
+      setIsUploading(false); // Ocultar spinner en caso de error
       setMensaje(t("publish.uploadError") + error.message);
     }
   };
@@ -273,29 +297,42 @@ const Publicar = () => {
         </div>
       ) : (
         <>
-      {mensaje && <p className="mensaje">{mensaje}</p>}
-      {/* POPUP DE ÉXITO */}
-      {popupExito && (
-        <div className="popup-exito">
-          <div className="popup-exito-contenido">
-            <h2>{t("publish.successTitle")}</h2>
-            <p>{t("publish.successMessage")}</p>
-            <button onClick={() => { setPopupExito(false); navigate("/"); }}>
-              {t("publish.goToHome")}
-            </button>
-          </div>
-        </div>
-      )}
-      {mostrarPopupError && archivoInvalido && (
-        <div className="popup-error">
-          <div className="popup-error-contenido">
-            <h2>Archivo no permitido</h2>
-            <p>El archivo <strong>"{archivoInvalido}"</strong> no es un tipo de asset permitido.</p>
-            <button onClick={() => setMostrarPopupError(false)}>Cerrar</button>
-          </div>
-        </div>
-      )}
-      <form onSubmit={handleSubmit} className="publicar-columnas">
+          {mensaje && <p className="mensaje">{mensaje}</p>}
+          {/* POPUP DE ÉXITO */}
+          {popupExito && (
+            <div className="popup-exito">
+              <div className="popup-exito-contenido">
+                <h2>{t("publish.successTitle")}</h2>
+                <p>{t("publish.successMessage")}</p>
+                <button onClick={() => { setPopupExito(false); navigate("/"); }}>
+                  {t("publish.goToHome")}
+                </button>
+              </div>
+            </div>
+          )}
+          
+          {/* POPUP DE CARGANDO */}
+          {isUploading && (
+            <div className="popup-loading">
+              <div className="popup-loading-contenido">
+                <div className="loading-spinner"></div>
+                <h2>Subiendo asset</h2>
+                <p>Por favor espere mientras se sube su asset...</p>
+                <p>Este proceso puede tardar unos minutos</p>
+              </div>
+            </div>
+          )}
+          
+          {mostrarPopupError && archivoInvalido && (
+            <div className="popup-error">
+              <div className="popup-error-contenido">
+                <h2>Archivo no permitido</h2>
+                <p>El archivo <strong>"{archivoInvalido}"</strong> no es un tipo de asset permitido.</p>
+                <button onClick={() => setMostrarPopupError(false)}>Cerrar</button>
+              </div>
+            </div>
+          )}
+          <form onSubmit={handleSubmit} className="publicar-columnas">
         <div>
           <h3>{t("publish.name")}</h3>
           <input

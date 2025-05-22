@@ -146,8 +146,18 @@ const realizarBusqueda = async (nombre) => {
     if (filtros.tags.length > 0) {
       assetsFiltrados = assetsFiltrados.filter(asset => {
         if (!asset.etiquetas || !Array.isArray(asset.etiquetas)) return false;
-        // Al menos uno de los tags seleccionados debe estar en el asset
-        return filtros.tags.some(tagId => asset.etiquetas.includes(tagId));
+        
+        // Comprobar si alguna de las etiquetas del filtro coincide con alguna del asset
+        return filtros.tags.some(tagId => 
+          asset.etiquetas.some(etiqueta => {
+            // Si etiqueta es string (ID), comparar directamente
+            if (typeof etiqueta === 'string') {
+              return etiqueta === tagId;
+            }
+            // Si etiqueta es un objeto, comparar con el _id
+            return etiqueta._id === tagId;
+          })
+        );
       });
     }
 
