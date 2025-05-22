@@ -7,6 +7,8 @@ import { FaArrowUpFromBracket } from "react-icons/fa6";
 import { useTranslation } from "react-i18next";
 import LanguageSwitcher from "./LanguageSwitcher";
 import {API_URL} from "../services/api"; 
+import defaultProfile from "../assets/no-profile.png";
+// funciona
 
 const Header = () => {
   const navigate = useNavigate();
@@ -101,17 +103,14 @@ const Header = () => {
       {isLoggedIn ? (
        <div className="profile-section">
           <button className="header-button" onClick={() => navigate(`/perfil`)}>
-            {userPhoto ? (
-              <img src={userPhoto} alt="Profile" className="profile-photo" />
-            ) : (
-              <img
-                src="./assets/no-profile.png" // Asegúrate de tener esta imagen en tu carpeta pública
-                alt="Default Profile"
-                className="profile-photo"
-              />
-            )}
+            <img
+              src={userPhoto || defaultProfile}
+              alt="Profile"
+              className="profile-photo"
+            />
           </button>
         </div>
+
 
       ) : (
         <button className="header-button" onClick={() => navigate(`/login`)}>

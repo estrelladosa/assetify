@@ -10,6 +10,7 @@ import { eliminarAsset } from "../services/api";
 import { useCurrentUser } from "../hooks/useCurrentUser";
 import { useTranslation } from "react-i18next";
 import {API_URL} from "../services/api"; 
+import defaultProfile from "../assets/no-profile.png";
 
 const Profile = () => {
     const navigate = useNavigate();
@@ -213,7 +214,7 @@ const Profile = () => {
         <div className="profile-config-container">
           <div className="profile-sidebar">
             <div className="avatar-container">
-              <img src={currentUser?.foto || "/default-avatar.jpg"} alt="Avatar" className="profile-avatar" />
+              <img src={currentUser?.foto || defaultProfile} alt="Avatar" className="profile-avatar" />
             </div>
             <div className="sidebar-menu">
               <div 

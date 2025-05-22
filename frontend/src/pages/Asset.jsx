@@ -6,6 +6,7 @@ import { FaUserPlus, FaCheck, FaHeart, FaRegHeart, FaBookmark, FaRegBookmark, Fa
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next"; // Importamos useTranslation
 import {API_URL} from "../services/api"; 
+import defaultProfile from "../assets/no-profile.png";
 
 import {
   obtenerAssetPorId,
@@ -215,7 +216,7 @@ export default function Asset() {
       {/* Información del asset */}
       <div className="asset-info">
         <div className="asset-user">
-          <img src={usuario.foto || "./assets/no-profile.png"} alt={t('asset.userProfileAlt')} className="asset-user-avatar" />
+          <img src={usuario.foto || defaultProfile} alt={t('asset.userProfileAlt')} className="asset-user-avatar" />
           <div className="asset-user-info">
             <p className="asset-username">{usuario.nombre_usuario}</p>
             <label>
