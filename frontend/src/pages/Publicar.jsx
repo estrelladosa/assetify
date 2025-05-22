@@ -4,6 +4,7 @@ import subirImagenIcon from "../assets/subirimagen.png";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next"; // Importamos useTranslation
 import "./Publicar.css";
+import {API_URL} from "../services/api"; 
 
 const Publicar = () => {
   const navigate = useNavigate();
@@ -33,7 +34,10 @@ const Publicar = () => {
   "3D": [".fbx", ".obj", ".stl", ".blend", ".wrl", ".gltf", ".glb", ".dae"],
   "Audio": [".mp3", ".wav", ".ogg", ".flac", ".aac", ".m4a"],
   "Video": [".mp4", ".mov", ".avi", ".mkv", ".webm"],
-  "Código": [".js", ".ts", ".py", ".cpp", ".c", ".java", ".cs", ".html", ".css", ".json", ".xml", ".txt", ".md"]
+  "Código": [
+  ".js", ".ts", ".py", ".cpp", ".c", ".h", ".java", ".cs", ".html", ".htm", ".css", ".scss", ".less",
+  ".json", ".xml", ".yml", ".yaml", ".txt", ".md", ".sh", ".bat", ".ps1", ".php", ".rb", ".go", ".rs",
+  ".swift", ".kt", ".m", ".pl", ".lua", ".sql", ".r", ".jl", ".asm", ".vb", ".fs", ".dart", ".scala"]
 };
 
 
@@ -44,8 +48,8 @@ const Publicar = () => {
 
     const fetchDatos = async () => {
       try {
-        const categoriasResponse = await fetch("http://localhost:4000/api/categorias");
-        const etiquetasResponse = await fetch("http://localhost:4000/api/etiquetas");
+        const categoriasResponse = await fetch(`${API_URL}/categorias`);
+        const etiquetasResponse = await fetch(`${API_URL}/etiquetas`);
 
         const categoriasData = await categoriasResponse.json();
         const etiquetasData = await etiquetasResponse.json();
@@ -121,7 +125,7 @@ const Publicar = () => {
       const nuevaEtiquetaObj = { nombre: nuevaEtiqueta };
 
       try {
-        const response = await fetch("http://localhost:4000/api/etiquetas", {
+        const response = await fetch(`${API_URL}/etiquetas`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(nuevaEtiquetaObj),
@@ -162,7 +166,7 @@ const Publicar = () => {
     const formData = new FormData();
     formData.append("archivo", imagen);
   
-    const response = await fetch("http://localhost:4000/api/drive/subir", {
+    const response = await fetch(`${API_URL}/drive/subir`, {
       method: "POST",
       body: formData,
     });
@@ -180,7 +184,7 @@ const Publicar = () => {
     const formData = new FormData();
     archivos.forEach((archivo) => formData.append("archivos", archivo));
   
-    const response = await fetch("http://localhost:4000/api/drive/subir-zip", {
+    const response = await fetch(`${API_URL}/drive/subir-zip`, {
       method: "POST",
       body: formData,
     });
@@ -255,7 +259,7 @@ const Publicar = () => {
         descargas: 0,
       };
 
-      const response = await fetch("http://localhost:4000/api/assets", {
+      const response = await fetch(`${API_URL}/assets`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),

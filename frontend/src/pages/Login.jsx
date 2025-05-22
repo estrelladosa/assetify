@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import "./Login.css";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import {API_URL} from "../services/api"; 
 
 const Login = () => {
   const navigate = useNavigate();
@@ -26,7 +27,7 @@ const Login = () => {
     e.preventDefault();
 
     try {
-      const response = await fetch("http://localhost:4000/api/usuarios/login", {
+      const response = await fetch(`${API_URL}/usuarios/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

@@ -9,6 +9,7 @@ import { obtenerAssetsPorUsuario, obtenerAssetsGuardados, actualizarPerfilUsuari
 import { eliminarAsset } from "../services/api";
 import { useCurrentUser } from "../hooks/useCurrentUser";
 import { useTranslation } from "react-i18next";
+import {API_URL} from "../services/api"; 
 
 const Profile = () => {
     const navigate = useNavigate();
@@ -98,7 +99,7 @@ const Profile = () => {
     }
 
     try {
-      const response = await fetch(`http://localhost:4000/api/usuarios/${currentUser._id}/password`, {
+      const response = await fetch(`${API_URL}/usuarios/${currentUser._id}/password`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -141,7 +142,7 @@ const Profile = () => {
       const formData = new FormData();
       formData.append("archivo", file);
 
-      const response = await fetch("http://localhost:4000/api/drive/subir", {
+      const response = await fetch(`${API_URL}/drive/subir`, {
         method: "POST",
         body: formData,
       });

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios"; // Necesitarás instalar axios si aún no lo tienes
 import "./Config.css";
 import { useTranslation } from "react-i18next";
+import {API_URL} from "../services/api"; 
 
 
 const Config = () => {
