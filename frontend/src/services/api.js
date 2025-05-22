@@ -1,4 +1,4 @@
-const API_URL = "http://localhost:4000/api";
+const API_URL = process.env.REACT_APP_BACKEND_URL/api;
 
 export const registrarUsuario = async (datos) => {
   const response = await fetch(`${API_URL}/usuarios`, {
@@ -30,7 +30,7 @@ export const searchAssets = async (params) => {
   }
   
   // Incluso con query vacía, haz la petición
-  const response = await fetch(`http://localhost:4000/api/assets/search?${query.toString()}`);
+  const response = await fetch(`${API_URL}/assets/search?${query.toString()}`);
   if (!response.ok) throw new Error("Error en la búsqueda");
   return await response.json();
 };
@@ -204,7 +204,7 @@ export const obtenerAssetsGuardados = async (userId) => {
 };
 
 export const actualizarPerfilUsuario = async (userId, datos) => {
-  const response = await fetch(`http://localhost:4000/api/usuarios/${userId}`, {
+  const response = await fetch(`${API_URL}/api/usuarios/${userId}`, {
     method: "PUT",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(datos),
@@ -223,7 +223,7 @@ export const obtenerPaises = async () => {
 };
 
 export const eliminarAsset = async (assetId) => {
-  const response = await fetch(`http://localhost:4000/api/assets/${assetId}`, {
+  const response = await fetch(`${API_URL}/api/assets/${assetId}`, {
     method: "DELETE",
   });
   if (!response.ok) throw new Error("Error al eliminar asset");

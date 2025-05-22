@@ -2,6 +2,7 @@ import React, { useState , useRef, useEffect} from "react";
 import { useNavigate } from "react-router-dom";
 import "../pages/Registro.css";
 import { useTranslation } from "react-i18next";
+import {API_URL} from "../services/api"; 
 
 const Registro = () => {
   const navigate = useNavigate();
@@ -41,7 +42,7 @@ const Registro = () => {
         const formData = new FormData();
         formData.append("archivo", imagenPerfil);
 
-        const responseImagen = await fetch("http://localhost:4000/api/drive/subir", {
+        const responseImagen = await fetch(`${API_URL}/drive/subir`, {
           method: "POST",
           body: formData,
         });
@@ -55,7 +56,7 @@ const Registro = () => {
         urlImagenPerfil = dataImagen.link;
       }
 
-      const response = await fetch("http://localhost:4000/api/usuarios", {
+      const response = await fetch(`${API_URL}/usuarios`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

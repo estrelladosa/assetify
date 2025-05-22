@@ -5,6 +5,7 @@ import AssetCard from "../components/AssetCard";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next"; // Importamos useTranslation
 import "./Search.css";
+import {API_URL} from "../services/api"; 
 
 const Search = () => {
   const location = useLocation();
@@ -25,17 +26,17 @@ const Search = () => {
   const [etiquetas, setEtiquetas] = useState([]);
 
   useEffect(() => {
-    fetch("http://localhost:4000/api/categorias")
+    fetch(`${API_URL}/categorias`)
       .then(res => res.json())
       .then(data => setCategorias(data))
       .catch(() => setCategorias([]));
 
-    fetch("http://localhost:4000/api/usuarios")
+    fetch(`${API_URL}/usuarios`)
       .then(res => res.json())
       .then(data => setAutores(data))
       .catch(() => setAutores([]));
 
-    fetch("http://localhost:4000/api/etiquetas")
+    fetch(`${API_URL}/etiquetas`)
       .then(res => res.json())
       .then(data => setEtiquetas(data))
       .catch(() => setEtiquetas([]));

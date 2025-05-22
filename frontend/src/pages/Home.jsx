@@ -4,6 +4,7 @@ import { useTranslation } from "react-i18next"; // Importamos useTranslation
 import AssetCard from "../components/AssetCard";
 import "../pages/Home.css";
 import { obtenerAssets } from "../services/api";
+import {API_URL} from "../services/api"; 
 
 const Home = () => {
   const { t } = useTranslation(); // Hook para traducción

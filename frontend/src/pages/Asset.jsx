@@ -5,6 +5,7 @@ import { useCurrentUser } from "../hooks/useCurrentUser";
 import { FaUserPlus, FaCheck, FaHeart, FaRegHeart, FaBookmark, FaRegBookmark, FaPaperPlane, FaTimes } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next"; // Importamos useTranslation
+import {API_URL} from "../services/api"; 
 
 import {
   obtenerAssetPorId,
